@@ -1,0 +1,21 @@
+
+
+@mixin anchor__button($height, $display, $font_size, $color1, $color2, $bg_color1, $bg_color2){
+  font-size: $font_size;
+  color: $color1;
+  display: $display;
+  height: $height;
+  text-align: center;
+  vertical-align:top;
+  line-height: $height;
+  border: none;
+  background-color: $bg_color1;
+  text-decoration: none;
+
+  &:visited {color:$color1;}  /* visited link */
+  &:hover {
+    color:$color2;
+    background-color: $bg_color2
+  }  /* mouse over link */
+  &:active {color:$color2;}  /* selected link */
+}

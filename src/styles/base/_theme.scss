@@ -1,0 +1,44 @@
+@import '../abstracts/variables';
+
+
+// brand colors
+
+$primary-color: $blue-color;
+$secondary-color: $white-color;
+
+$primary-quiet: $light-blue-color;
+
+// font colors
+
+$text-color: $secondary-color;
+$grey-text-color: rgba(0, 0, 0, 0.3);
+$main-background: rgba(220, 220, 220, 0.3);
+$quiet-color: #ccc;
+$loud-color: #000;
+$heading-color: #111;
+
+$link-color: #d54aaf;
+$link-hover-color: saturate(#d54aaf, 20%);
+$link-visited-color: purple;
+
+// colors for other things
+
+$header-bg: $blue-color;
+
+// font families and sizes
+
+$base-font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+$base-font-size: 18px;
+$base-font-weight: 300;
+
+$fixed-font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+$fixed-font-size: 15px;
+$fixed-line-height: 1.2;
+
+$heading-font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+$heading-font-weight: 700;
+
+// sizes for other things
+
+$header_height: 40px;
+$menu-width: 200px !default;

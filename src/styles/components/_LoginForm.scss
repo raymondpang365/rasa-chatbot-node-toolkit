@@ -1,0 +1,34 @@
+@import '../abstracts/variables';
+@import '../base/theme';
+@import '../base/typography';
+
+.loginForm {
+  margin: 20px;
+  padding: 20px;
+  display: flex;
+  width: 300px;
+  flex-wrap: wrap;
+  background-color: lighten($main-background, 20);
+  border: 3px solid $light-blue-color;
+  border-radius: 1em;
+}
+
+.loginButton {
+  @extend .btnBlue;
+
+  width: 250px;
+  display: block;
+  padding:3px 5px;
+}
+
+.loginFormTitle {
+  width: 80px;
+  font-size: 1em;
+  color: $blue-color;
+}
+
+.loginFormText {
+  color: $grey-text-color;
+
+  @extend .small;
+}
