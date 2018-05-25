@@ -114,24 +114,12 @@ export default {
       return res.redirect(`${appName}://login?user=${JSON.stringify(req.user)}`)
     }
     else {
-      const {user} = req;
-      if (!user) {
-        return next();
-      }
-      const token = user.toAuthenticationToken();
-
-      user.lastLoggedInAt = new Date();
-      user.save(()=> {
-          console.log(token);
-          console.log(user);
-
-          req.store.dispatch(loginUser({token, user}, res));
-          req.store.dispatch(redirect(state.next || '/'));
-
-          return next();
-        }
-
-      );
+      const { user } = req;
+      const { token } = user;
+      delete user.token;
+      req.store.dispatch(loginUser({ token, user }, res));
+      req.store.dispatch(redirect(state.next || '/'));
+      return next();
     }
   },
 

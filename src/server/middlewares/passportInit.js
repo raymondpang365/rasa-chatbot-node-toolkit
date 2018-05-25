@@ -14,8 +14,6 @@ export default (req, res, next) => {
       [id]
     ).then( results => {
       const userFound = results.rows;
-      console.log('testing');
-      console.log(userFound);
       return cb(null, userFound);
     })
       .catch( err => {
@@ -38,7 +36,7 @@ export default (req, res, next) => {
     });
    };
 
-  const mapProfile = (platform, profile, createTime) => {
+  const mapProfile = (platform, profile) => {
     let user;
     switch(platform){
       case "facebook":
@@ -52,8 +50,6 @@ export default (req, res, next) => {
           middle_name: profile._json.middle_mame,
           family_name: profile._json.last_name,
           avatar_url: profile._json.picture.data.url,
-          login_time: createTime,
-          create_time: createTime
         };
         break;
       case "google":
@@ -66,8 +62,6 @@ export default (req, res, next) => {
           given_name: profile._json.name.givenName,
           family_name: profile._json.familyName,
           avatar_url: profile._json.image.url,
-          login_time: createTime,
-          create_time: createTime
         };
         break;
       default:
@@ -75,12 +69,15 @@ export default (req, res, next) => {
     }
     const keys = [];
     const values = [];
+    console.log(user);
     for (const k in user) {
-      keys.push(k);
-      values.push(user[k]);
+      if (typeof user[k] !== "undefined") {
+        keys.push(k);
+        values.push(user[k]);
+      }
     }
     return {
-      query: `INSERT INTO user_Info (${keys.join(',')}) VALUES ('${values.join("','")}')`,
+      query: `INSERT INTO user_Info (${keys.join(',')},login_time,create_time) VALUES ('${values.join("','")}', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) RETURNING id`,
       user
     };
   };
@@ -88,8 +85,7 @@ export default (req, res, next) => {
   const loginOrCreate = (platform, userFound, profile, done) => {
     if (userFound.length === 0){
       console.log('user not found');
-      const createTime = new Date();
-      const params = mapProfile(platform, profile, createTime);
+      const params = mapProfile(platform, profile);
       let { user } = params;
       p.transaction(conn =>
         p.query(params.query)
@@ -97,35 +93,35 @@ export default (req, res, next) => {
             const lastId = insertResult.rows[0].id;
             const lastIdStr = `${lastId}`;
             const pad = (`U00000000`).slice(0, -lastIdStr.length);
-            const userId = `${pad}${lastIdStr}`;
-            const token = genToken({ userId, loginTime: createTime });
-            user = { userId, token, ...user };
+            const user_id = `${pad}${lastIdStr}`;
+            const token = genToken({ user_id });
+            user = { user_id, token, ...user };
             return p.query(
               "UPDATE user_info SET user_id = $1, token = $2 WHERE id = $3",
-              [userId, token, lastId])
+              [user_id, token, lastId])
           })
       ).then(() => {
-        done(null, { user })
+        delete user.user_password;
+        done(null, user )
       }).catch((errs) => {
-        done(errs, null);
+        console.log('omgomgomgomogm');
       });
     }
     else {
       console.log('user found');
       const user = userFound[0];
-      const userId = user.user_id;
-      const loginTime = new Date();
-      const token = genToken( { userId, loginTime } );
+      const { user_id } = user;
+      const token = genToken( { user_id } );
       p.query(
-        "UPDATE user_info SET login_time=$1, token=$2 WHERE user_id=$3",
-        [loginTime, token, userId]
-      ).then(() => {
+        "UPDATE user_info SET login_time= CURRENT_TIMESTAMP, token=$1 WHERE user_id=$2 " +
+        "RETURNING login_time",
+        [token, user_id]
+      ).then(results => {
         console.log('case 2');
         user.token = token;
-        user.login_time = loginTime;
-        const data = {...user};
-        delete data.user_password;
-        done(null, data );
+        user.login_time = results.rows[0].login_time;
+        delete user.user_password;
+        done(null, user);
       })
         .catch(_err => {
           console.log(_err);
@@ -144,7 +140,6 @@ export default (req, res, next) => {
           ]
         },
         (_req, accessToken, refreshToken, profile, done) => {
-          console.log('bingo 2');
           findUser(
             'facebook',
             profile._json.id,
@@ -198,10 +193,10 @@ export default (req, res, next) => {
   );
 
   // Serialize user into the sessions
-  passport.serializeUser((user, done) => done(null, user));
+  // passport.serializeUser((user, done) => done(null, user));
 
   // Deserialize user from the sessions
-  passport.deserializeUser((user, done) => done(null, user));
+  // passport.deserializeUser((user, done) => done(null, user));
 
   passport.initialize()(req, res, next);
   // passport.session()(req, res, next)

@@ -1,4 +1,3 @@
-import passport from 'passport';
 import passportAuth from '../../middlewares/passportAuth';
 import { passportStrategy } from '../../../config';
 import socialAuthController from '../../controllers/socialAuthRequired';
@@ -19,10 +18,8 @@ export default app => {
   if (passportStrategy.google) {
     app.get('/auth/google', socialAuthController.initGoogle);
     app.get('/auth/google/callback',
-      passport.authenticate(
-        'google',
-        {failureRedirect: '/auth/google'}),
-      (req, res) => res.redirect(`OAuthLogin://login?user=${JSON.stringify(req.user)}`)
+      passportAuth('google'),
+      userController.socialLogin
     );
   } else {
     app.get('/auth/google', socialAuthController.setupError);

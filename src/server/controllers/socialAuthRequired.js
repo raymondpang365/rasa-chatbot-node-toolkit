@@ -24,8 +24,7 @@ export default {
       scope: ['profile'],
       state: JSON.stringify({
         next: req.query.next,
-        env: req.query.env,
-        random: Math.random()
+        env: req.query.env
       })
     })(req, res, next)
 };
