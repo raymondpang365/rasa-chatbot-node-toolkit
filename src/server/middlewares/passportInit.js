@@ -1,9 +1,11 @@
 import passport from 'passport';
-import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
+import { Strategy as JwtStrategy } from 'passport-jwt';
 import FacebookStrategy from 'passport-facebook';
-import jsonwebtoken from 'jsonwebtoken';
+import { jwtExtractor, genAccessToken, genRefreshToken } from '../utils/tokenHelper'
 import { passportStrategy, jwt } from '../../config/index';
 import p from '../utils/agents';
+
+const uuidv4 = require('uuid/v4');
 
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
@@ -22,19 +24,8 @@ export default (req, res, next) => {
       });
   };
 
-  const jwtExtractor = () => req.query.env === "native" ?
-    ExtractJwt.fromAuthHeaderWithScheme('bearer'):
-      req.store.getState().cookies.token;
 
 
-  const genToken = data => {
-    console.log(JSON.parse(JSON.stringify(data)));
-    console.log(jwt.authentication.secret);
-    console.log(jwt.authentication.expiresIn);
-    return jsonwebtoken.sign(JSON.parse(JSON.stringify(data)), jwt.authentication.secret, {
-      expiresIn: jwt.authentication.expiresIn
-    });
-   };
 
   const mapProfile = (platform, profile) => {
     let user;
@@ -77,7 +68,7 @@ export default (req, res, next) => {
       }
     }
     return {
-      query: `INSERT INTO user_Info (${keys.join(',')},login_time,create_time) VALUES ('${values.join("','")}', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) RETURNING id`,
+      query: `INSERT INTO user_Info (${keys.join(',')}, last_login_time, create_time) VALUES ('${values.join("','")}', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) RETURNING id`,
       user
     };
   };
@@ -86,42 +77,63 @@ export default (req, res, next) => {
     if (userFound.length === 0){
       console.log('user not found');
       const params = mapProfile(platform, profile);
-      let { user } = params;
+
       p.transaction(conn =>
         p.query(params.query)
           .then(insertResult => {
             const lastId = insertResult.rows[0].id;
             const lastIdStr = `${lastId}`;
             const pad = (`U00000000`).slice(0, -lastIdStr.length);
+            const session_id = uuidv4();
+            const refresh_token = genRefreshToken(session_id);
             const user_id = `${pad}${lastIdStr}`;
-            const token = genToken({ user_id });
-            user = { user_id, token, ...user };
-            return p.query(
-              "UPDATE user_info SET user_id = $1, token = $2 WHERE id = $3",
-              [user_id, token, lastId])
+            return Promise.all([
+              p.query(
+              "UPDATE user_info SET user_id = $1 WHERE id = $2 RETURNING user_id",
+              [user_id, lastId]),
+              p.query(
+                "INSERT INTO session (user_id, session_id, refresh_token ,login_time, create_time ) " +
+                "VALUES ($1, $2, $3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) " +
+                "RETURNING session_id, refresh_token",
+                [user_id, session_id, refresh_token])
+              ]);
           })
-      ).then(() => {
-        delete user.user_password;
-        done(null, user )
-      }).catch((errs) => {
-        console.log('omgomgomgomogm');
+      ).then(values => {
+        const [results, results2] = values;
+        const { user_id } = results.rows[0];
+        const { session_id, refresh_token } = results2.rows[0];
+        const access_token = genAccessToken({ user_id, session_id });
+        const info = { user_id, session_id };
+        const data = {token: access_token, info};
+        done(null, data )
+      }).catch(err => {
+        res.pushError(err);
+        res.error();
       });
     }
     else {
       console.log('user found');
       const user = userFound[0];
       const { user_id } = user;
-      const token = genToken( { user_id } );
-      p.query(
-        "UPDATE user_info SET login_time= CURRENT_TIMESTAMP, token=$1 WHERE user_id=$2 " +
-        "RETURNING login_time",
-        [token, user_id]
-      ).then(results => {
+      const session_id = uuidv4();
+      const refresh_token = genRefreshToken(session_id);
+      Promise.all([
+        p.query(
+        "UPDATE user_info SET last_login_time=CURRENT_TIMESTAMP WHERE user_id=$1 " +
+        "RETURNING last_login_time",
+        [user_id]
+      ),
+        p.query(
+          "INSERT INTO session (user_id, session_id, refresh_token, login_time, create_time ) " +
+          "VALUES ($1, $2, $3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)",
+          [user_id, session_id, refresh_token ])
+      ])
+      .then(() => {
+        const access_token = genAccessToken( { user_id, session_id } );
         console.log('case 2');
-        user.token = token;
-        user.login_time = results.rows[0].login_time;
-        delete user.user_password;
-        done(null, user);
+        const info = { user_id, session_id };
+        const data = {token: access_token, info};
+        done(null, data);
       })
         .catch(_err => {
           console.log(_err);
@@ -167,38 +179,7 @@ export default (req, res, next) => {
     );
   }
 
-  passport.use(
-    new JwtStrategy(
-      {
-        jwtFromRequest: jwtExtractor,
-        secretOrKey: jwt.authentication.secret
-      },
-      (jwtPayload, done) => {
-        // this callback is invoked only when jwt is correctly decoded
-        console.log(jwtPayload);
-        p.query(
-          "SELECT * FROM user_info WHERE user_id= $1",
-          [jwtPayload.userId]
-        ).then(user => {
-            console.log(user);
-            return done(null, user, jwtPayload);
-          }
-        )
-        .catch(err => {
-          console.log(err);
-          return done(err, null, jwtPayload);
-        });
-      }
-    )
-  );
-
-  // Serialize user into the sessions
-  // passport.serializeUser((user, done) => done(null, user));
-
-  // Deserialize user from the sessions
-  // passport.deserializeUser((user, done) => done(null, user));
-
   passport.initialize()(req, res, next);
-  // passport.session()(req, res, next)
+
 
 };

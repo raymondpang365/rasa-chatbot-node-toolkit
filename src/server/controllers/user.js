@@ -1,11 +1,12 @@
 import fs from 'fs';
 import path from 'path';
 import mkdirp from 'mkdirp';
-import assign from 'object-assign';
-import configs from '../../config';
+import jsonwebtoken from 'jsonwebtoken';
 import Errors from '../../constants/Errors';
 import { loginUser } from '../../actions/user';
 import { redirect } from '../../actions/route';
+import { jwt, nodemailer } from '../../config/index';
+import { jwtExtractor, genAccessToken, genRefreshToken } from '../utils/tokenHelper'
 import p from '../utils/agents';
 import paginate from '../utils/paginate'
 
@@ -23,35 +24,31 @@ const hashPassword = (rawPassword = '') => {
   return rawPassword;
 };
 
+
 export default {
 
   emailCreate: (req, res, next) => {
     p.query('SELECT * FROM user_info where email = $1', req.body.email)
       .then(results => {
-        const user = results.rows;
+        const user = results.rows[0];
         if (user) {
-          res.errors([Errors.USER_EXISTED]);
+          throw Errors.USER_EXISTED;
         } else {
-          const newUser = {
-            name: req.body.name,
-            email: {
-              value: req.body.email
-            },
-            password: req.body.password,
-            nonce: {
-              verifyEmail: Math.random()
-            }
-          };
-
-          return p.query('INSERT INTO user_info SET $1', newUser);
+          return p.query("INSERT INTO user_info ('name', 'email', 'password', 'verify_email_nonce') " +
+            "VALUES ($1, $2, $3, $4)",
+            [req.body.name, req.body.email, req.body.password, Math.random()]);
         }
-      }).then( _user => {
-      req.user = _user;
-      if (!configs.nodemailer) {
-        return res.json({ _user });
-      }
-      return next();
-      })
+      }).then( result => {
+        const _user = result.rows[0];
+        req.user = _user;
+        if (!nodemailer) {
+          return res.status(200).json({status: 200, data: _user });
+        }
+        return next();
+      }).catch( err => {
+        res.pushError(err);
+        res.error();
+    })
   },
 
   verifyEmail: (req, res) => {
@@ -59,52 +56,64 @@ export default {
 
     user.email.isVerified = true;
     user.email.verifiedAt = new Date();
-    p.query('UPDATE user_info SET $1', user)
-      .then((results) => {
-        res.json(results.rows);
-      }
-    );
+    p.query('UPDATE email SET is_verified = true, verified_at = CURRENT_TIMESTAMP ' +
+      'WHERE address = $1',
+      [user.email])
+      .then((result) => {
+        res.status(200).json({status: 200, data: result});
+      })
+      .catch(err => {
+        res.pushError(err);
+        res.error();
+      });
   },
 
   emailLogin: (req, res) => {
-    p.query('SELECT * FROM user_info where email = $1', req.body.email)
-      .then(user => {
+    p.query('SELECT * FROM user_info where email = $1', [req.body.email])
+      .then(result => {
+        const user = result.rows[0];
         if (!user) {
-          res.json({
-            isAuth: false
-          });
-        } else {
-          user.auth(
-            req.body.password,
-            isAuth => {
-              if (isAuth) {
-                const token = user.toAuthenticationToken();
-                user.lastLoggedInAt = new Date();
-                user.save(
-                  _user => {
-                    res.json({
-                      isAuth: true,
-                      token,
-                      _user
-                    });
-                  }
-                );
-              } else {
-                res.json({
-                  isAuth: false
-                });
-              }
-            });
+          res.status(200).json({status: 200, isAuth: false});
         }
-      })
+        else if(user.password === hashPassword(req.body.password)) {
+            const token = genAccessToken({
+              _id: this._id,
+              name: this.name,
+              email: this.email
+            });
+            p.query("UPDATE user_info SET last_login_time = CURRENT_TIMESTAMP" +
+              "WHERE user_id = $1", [user.user_id])
+              .then(() => {
+                res.status(200).json({status: 200, data: {isAuth: true, token, user}});
+              })
+              .catch(err => {
+                res.pushError(err);
+                res.error();
+              })
+        }
+        else {
+          res.status(200).json({status: 200, isAuth: false});
+        }
+    }).catch(err => {
+      res.pushError(err);
+      res.error();
+    })
   },
 
   emailSetNonce: (nonceKey) => (req, res, next) => {
 
     p.query('SELECT * FROM user_info where email = $1', req.body.email)
-      .then( user => {
+      .then( result => {
+        const user = result.rows[0];
         user.nonce[nonceKey] = Math.random();
         return p.query('UPDATE * FROM user_info where user_id = $1', user.user_id)
+      })
+      .then( result => {
+        res.status(200).json({status: 200, data: result});
+      })
+      .catch( err => {
+        res.pushError(err);
+        res.error();
       });
   },
 
@@ -115,9 +124,9 @@ export default {
     }
     else {
       const { user } = req;
-      const { token } = user;
+      const { token, info } = user;
       delete user.token;
-      req.store.dispatch(loginUser({ token, user }, res));
+      req.store.dispatch(loginUser({ token, info }, res));
       req.store.dispatch(redirect(state.next || '/'));
       return next();
     }
@@ -127,9 +136,13 @@ export default {
 
   emailUpdatePassword: (req, res) => {
     const {user} = req;
-
+    if(req.body === null){
+      res.pushError(Errors.INVALID_DATA);
+      res.error();
+    }
     p.query('SELECT user_password FROM user_info WHERE user_id', user.user_id)
-      .then(pw => {
+      .then(result => {
+        const pw = result.rows[0];
         if (pw === hashPassword(req.body.oldPassword)) {
           return p.query('UPDATE user_info SET user_password = $1', req.body.newPassword);
         }
@@ -139,10 +152,9 @@ export default {
           });
         }
       }).then(result => {
-      res.json({
-        originAttributes: req.body,
-        isAuth: true,
-        user: result
+      res.status(200).json({
+        status: 200,
+        data: { originAttributes: req.body, isAuth: true, user: result }
       });
     }).catch(err => {
 
@@ -151,8 +163,10 @@ export default {
 
   emailResetPassword: (req, res) => {
     const { user } = req;
-    p.query('UPDATE user_info SET user_password = $1', req.body.newPassword)
-      .then(_user => {
+    p.query('UPDATE user_info SET password = $1 WHERE user_id = $2',
+      [req.body.newPassword, user.user_id])
+      .then(result => {
+        const _user = result.rows[0];
         res.json({
           originAttributes: req.body,
           user: _user
@@ -176,8 +190,20 @@ export default {
   },
 
   logout(req, res) {
-    req.logout();
-    res.json({});
+    p.query('UPDATE session SET refresh_token = null WHERE session_id = ?',
+      [req.jwtPayload.session_id]
+    ).then(results => {
+      if (results.affectedRows !== 1){
+        throw Errors.DB_OPERATION_FAIL;
+      }
+      else{
+        req.logout();
+        res.status(200).json({status: 200, data: results});
+      }
+    }).catch(err => {
+      res.pushError(Errors.DB_OPERATION_FAIL);
+      res.errors();
+    });
   },
 
   readSelf(req, res) {
@@ -193,7 +219,7 @@ export default {
       .then(
         res.json({ status: 200, data: { uuid, device_token } })
       ).catch(err => {
-      res.pushError(Errors.ODM_OPERATION_FAIL);
+      res.pushError(err);
       res.errors();
     });
   },
@@ -215,7 +241,7 @@ export default {
       .then(
         res.json({ status: 200, data: url })
       ).catch(err => {
-      res.pushError(Errors.ODM_OPERATION_FAIL);
+      res.pushError(err);
       res.errors();
     });
   },

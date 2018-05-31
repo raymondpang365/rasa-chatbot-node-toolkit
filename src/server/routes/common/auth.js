@@ -2,6 +2,7 @@ import passportAuth from '../../middlewares/passportAuth';
 import { passportStrategy } from '../../../config';
 import socialAuthController from '../../controllers/socialAuthRequired';
 import userController from '../../controllers/user';
+import { refreshAccessToken } from '../../middlewares/jwtAuth';
 
 export default app => {
 
@@ -24,4 +25,6 @@ export default app => {
   } else {
     app.get('/auth/google', socialAuthController.setupError);
   }
+
+  app.get('/auth/refreshToken', refreshAccessToken);
 };

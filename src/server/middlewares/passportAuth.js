@@ -9,7 +9,7 @@ export default strategyName => (req, res, next) => {
         failureRedirect: `/auth/${strategyName}`,
         session: false
       },
-      (data, user) => {
+      (err, user) => {
         req.user = user;
         next();
       }
@@ -22,7 +22,7 @@ export default strategyName => (req, res, next) => {
         failureRedirect: '/user/login',
         session: false
       },
-      (data, user) => {
+      (err, user) => {
         req.user = user;
         next();
       }

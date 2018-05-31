@@ -339,7 +339,8 @@
     "sequelize": "^4.37.6",
     "serialize-javascript": "^1.4.0",
     "serve-favicon": "2.4.5",
-    "snapsvg": "^0.5.1"
+    "snapsvg": "^0.5.1",
+    "uuid": "^3.2.1"
   },
   "devDependencies": {
     "asset-require-hook": "^1.2.0",

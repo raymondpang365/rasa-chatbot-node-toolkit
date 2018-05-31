@@ -7,15 +7,15 @@ import { setEntities } from './entity';
 import { setPages } from './page';
 import userAPI from '../api/user';
 
-export const loginUser = ({ token, user }, res = null) => dispatch => {
+export const loginUser = ({ token, info }, res = null) => dispatch => {
   console.log('again again ');
   console.log(token);
-  console.log(user);
+  console.log(info);
   dispatch(
     setCookies(
       {
         token,
-        user
+        info
       },
       res
     )
@@ -31,7 +31,7 @@ export const logoutUser = () =>
       /* istanbul ignore next */
       Promise.all([
         dispatch(removeCookie('token')),
-        dispatch(removeCookie('user'))
+        dispatch(removeCookie('info'))
       ]).then(()=> {
           console.log('redirect now!');
 

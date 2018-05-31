@@ -26,9 +26,13 @@ module.exports = {
     }
   },
   jwt: {
-    authentication: {
-      secret: process.env.JWT_AUTH_SECRET,
-      expiresIn: 60 * 60 * 24 * 3 // in seconds
+    accessToken: {
+      secret: process.env.JWT_ACCESS_TOKEN_SECRET,
+      expiresIn: 60 // in seconds
+    },
+    refreshToken: {
+      secret: process.env.JWT_REFRESH_TOKEN_SECRET,
+      expiresIn: 60 * 60 * 24 * 180 // in seconds
     },
     verifyEmail: {
       secret: 'df5s6sdHdjJdRg56',
