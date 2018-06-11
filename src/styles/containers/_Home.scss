@@ -2,6 +2,13 @@
   padding: 20px 15px;
 }
 
+.homeBgFull {
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://i.imgur.com/GxpLBVZ.jpg');
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+}
+
 .homeBg {
   background-attachment: fixed;
   background-color: black;
@@ -104,6 +111,7 @@
 
   }
 
+
   .overlay {
     position:absolute;
     z-index:2;
@@ -163,27 +171,6 @@
         color:#000;
       }
     }
-  }
-
-  &:nth-of-type(1) {
-    h2{
-      @media only screen and (max-width: 992px) {
-        position: relative;
-        right: 5%;
-      }
-    }
-    // second backg
-    h5{
-      @media only screen and (max-width: 992px) {
-        position: relative;
-        right: 30%;
-      }
-    }
-  }
-
-  &:nth-of-type(2) {
-    // second backg
-    background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkDJ5Cm0vyNRSrK1pw3Hlo9cC-AuhHlVDg0DnLewFWVN5zM3hZ');
   }
 }
 
