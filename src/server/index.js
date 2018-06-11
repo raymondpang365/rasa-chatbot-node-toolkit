@@ -13,8 +13,8 @@ const app = express();
 middlewares(app);
 serverRoutes(app);
 
-if (port) {
-  app.listen(port, host, err => {
+if (port && listenTo) {
+  app.listen(port, listenTo, err => {
     const url = `http://${listenTo}:${port}`;
 
     if (err) console.error(chalk.red(`==> 😭  OMG!!! ${err}`));
