@@ -4,7 +4,7 @@
 import express from 'express';
 import React from 'react';
 import chalk from 'chalk';
-import { port, host } from '../config/index';
+import { port, listenTo } from '../config/index';
 import middlewares from './middlewares';
 import serverRoutes from './routes';
 
@@ -15,7 +15,7 @@ serverRoutes(app);
 
 if (port) {
   app.listen(port, host, err => {
-    const url = `http://${host}:${port}`;
+    const url = `http://${listenTo}:${port}`;
 
     if (err) console.error(chalk.red(`==> 😭  OMG!!! ${err}`));
 
