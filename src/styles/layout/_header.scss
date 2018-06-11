@@ -11,7 +11,7 @@
   height: $header_height;
   line-height: $header_height;
   color: $text-color;
-  background-color: $header-bg;
+  background-color: rgba($header-bg, 0.3);
   z-index: 1;
 }
 
@@ -44,6 +44,7 @@ a.header__logo {
 /* RESPONSIVE */
 @media only screen and (max-width: 768px) {
   .header {
+    background-color: lighten($header-bg, 10);
     position: static;
     padding-right: 0;
     padding-left: 0;

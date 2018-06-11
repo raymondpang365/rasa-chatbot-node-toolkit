@@ -51,6 +51,7 @@ a {
 
 .siteContent {
   overflow: hidden;
+  color: $header-bg;
   min-height: 100%;
   min-width: 100%;
   padding-top: $header_height;
@@ -68,10 +69,6 @@ a {
 }
 
 @media only screen and (max-width: 768px) {
-  .container {
-    padding: 0 20px;
-  }
-
   .siteContent {
     overflow: hidden;
     min-height: 100vh;

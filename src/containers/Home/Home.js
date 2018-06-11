@@ -40,16 +40,12 @@ export class Home extends Component<Props> {
         <div className={styles.bgContainer}>
 
           <Helmet title="Home" />
-          <div className={styles.mainContent}>
-            <h1>Car Sharing?</h1>
-            <h3>Let us know more about you, if you are interested to... </h3>
-          </div>
           <div className={styles.flex}>
             <div className={styles.half}>
               <div className={styles.overlay} />
               <div className={styles.half_content}>
                 <h2>Rent a Car</h2>
-                <h4>Drive when you need it</h4>
+                <h5>Drive when you need it</h5>
                 <a className={styles.btn_more}>Do a survey</a>
               </div>
             </div>

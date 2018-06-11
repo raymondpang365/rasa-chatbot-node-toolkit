@@ -46,9 +46,6 @@ class NavigationBar extends PureComponent {
     return(
       <header className={styles.header}>
         <button onClick={this.toggleSideBar.bind(this)} className={styles.header__icon} id={styles.header__icon} />
-        <Link className={styles.header__logo} to="/" >
-          <span role="img" aria-label="baby">🚗</span>
-        </Link>
         <nav className={styles.menuLeft}>
           <Link className={this.toggleButtonStyle('/')} to="/">Home</Link>
         </nav>

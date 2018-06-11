@@ -5,8 +5,7 @@ import styles from '../../styles/main.scss';
 const SideNavigationBar = () => (
   <nav className={[styles.sideMenu, styles.header].join(' ')}>
     <Link to="/">Home</Link>
-    <Link to="/vehicle">Vehicle</Link>
-    <Link to="/demo/form-element">Form Elements</Link>
+    <Link to="/user/login">Login</Link>
   </nav>
 );
 

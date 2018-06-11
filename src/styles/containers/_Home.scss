@@ -4,7 +4,7 @@
 
 .homeBg {
   background-attachment: fixed;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://cdn.pixabay.com/photo/2017/09/09/18/24/driving-2732934_1280.jpg');
+  background-color: black;
   background-position: center;
   background-size: cover;
   color: #fff;
@@ -30,18 +30,16 @@
 .flex{
   position: absolute;
   width: 100%;
-  top: 200px;
   display: flex;
+
+  @media only screen and (max-width: 992px) {
+    display: block;
+  }
 }
 
 .half {
   width:50%;
   height:425px;
-
-  @media only screen and (max-width: 992px) {
-    height:250px;
-  }
-
   display: flex;
   padding-left:25px;
   justify-content:center;
@@ -53,12 +51,7 @@
   background-position:center;
   background-size:cover;
   background-repeat:no-repeat;
-  background-image:url('https://cdn.pixabay.com/photo/2017/09/09/18/24/driving-2732934_1280.jpg');
-
-  &:nth-of-type(2) {
-    // second backg
-    background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkDJ5Cm0vyNRSrK1pw3Hlo9cC-AuhHlVDg0DnLewFWVN5zM3hZ');
-  }
+  background-image:url('https://i.imgur.com/GxpLBVZ.jpg');
 
   h2 {
     font-weight:400;
@@ -69,6 +62,21 @@
 
     @media only screen and (max-width: 992px) {
       font-size:1.875rem;
+      top: 15%;
+      position: relative;
+      white-space: nowrap;
+      overflow: hidden;
+      left: auto;
+      transform: translate(-50%, 50%);
+    }
+  }
+
+  h5 {
+    transition:all 2s;
+
+    @media only screen and (max-width: 992px) {
+      position: relative;
+      right: 15%;
     }
   }
 
@@ -86,6 +94,14 @@
     font-weight:500;
     letter-spacing:1px;
     transition:all 0.75s;
+
+    @media only screen and (max-width: 992px) {
+      position: relative;
+      top: 20%;
+      transform: translate(-50%, -50%);
+    }
+
+
   }
 
   .overlay {
@@ -118,11 +134,57 @@
       letter-spacing:2.5px;
     }
 
+    h5 {
+      letter-spacing:2.5px;
+    }
+
     .btn_more {
-      background:#fff;
-      color:#000;
-      margin:40px 0;
+      background: #fff;
+      color: #000;
+      margin: 40px 0;
     }
   }
+
+  @media only screen and (max-width: 992px) {
+    height:250px;
+    width: 100%;
+
+    &:hover {
+      width:100% !important;
+      background-color:black;
+      background-size: cover;
+
+      h2 {
+        letter-spacing:2.5px;
+      }
+
+      .btn_more {
+        background:#fff;
+        color:#000;
+      }
+    }
+  }
+
+  &:nth-of-type(1) {
+    h2{
+      @media only screen and (max-width: 992px) {
+        position: relative;
+        right: 5%;
+      }
+    }
+    // second backg
+    h5{
+      @media only screen and (max-width: 992px) {
+        position: relative;
+        right: 30%;
+      }
+    }
+  }
+
+  &:nth-of-type(2) {
+    // second backg
+    background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkDJ5Cm0vyNRSrK1pw3Hlo9cC-AuhHlVDg0DnLewFWVN5zM3hZ');
+  }
 }
+
 
