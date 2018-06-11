@@ -3,10 +3,12 @@
 
 // brand colors
 
-$primary-color: $blue-color;
-$secondary-color: $white-color;
+$primary-color: #2174ea;
+$secondary-color: rgba(219, 238, 232, 0.87);
+$third-color: rgb(71, 209, 255);
+$forth-color: rgb(12, 180, 44);
 
-$primary-quiet: $light-blue-color;
+$primary-quiet: $secondary-color;
 
 // font colors
 
@@ -23,7 +25,7 @@ $link-visited-color: purple;
 
 // colors for other things
 
-$header-bg: $blue-color;
+$header-bg: $primary-color;
 
 // font families and sizes
 

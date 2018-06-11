@@ -6,12 +6,12 @@ import styles from '../../styles/main.scss';
 
 type Props = { info: Object, role: String };
 
-const StatementDetailCard = ({ info, role }: Props) => {
+const VehicleDetailCard = ({ info, role }: Props) => {
   switch (role) {
     case 'admin':
       return (
-        <div className={styles.StatementDetail}>
-          <h4>Statement Card</h4>
+        <div className={styles.VehicleDetail}>
+          <h4>Vehicle Card</h4>
           <ul>
             <li>Name: {info.name}</li>
             <li>Phone: {info.phone}</li>
@@ -22,8 +22,8 @@ const StatementDetailCard = ({ info, role }: Props) => {
       );
     default:
       return (
-        <div className={styles.StatementDetail}>
-          <h4>Statement Card</h4>
+        <div className={styles.VehicleDetail}>
+          <h4>Vehicle Card</h4>
           <ul>
             <li>Name: {info.name}</li>
             <li>Phone: {info.phone}</li>
@@ -35,4 +35,4 @@ const StatementDetailCard = ({ info, role }: Props) => {
   }
 };
 
-export default StatementDetailCard;
+export default VehicleDetailCard;

@@ -22,6 +22,9 @@ class Logout extends PureComponent<Props>{
     dispatch(logoutUser());
   }
   render() {
+    console.log('Logout props');
+    console.log(this.props);
+    console.log('Logout props');
     return null;
   }
 

@@ -27,7 +27,10 @@ export const setCookie = (name, value, options, res = null) => {
     } else if (res) {
       res.cookie(name, serializedValue);
     }
-
+    console.log('hehe');
+    console.log(name);
+    console.log(serializedValue);
+    console.log('hehe');
     dispatch({
       type: 'SET_COOKIE',
       cookie: {
@@ -42,6 +45,7 @@ export const setCookie = (name, value, options, res = null) => {
 export const setCookies = (cookies, res = null) => dispatch => {
   Object.keys(cookies).forEach(name =>
     dispatch(setCookie(name, cookies[name], {}, res))
+
   );
 };
 

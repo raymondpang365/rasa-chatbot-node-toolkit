@@ -1,11 +1,11 @@
+
 .formWrap {
   position: relative;
   height: 50px;
-  width: 250px;
-  margin: 5px auto 20px 0;
+  width: 300px;
 
   label {
-    color: $blue-color;
+    color: $third-color;
     position: absolute;
     top: 25px;
     font-size: 1em;
@@ -16,13 +16,13 @@
     display: block;
     border: 0;
     float: none;
-    border-top: 1px solid $blue-color;
+    border-top: 1px solid $third-color;
     margin: 0;
     padding: 0;
   }
 
   .validColor{
-    color: $blue-color;
+    color: $third-color;
   }
 
   .invalidColor{
@@ -31,7 +31,7 @@
 
 
   .active.valid + hr {
-    @include active_hr ($blue-color);
+    @include active_hr ($third-color);
   }
 
   .active.invalid + hr {
@@ -39,7 +39,7 @@
   }
 
   .active.valid label{
-    @include active_label ($blue-color);
+    @include active_label ($third-color);
   }
 
   .active.invalid label {
@@ -61,6 +61,14 @@
     background: transparent;
     font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
     transition: all 0.5s ease;
+  }
+
+  input, select, textarea{
+    color: #fff;
+  }
+
+  textarea:focus, input:focus {
+    color: #fff;
   }
 
   .active input {
@@ -121,7 +129,7 @@
     bottom: 5px;
     right: 16px;
     visibility: visible;
-    background-color: $blue-color;
+    background-color: $third-color;
     transform-origin: inherit;
     transform: rotate(40deg);
     transition: bottom 0.4s ease, transform 0.4s ease 0.3s;
@@ -131,7 +139,7 @@
     bottom: 5px;
     height: 8px;
     visibility: visible;
-    background-color: $blue-color;
+    background-color: $third-color;
     transform-origin: inherit;
     transform: rotate(-45deg);
     transition: bottom 0.4s ease, visibility 0.4s ease 0.3s, transform 0.4s ease 0.3s;
@@ -154,6 +162,14 @@
     transition: bottom 0.4s ease, visibility 0.4s ease 0.3s, transform 0.4s ease 0.3s;
   }
 
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus{
+    border: none;
+    -webkit-text-fill-color: darken(yellow, 10);
+    -webkit-box-sizing: content-box;
+    transition: background-color 5000s ease-in-out 0s;
+  }
 }
 
 

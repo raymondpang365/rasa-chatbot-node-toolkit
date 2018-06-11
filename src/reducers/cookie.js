@@ -17,6 +17,9 @@ if (process.env.BROWSER) {
 export default (state: State = initCookies, action: Action) => {
   switch (action.type) {
     case 'SET_COOKIE': {
+      console.log('haha');
+      console.log(action.cookie);
+      console.log('haha');
       return {
         ...state,
         [action.cookie.name]: action.cookie.value

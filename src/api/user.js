@@ -1,13 +1,13 @@
 export default apiEngine => ({
   list: ({ page }) => apiEngine.get('/api/users', { params: { page } }),
-  register: user => apiEngine.post('/api/users', { data: user }),
+  emailRegister: user => apiEngine.post('/api/users', { data: user }),
   verifyEmail: ({ token }) =>
     apiEngine.post('/api/users/email/verify', {
       data: { verifyEmailToken: token }
     }),
   requestVerifyEmail: form =>
     apiEngine.post('/api/users/email/request-verify', { data: form }),
-  login: user => apiEngine.post('/api/users/login', { data: user }),
+  emailLogin: user => apiEngine.post('/api/users/emaillogin', { data: user }),
 
   appSocialLogin: facebookToken =>
     apiEngine.post('/auth/facebook/native', { data: facebookToken }),

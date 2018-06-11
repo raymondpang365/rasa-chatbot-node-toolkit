@@ -9,8 +9,8 @@
     </database>
     <schema id="3" parent="2" name="public">
       <ObjectId>2200</ObjectId>
-      <IntrospectionTimestamp>2018-05-31.09:02:05.557</IntrospectionTimestamp>
-      <IntrospectionStateNumber>832</IntrospectionStateNumber>
+      <IntrospectionTimestamp>2018-06-10.02:39:18.016</IntrospectionTimestamp>
+      <IntrospectionStateNumber>1062</IntrospectionStateNumber>
       <Current>1</Current>
       <Visible>1</Visible>
     </schema>
@@ -67,7 +67,7 @@
     </table>
     <table id="17" parent="3" name="user_info">
       <ObjectId>16417</ObjectId>
-      <StateNumber>832</StateNumber>
+      <StateNumber>1062</StateNumber>
     </table>
     <column id="18" parent="13" name="address">
       <Position>1</Position>
@@ -307,13 +307,13 @@
     </column>
     <column id="62" parent="17" name="verify_email_nonce">
       <Position>25</Position>
-      <DataType>integer|0</DataType>
-      <StateNumber>831</StateNumber>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>1061</StateNumber>
     </column>
     <column id="63" parent="17" name="reset_password_nonce">
       <Position>26</Position>
-      <DataType>integer|0</DataType>
-      <StateNumber>832</StateNumber>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>1062</StateNumber>
     </column>
     <index id="64" parent="17" name="user_id_uindex">
       <ObjectId>16433</ObjectId>

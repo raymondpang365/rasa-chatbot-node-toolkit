@@ -1,8 +1,10 @@
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 import { setCookie } from './cookie';
 
-export const redirect = path => dispatch => {
+const redirect = path => dispatch => {
   dispatch(setCookie('redirect', path));
   dispatch(push(path));
 };
+
+export default redirect;
 

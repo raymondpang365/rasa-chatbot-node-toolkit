@@ -1,5 +1,8 @@
 @import '../abstracts/variables';
 
 .login{
+  position: fixed;
+  top: 10%;
+
   @extend .siteContent;
 }

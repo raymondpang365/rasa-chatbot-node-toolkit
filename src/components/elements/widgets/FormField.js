@@ -85,6 +85,7 @@ class FormField extends PureComponent {
           <input
             type={type}
             name={name}
+            spellCheck="false"
             autoComplete="off"
             onBlur={this.handleInputBlur}
             onFocus={this.handleInputFocus}

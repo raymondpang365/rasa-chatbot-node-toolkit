@@ -1,8 +1,8 @@
 /* @flow */
 
-import StatementListCard from './StatementListCard';
-import StatementDetailCard from './StatementDetailCard';
+import VehicleListCard from './VehicleListCard';
+import VehicleDetailCard from './VehicleDetailCard';
 import ErrorDisplay from './ErrorDisplay';
 import Loading from './Loading';
 
-export { StatementListCard, StatementDetailCard, ErrorDisplay, Loading };
+export { VehicleListCard, VehicleDetailCard, ErrorDisplay, Loading };

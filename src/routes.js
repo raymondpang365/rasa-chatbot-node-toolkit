@@ -3,14 +3,15 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 
-import { fetchStatementIfNeeded } from './actions/statement';
-import { fetchStatementsIfNeeded } from './actions/statements';
+import { fetchVehicleIfNeeded } from './actions/vehicle';
+import { fetchVehiclesIfNeeded } from './actions/vehicles';
 import {
   App,
   asyncHome,
   asyncLogin,
-  asyncStatementDetail,
-  asyncStatementList,
+  asyncRegister,
+  asyncVehicleDetail,
+  asyncVehicleList,
   asyncLogout,
   NotFound
 } from './containers';
@@ -30,23 +31,28 @@ export default [
         component: asyncLogin,
       },
       {
+        path: '/user/register',
+        exact: true,
+        component: asyncRegister,
+      },
+      {
         path: '/user/logout',
         component: asyncLogout
       },
       {
-        path: '/StatementDetail/:id',
-        component: asyncStatementDetail,
-        loadData: ({ params }: Object) => [fetchStatementIfNeeded(params.id)]
+        path: '/VehicleDetail/:id',
+        component: asyncVehicleDetail,
+        loadData: ({ params }: Object) => [fetchVehicleIfNeeded(params.id)]
       },
       {
-        path: '/statement',
+        path: '/vehicle',
         exact: true,
-        component: () => <Redirect to="/statement/page/1" />
+        component: () => <Redirect to="/vehicle/page/1" />
       },
       {
-        path: '/statement/page/:id',
-        component: asyncStatementList,
-        loadData: ({ params }: Object) => [fetchStatementsIfNeeded(params.id)]
+        path: '/vehicle/page/:id',
+        component: asyncVehicleList,
+        loadData: ({ params }: Object) => [fetchVehiclesIfNeeded(params.id)]
       },
       {
         component: NotFound

@@ -1,7 +1,6 @@
 import passport from 'passport';
-import { Strategy as JwtStrategy } from 'passport-jwt';
 import FacebookStrategy from 'passport-facebook';
-import { jwtExtractor, genAccessToken, genRefreshToken } from '../utils/tokenHelper'
+import { genAccessToken, genRefreshToken } from '../utils/tokenHelper'
 import { passportStrategy, jwt } from '../../config/index';
 import p from '../utils/agents';
 
@@ -85,7 +84,7 @@ export default (req, res, next) => {
             const lastIdStr = `${lastId}`;
             const pad = (`U00000000`).slice(0, -lastIdStr.length);
             const session_id = uuidv4();
-            const refresh_token = genRefreshToken(session_id);
+            const refresh_token = genRefreshToken({ session_id });
             const user_id = `${pad}${lastIdStr}`;
             return Promise.all([
               p.query(
@@ -116,7 +115,7 @@ export default (req, res, next) => {
       const user = userFound[0];
       const { user_id } = user;
       const session_id = uuidv4();
-      const refresh_token = genRefreshToken(session_id);
+      const refresh_token = genRefreshToken({ session_id });
       Promise.all([
         p.query(
         "UPDATE user_info SET last_login_time=CURRENT_TIMESTAMP WHERE user_id=$1 " +

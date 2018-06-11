@@ -344,7 +344,7 @@ The starter supports CSS, SASS and [CSS modules](https://github.com/css-Modules/
 With CSS modules:
 
 ```javascript
-import styles from StatementList.scss;
+import styles from VehicleList.scss;
 
 // ...
 

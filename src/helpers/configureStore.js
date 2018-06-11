@@ -1,6 +1,6 @@
 /* @flow */
 
-import { routerMiddleware } from 'react-router-redux';
+import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 
@@ -23,7 +23,9 @@ export default (history: Object, initialState: Object = {}): Store => {
     applyMiddleware(...middlewares)
     // Add other enhancers here
   );
-  const store = createStore(rootReducer, initialState, enhancers);
+
+
+  const store = createStore(connectRouter(history)(rootReducer), initialState, enhancers);
 
   if (module.hot) {
     // Enable Webpack hot module replacement for reducers

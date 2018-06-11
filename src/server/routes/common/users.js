@@ -1,7 +1,7 @@
 import configs from '../../../config';
 import Roles from '../../../constants/Roles';
 import bodyParser from '../../middlewares/bodyParser';
-import { jwtAuthRequired } from '../../middlewares/jwtAuth';
+import { jwtAuth } from '../../middlewares/jwtAuth';
 import roleRequired from '../../middlewares/roleRequired';
 import validate from '../../middlewares/validate';
 import fileUpload from '../../middlewares/fileUpload';
@@ -14,7 +14,7 @@ export default app => {
     '/api/users',
     bodyParser.json,
     validate.recaptcha,
-    userController.emailCreate
+    userController.emailRegister
   );
 
   app.post(
@@ -31,7 +31,7 @@ export default app => {
     validate.recaptcha,
     userController.emailSetNonce('verifyEmail')
   );
-  app.post('/api/users/login', bodyParser.json, userController.emailLogin);
+  app.post('/api/users/emaillogin', bodyParser.json, userController.emailLogin);
   app.post(
     '/api/users/password/request-reset',
     bodyParser.json,
@@ -50,36 +50,36 @@ export default app => {
   // jwt required for the following:
   app.get(
     '/api/users/',
-    jwtAuthRequired,
+    jwtAuth,
     roleRequired([Roles.ADMIN]),
     userController.list
   );
 
-  app.get('/api/users/logout', userController.logout);
-  app.get('/api/users/me', jwtAuthRequired, userController.readSelf);
+  app.get('/api/users/logout', jwtAuth, userController.logout);
+  app.get('/api/users/me', jwtAuth, userController.readSelf);
   app.put(
     '/api/users/me',
-    jwtAuthRequired,
+    jwtAuth,
     bodyParser.json,
     validate.form('user/EditForm'),
     userController.update
   );
   app.put(
     '/api/users/me/avatarURL',
-    jwtAuthRequired,
+    jwtAuth,
     bodyParser.json,
     userController.updateAvatarURL
   );
   app.put(
     '/api/users/me/password',
-    jwtAuthRequired,
+    jwtAuth,
     bodyParser.json,
     validate.form('user/ChangePasswordForm'),
     userController.emailUpdatePassword
   );
   app.post(
     '/api/users/me/avatar',
-    jwtAuthRequired,
+    jwtAuth,
     fileUpload
       .disk({
         destination: 'tmp/{userId}',

@@ -1,6 +1,128 @@
-
-
-
 .Home {
   padding: 20px 15px;
 }
+
+.homeBg {
+  background-attachment: fixed;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://cdn.pixabay.com/photo/2017/09/09/18/24/driving-2732934_1280.jpg');
+  background-position: center;
+  background-size: cover;
+  color: #fff;
+}
+
+.mainContent {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.hover_wrap {
+  max-width:1400px;
+  width:100%;
+  margin:0 auto;
+  display:flex;
+  height:100vh;
+  align-items:center;
+  position:relative;
+}
+
+.flex{
+  position: absolute;
+  width: 100%;
+  top: 200px;
+  display: flex;
+}
+
+.half {
+  width:50%;
+  height:425px;
+
+  @media only screen and (max-width: 992px) {
+    height:250px;
+  }
+
+  display: flex;
+  padding-left:25px;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  flex-direction:column;
+  transition:all 0.75s;
+  position:relative;
+  background-position:center;
+  background-size:cover;
+  background-repeat:no-repeat;
+  background-image:url('https://cdn.pixabay.com/photo/2017/09/09/18/24/driving-2732934_1280.jpg');
+
+  &:nth-of-type(2) {
+    // second backg
+    background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkDJ5Cm0vyNRSrK1pw3Hlo9cC-AuhHlVDg0DnLewFWVN5zM3hZ');
+  }
+
+  h2 {
+    font-weight:400;
+    letter-spacing:0;
+    font-size:2.25rem;
+    margin:0;
+    transition:all 2s;
+
+    @media only screen and (max-width: 992px) {
+      font-size:1.875rem;
+    }
+  }
+
+  .btn_more {
+    border:1px solid #fff;
+    max-width:125px;
+    width:100%;
+    height:45px;
+    display: flex;
+    align-items:center;
+    justify-content:center;
+    margin:10px;
+    text-transform:uppercase;
+    font-size:0.9rem;
+    font-weight:500;
+    letter-spacing:1px;
+    transition:all 0.75s;
+  }
+
+  .overlay {
+    position:absolute;
+    z-index:2;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background-color:#000;
+    opacity:0.3;
+  }
+
+  .half_content {
+    position:relative;
+    z-index:5;
+    color:#fff;
+    display: flex;
+    flex-direction:column;
+    align-items:center;
+    max-width:400px;
+  }
+
+  &:hover {
+    width:75%;
+    background-color:black;
+    background-size: cover;
+
+    h2 {
+      letter-spacing:2.5px;
+    }
+
+    .btn_more {
+      background:#fff;
+      color:#000;
+      margin:40px 0;
+    }
+  }
+}
+

@@ -15,7 +15,7 @@ export type UserInfo = {
   }
 };
 
-export type Statement = {
+export type Vehicle = {
   +[productId: string]: {
     +readyStatus: string,
     +err: any,
@@ -23,7 +23,7 @@ export type Statement = {
   }
 };
 
-export type StatementList = {
+export type VehicleList = {
   +readyStatus: string,
   +err: any,
   +list: Array<Object>
@@ -61,12 +61,12 @@ export type Action =
   | { type: 'USER_REQUESTING', userId: string }
   | { type: 'USER_SUCCESS', userId: string, data: Object }
   | { type: 'USER_FAILURE', userId: string, err: any }
-  | { type: 'STATEMENTS_REQUESTING' }
-  | { type: 'STATEMENTS_SUCCESS', data: Array<Object> }
-  | { type: 'STATEMENTS_FAILURE', err: any }
-  | { type: 'STATEMENT_REQUESTING', statementId: string }
-  | { type: 'STATEMENT_SUCCESS', statementId: string, data: Object }
-  | { type: 'STATEMENT_FAILURE', statementId: string, err: any };
+  | { type: 'VEHICLES_REQUESTING' }
+  | { type: 'VEHICLES_SUCCESS', data: Array<Object> }
+  | { type: 'VEHICLES_FAILURE', err: any }
+  | { type: 'VEHICLE_REQUESTING', vehicleId: string }
+  | { type: 'VEHICLE_SUCCESS', vehicleId: string, data: Object }
+  | { type: 'VEHICLE_FAILURE', vehicleId: string, err: any };
 
 export type Dispatch = (
   action: Action | ThunkAction | PromiseAction | Array<Action>

@@ -6,16 +6,16 @@ import { Link } from 'react-router-dom';
 
 import styles from '../../styles/main.scss';
 
-const StatementListCard = (
+const VehicleListCard = (
   key: number,
   onRemoveClick,
   onSaveClick,
   name: string
 ) => (
-  <div className={styles.StatementListCard}>
+  <div className={styles.VehicleListCard}>
     <li key={key}>
-      <Link to={`/StatementInfo/${key}`}>{name}</Link>
+      <Link to={`/VehicleInfo/${key}`}>{name}</Link>
     </li>
   </div>
 );
-export default StatementListCard;
+export default VehicleListCard;

@@ -25,15 +25,28 @@ a {
   color: inherit;
 }
 
+.bgContainerFull {
+  height: 100%;
+
+  @extend .container;
+  @extend .homeBg;
+}
+
+.bgContainer {
+  height: 200px;
+
+  @extend .container;
+  @extend .homeBg;
+}
+
 .container {
   position:fixed;
   margin:0;
   top:0;
   left:0;
-  padding: 0 15%;
   width: 100%;
   height: 100%;
-  display: block;
+
 }
 
 .siteContent {

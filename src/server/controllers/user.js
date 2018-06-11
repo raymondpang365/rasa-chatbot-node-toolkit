@@ -1,14 +1,17 @@
 import fs from 'fs';
 import path from 'path';
 import mkdirp from 'mkdirp';
-import jsonwebtoken from 'jsonwebtoken';
+import crypto from 'crypto';
 import Errors from '../../constants/Errors';
 import { loginUser } from '../../actions/user';
-import { redirect } from '../../actions/route';
+import redirect from '../../actions/route';
 import { jwt, nodemailer } from '../../config/index';
-import { jwtExtractor, genAccessToken, genRefreshToken } from '../utils/tokenHelper'
+import {  genAccessToken, genRefreshToken } from '../utils/tokenHelper'
+
 import p from '../utils/agents';
 import paginate from '../utils/paginate'
+
+const uuidv4 = require('uuid/v4');
 
 const appName = process.env.APP_NAME || "HopeMd";
 
@@ -24,21 +27,50 @@ const hashPassword = (rawPassword = '') => {
   return rawPassword;
 };
 
+const randomValueHex = (len) =>
+  crypto.randomBytes(Math.ceil(len/2))
+    .toString('hex') // convert to hexadecimal format
+    .slice(0,len).toUpperCase();   // return required number of characters
+
 
 export default {
 
-  emailCreate: (req, res, next) => {
-    p.query('SELECT * FROM user_info where email = $1', req.body.email)
+  emailRegister: (req, res, next) => {
+    console.log("email register");
+    p.query('SELECT * FROM user_info where email = $1', [req.body.email])
       .then(results => {
-        const user = results.rows[0];
-        if (user) {
+        if (results.rowCount > 0) {
+          console.log("user existed");
           throw Errors.USER_EXISTED;
         } else {
-          return p.query("INSERT INTO user_info ('name', 'email', 'password', 'verify_email_nonce') " +
-            "VALUES ($1, $2, $3, $4)",
-            [req.body.name, req.body.email, req.body.password, Math.random()]);
+          return Promise.all([hashPassword(req.body.password),randomValueHex(6)]);
         }
-      }).then( result => {
+      }).then( results =>
+         p.transaction(conn =>
+          p.query("INSERT INTO user_info (display_name, email, password, verify_email_nonce) " +
+            "VALUES ($1, $2, $3, $4) RETURNING id",
+            [ req.body.name, req.body.email, results[0], results[1] ])
+            .then(insertResult => {
+              const lastId = insertResult.rows[0].id;
+              const lastIdStr = `${lastId}`;
+              const pad = (`U00000000`).slice(0, -lastIdStr.length);
+              const session_id = uuidv4();
+              const refresh_token = genRefreshToken({ session_id });
+              const user_id = `${pad}${lastIdStr}`;
+              return Promise.all([
+                p.query(
+                  "UPDATE user_info SET user_id = $1 WHERE id = $2 RETURNING user_id",
+                  [user_id, lastId]),
+                p.query(
+                  "INSERT INTO session (user_id, session_id, refresh_token ,login_time, create_time ) " +
+                  "VALUES ($1, $2, $3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) " +
+                  "RETURNING session_id, refresh_token",
+                  [user_id, session_id, refresh_token])
+              ]);
+            })
+        )
+    ).then( result => {
+        console.log(result);
         const _user = result.rows[0];
         req.user = _user;
         if (!nodemailer) {
@@ -46,9 +78,53 @@ export default {
         }
         return next();
       }).catch( err => {
+        console.log(err);
         res.pushError(err);
-        res.error();
+        res.errors();
     })
+  },
+
+  emailLogin: (req, res) => {
+    console.log("email login");
+    p.query('SELECT * FROM user_info where email = $1', [req.body.email])
+      .then(result => {
+        if (result.rowCount === 0) {
+          console("no user found");
+          res.status(401).json({status: 401, isAuth: false});
+        }
+        else if(result.rows[0].password === hashPassword(req.body.password)) {
+          const {user_id} = result.rows[0];
+          const session_id = uuidv4();
+          const refresh_token = genRefreshToken({session_id});
+          return Promise.all([
+            p.query(
+              "UPDATE user_info SET last_login_time=CURRENT_TIMESTAMP WHERE user_id=$1 " +
+              "RETURNING last_login_time",
+              [user_id]
+            ),
+            p.query(
+              "INSERT INTO session (user_id, session_id, refresh_token, login_time, create_time ) " +
+              "VALUES ($1, $2, $3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) " +
+              "RETURNING user_id, session_id",
+              [user_id, session_id, refresh_token])
+          ]);
+        }
+        else{
+          console.log("wrong password");
+          res.status(401).json({status: 401, isAuth: false});
+        }
+      }).then(results => {
+        const { user_id, session_id } = results[1].rows[0];
+        const access_token = genAccessToken({ user_id, session_id });
+        console.log('case 2');
+        const info = { user_id, session_id };
+        const data = {token: access_token, info};
+        res.status(200).json({status: 200, isAuth: true, ...data});
+      }).catch(err => {
+        console.log(err);
+        res.pushError(err);
+        res.errors();
+      })
   },
 
   verifyEmail: (req, res) => {
@@ -64,41 +140,11 @@ export default {
       })
       .catch(err => {
         res.pushError(err);
-        res.error();
+        res.errors();
       });
   },
 
-  emailLogin: (req, res) => {
-    p.query('SELECT * FROM user_info where email = $1', [req.body.email])
-      .then(result => {
-        const user = result.rows[0];
-        if (!user) {
-          res.status(200).json({status: 200, isAuth: false});
-        }
-        else if(user.password === hashPassword(req.body.password)) {
-            const token = genAccessToken({
-              _id: this._id,
-              name: this.name,
-              email: this.email
-            });
-            p.query("UPDATE user_info SET last_login_time = CURRENT_TIMESTAMP" +
-              "WHERE user_id = $1", [user.user_id])
-              .then(() => {
-                res.status(200).json({status: 200, data: {isAuth: true, token, user}});
-              })
-              .catch(err => {
-                res.pushError(err);
-                res.error();
-              })
-        }
-        else {
-          res.status(200).json({status: 200, isAuth: false});
-        }
-    }).catch(err => {
-      res.pushError(err);
-      res.error();
-    })
-  },
+
 
   emailSetNonce: (nonceKey) => (req, res, next) => {
 
@@ -113,7 +159,7 @@ export default {
       })
       .catch( err => {
         res.pushError(err);
-        res.error();
+        res.errors();
       });
   },
 
@@ -123,11 +169,14 @@ export default {
       return res.redirect(`${appName}://login?user=${JSON.stringify(req.user)}`)
     }
     else {
+      console.log(req);
       const { user } = req;
       const { token, info } = user;
       delete user.token;
+      console.log('super bibibo');
       req.store.dispatch(loginUser({ token, info }, res));
-      req.store.dispatch(redirect(state.next || '/'));
+      res.redirect(state.next || '/');
+      console.log('ultimate bibibo');
       return next();
     }
   },
@@ -138,7 +187,7 @@ export default {
     const {user} = req;
     if(req.body === null){
       res.pushError(Errors.INVALID_DATA);
-      res.error();
+      res.errors();
     }
     p.query('SELECT user_password FROM user_info WHERE user_id', user.user_id)
       .then(result => {
@@ -171,8 +220,9 @@ export default {
           originAttributes: req.body,
           user: _user
         });
-      }).catch(()=>{
-
+      }).catch(err=>{
+        res.pushError(err);
+        res.errors();
       });
   },
 
@@ -190,18 +240,14 @@ export default {
   },
 
   logout(req, res) {
-    p.query('UPDATE session SET refresh_token = null WHERE session_id = ?',
-      [req.jwtPayload.session_id]
+    console.log(res.locals.decoded);
+    p.query('DELETE FROM session WHERE session_id = $1',
+      [res.locals.decoded.session_id]
     ).then(results => {
-      if (results.affectedRows !== 1){
-        throw Errors.DB_OPERATION_FAIL;
-      }
-      else{
-        req.logout();
-        res.status(200).json({status: 200, data: results});
-      }
+      req.logout();
+      res.status(200).json({status: 200, data: results});
     }).catch(err => {
-      res.pushError(Errors.DB_OPERATION_FAIL);
+      res.pushError(err);
       res.errors();
     });
   },

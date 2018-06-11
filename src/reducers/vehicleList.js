@@ -2,30 +2,30 @@
 
 import fp from 'lodash/fp';
 
-import type { StatementList, Action } from '../types';
+import type { VehicleList, Action } from '../types';
 
-type State = StatementList;
+type State = VehicleList;
 
 const initialState = {
-  readyStatus: 'STATEMENTS_INVALID',
+  readyStatus: 'VEHICLES_INVALID',
   err: null,
   list: []
 };
 
 export default (state: State = initialState, action: Action): State => {
   switch (action.type) {
-    case 'STATEMENTS_REQUESTING':
+    case 'VEHICLES_REQUESTING':
       return fp.assign(state, {
-        readyStatus: 'STATEMENTS_REQUESTING'
+        readyStatus: 'VEHICLES_REQUESTING'
       });
-    case 'STATEMENTS_FAILURE':
+    case 'VEHICLES_FAILURE':
       return fp.assign(state, {
-        readyStatus: 'STATEMENTS_FAILURE',
+        readyStatus: 'VEHICLES_FAILURE',
         err: action.err
       });
-    case 'STATEMENTS_SUCCESS':
+    case 'VEHICLES_SUCCESS':
       return fp.assign(state, {
-        readyStatus: 'STATEMENTS_SUCCESS',
+        readyStatus: 'VEHICLES_SUCCESS',
         list: action.data
       });
     default:

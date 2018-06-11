@@ -37,9 +37,10 @@ export default {
         validatedKits = paginate(validatedKits, req.query.page, req.query.limit);
       }
       res.json({status: 200, data: validatedKits });
-    }).catch(errors =>
-      res.json({status: 400, errors})
-    );
+    }).catch(error => {
+      res.pushError(error)
+      res.error();
+    });
   },
 
   checkLatest(req, res){
@@ -133,8 +134,8 @@ export default {
           kit: _kit
         });
       })
-      .catch( (err) => {
-        res.pushError(Errors.ODM_OPERATION_FAIL);
+      .catch( err => {
+        res.pushError(err);
         res.errors();
       });
   },

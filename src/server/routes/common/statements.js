@@ -1,10 +1,10 @@
-import statementController from '../../controllers/test';
+import vehicleController from '../../controllers/test';
 import bodyParser from '../../middlewares/bodyParser';
-import { jwtAuthRequired } from '../../middlewares/jwtAuth';
+import { jwtAuth } from '../../middlewares/jwtAuth';
 
 export default app => {
-  app.get('/api/tests', statementController.list);
-  app.post('/api/tests', jwtAuthRequired, bodyParser.json, statementController.create);
-  app.put('/api/statements/:id', jwtAuthRequired, bodyParser.json, statementController.update);
-  app.delete('/api/statements/:id', jwtAuthRequired, statementController.remove);
+  app.get('/api/tests', vehicleController.list);
+  app.post('/api/tests', jwtAuth, bodyParser.json, vehicleController.create);
+  app.put('/api/vehicles/:id', jwtAuth, bodyParser.json, vehicleController.update);
+  app.delete('/api/vehicles/:id', jwtAuth, vehicleController.remove);
 };

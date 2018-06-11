@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 import { compose } from 'redux';
 import { Form, Field } from 'react-final-form';
 import { connect } from 'react-redux';
@@ -10,8 +10,7 @@ import { Link, withRouter } from 'react-router-dom';
 import type { Connector } from 'react-redux';
 import styles from '../../../styles/main.scss'
 import type { ReduxState } from '../../../types';
-import { loginUser } from'../../../actions/user';
-import userAPI from '../../../api/user'
+import { loginUser, emailLogin } from'../../../actions/user';
 import { pushErrors } from '../../../actions/error';
 import SocialAuthButtonList from '../../../components/utils/SocialAuthButtonList';
 
@@ -26,49 +25,54 @@ const validEmail = value => {
 
 const required = value => (value ? undefined : "Required");
 
-
-const onSubmit = async values => {
-  const{ dispatch, apiEngine, change } = this.props;
-    userAPI(apiEngine)
-      .login(values)
-      .catch((err) => {
-        dispatch(pushErrors(err));
-        throw err;
-      })
-      .then(json => {
-        if (json.isAuth) {
-          // redirect to the origin path before logging in
-          const { next } = this.props.routing.locationBeforeTransitions.query;
-
-          window.alert("LOGIN SUCCESS!");
-
-          dispatch(loginUser({
-            token: json.token,
-            data: json.user,
-          }));
-          dispatch(push(next || '/'));
-          return json;
-        } else {
-          change('password', '');
-          return { [FORM_ERROR]: "Login failed. You may type wrong email or password." };
-        }
-      });
-};
-
-
-
-
-
 const composeValidators = (...validators) => value =>
   validators.reduce((error, validator) => error || validator(value), undefined);
 
 type Props = {};
 
 class Login extends PureComponent<Props> {
+
+  onSubmit(values){
+    console.log(this);
+    const{ dispatch, apiEngine } = this.props;
+    /*
+    userAPI(apiEngine)
+      .login(values)
+      */
+    dispatch(emailLogin(values))
+      .catch((err) => {
+        dispatch(pushErrors(err));
+        throw err;
+      })
+      .then(json => {
+        console.log(json);
+        const { data } = json;
+        if (data.isAuth) {
+          // redirect to the origin path before logging in
+          console.log(this.props);
+          // const { next } = this.props.routing.locationBeforeTransitions.query;
+
+          console.log("LOGIN SUCCESS!");
+
+          dispatch(loginUser({
+            token: data.token,
+            info: data.info,
+          }));
+          dispatch(push('/'));
+          return data;
+        } else {
+          // change('password', '');
+          return { [FORM_ERROR]: "Login failed. You may type wrong email or password." };
+        }
+      });
+  };
+
   render() {
+    console.log('Login props:');
+    console.log(this.props);
     return (
       <div className={styles.login}>
-        <div className={styles.container}>
+        <div className={styles.bgContainerFull}>
           <div className={styles.login}>
             <div className={styles.loginForm}>
               <Helmet title='Login' />
@@ -80,7 +84,7 @@ class Login extends PureComponent<Props> {
                 </alert>
               )}
               <Form
-                onSubmit={onSubmit}
+                onSubmit={this.onSubmit.bind(this)}
                 render={({
                    handleSubmit,
                    submitError,
@@ -98,6 +102,7 @@ class Login extends PureComponent<Props> {
                          validate={composeValidators(validEmail, required)}
                          hintText="Email"
                          type="email"
+                         spellcheck="false"
                          floatingLabelText="Email :"
                        />
                        <Field
@@ -106,21 +111,31 @@ class Login extends PureComponent<Props> {
                          validate={composeValidators(required)}
                          type="password"
                          hintText="Password"
+                         spellcheck="false"
                          floatingLabelText="Password :"
                        />
                        {submitError && <div className="error">{submitError}</div>}
                      </div>
+
                      <button className={styles.loginButton}>
-                       Login
+                        Login with Email
                      </button>
+                     <br />
+
+                     <Link className={styles.loginFormText} to="/user/register">
+                       Create an account
+                     </Link>
+                     <text className={styles.loginFormTextSeparator} >|</text>
                      <Link className={styles.loginFormText} to="/user/password/forget">
-                       Forget password?
+                       Forget password
                      </Link>
 
                    </form>
                 )}
               />
-              <SocialAuthButtonList routing={this.props.routing} />
+              <br />
+              <hr className={styles.orSeparator} />
+              <SocialAuthButtonList routing={this.props.routing} prependText="Login" />
             </div>
 
           </div>

@@ -1,14 +1,14 @@
 import { schema } from 'normalizr';
 
-export const statementSchema = new schema.Entity(
-  'statements',
+export const vehicleSchema = new schema.Entity(
+  'vehicles',
   {},
   {
     idAttribute: '_id'
   }
 );
 
-export const arrayOfStatement = new schema.Array(statementSchema);
+export const arrayOfVehicle = new schema.Array(vehicleSchema);
 
 export const userSchema = new schema.Entity(
   'users',

@@ -3,32 +3,65 @@
 @import '../base/typography';
 
 .loginForm {
-  margin: 20px;
-  padding: 20px;
-  display: flex;
+  position: relative;
+  float: right;
+  margin: 20px 20px;
+  right: 300px;
+  padding: 5px 20px;
   width: 300px;
   flex-wrap: wrap;
-  background-color: lighten($main-background, 20);
-  border: 3px solid $light-blue-color;
+  vertical-align: middle;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 3px solid $secondary-color;
   border-radius: 1em;
 }
 
-.loginButton {
-  @extend .btnBlue;
 
-  width: 250px;
+.loginButton {
+  @extend .loginButtonBox;
+
+
+  width: 85%;
   display: block;
   padding:3px 5px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+  background-color: $third-color;
+  font-size: 0.5em;
 }
 
 .loginFormTitle {
   width: 80px;
   font-size: 1em;
-  color: $blue-color;
+  color: $third-color;
+  font-weight: 900;
 }
 
 .loginFormText {
-  color: $grey-text-color;
+  color: rgb(240, 240, 240);
+  text-decoration: underline;
+  vertical-align: middle;
 
   @extend .small;
 }
+
+.alignCenter{
+  align-content: center;
+}
+
+.loginFormTextSeparator {
+  margin: 0 20px;
+  vertical-align: middle;
+
+  @extend .loginFormText;
+  @extend .small;
+}
+
+.orSeparator {
+  display: block;
+  margin: 0 -20px;
+  border: 0;
+  border-top: 3px solid $secondary-color;
+}
+

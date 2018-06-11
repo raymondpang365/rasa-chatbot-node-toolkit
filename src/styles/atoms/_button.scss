@@ -31,7 +31,7 @@
 .btnBlue {
   @extend .btn;
 
-  @include button-bg($blue-color);
+  @include button-bg($primary-color);
 }
 
 .btnYellow{

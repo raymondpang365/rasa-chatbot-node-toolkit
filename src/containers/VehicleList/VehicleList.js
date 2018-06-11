@@ -6,33 +6,33 @@ import { connect } from 'react-redux';
 import type { Connector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { hot } from 'react-hot-loader';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 import ErrorList from '../../components/utils/ErrorList';
 import {
-  createStatement,
-  updateStatement,
-  removeStatement,
-  fetchStatements,
-  fetchStatementsIfNeeded
-} from '../../actions/statements';
+  createVehicle,
+  updateVehicle,
+  removeVehicle,
+  fetchVehicles,
+  fetchVehiclesIfNeeded
+} from '../../actions/vehicles';
 import { setCrrentPage } from '../../actions/page';
-import StatementListCard from '../../components/StatementListCard/index';
+import VehicleListCard from '../../components/VehicleListCard/index';
 import InfiniteScroll from '../../components/utils/InfiniteScroll';
 import styles from '../../styles/main.scss'
 
 import type {
-  StatementList as StatementListType,
+  VehicleList as VehicleListType,
   Dispatch,
   ReduxState
 } from '../../types/index';
 
 type Props = {
-  statementList: StatementListType,
-  fetchStatementsIfNeeded: () => void
+  vehicleList: VehicleListType,
+  fetchVehiclesIfNeeded: () => void
 };
 
 
-class StatementList extends PureComponent {
+class VehicleList extends PureComponent {
 
   constructor(props) {
     super(props);
@@ -48,31 +48,31 @@ class StatementList extends PureComponent {
   }
 
   componentDidMount() {
-    this.props.fetchStatementsIfNeeded(this.props.match.params.page);
+    this.props.fetchVehiclesIfNeeded(this.props.match.params.page);
     console.log('hello');
   }
 
   _handleAddClick() {
-    const text = this.statementtext.value;
+    const text = this.vehicletext.value;
     console.log(text);
-    this.props.createStatement(text).then(() => {
-      this.statementtext.value = '';
+    this.props.createVehicle(text).then(() => {
+      this.vehicletext.value = '';
     });
 
   }
 
   _handleSaveClick(id, newText) {
-    this.props.updateStatement(id, newText);
+    this.props.updateVehicle(id, newText);
   }
 
   _handleRemoveClick(id) {
-    this.props.removeStatement(id);
+    this.props.removeVehicle(id);
   }
 
   _loadItems(page) {
     const { location } = this.props;
     this.props.setCrrentPage(page);
-    this.props.fetchStatementsIfNeeded(page);
+    this.props.fetchVehiclesIfNeeded(page);
     if (location !== undefined) {
       this.props.push({
         pathname: location.pathname,
@@ -81,27 +81,27 @@ class StatementList extends PureComponent {
     }
   }
 
-  renderStatementList() {
-    const { statementList } = this.props;
+  renderVehicleList() {
+    const { vehicleList } = this.props;
     let loader;
     if (
-      !statementList.readyStatus ||
-      statementList.readyStatus === 'STATEMENTS_INVALID' ||
-      statementList.readyStatus === 'STATEMENTS_REQUESTING'
+      !vehicleList.readyStatus ||
+      vehicleList.readyStatus === 'VEHICLES_INVALID' ||
+      vehicleList.readyStatus === 'VEHICLES_REQUESTING'
     ) {
       loader = <div className="loader">Loading ...</div>;
-    } else if (statementList.readyStatus === 'STATEMENTS_FAILURE') {
+    } else if (vehicleList.readyStatus === 'VEHICLES_FAILURE') {
       loader = <p>Oops, Failed to load items!</p>;
     }
 
     const items = [];
-    this.props.statements.map(statement => {
+    this.props.vehicles.map(vehicle => {
       items.push(
-        <StatementListCard
-          statement={statement._id}
-          onRemoveClick={this.handleRemoveClick(statement._id)}
-          onSaveClick={this.handleSaveClick(statement._id)}
-          name={statement.text}
+        <VehicleListCard
+          vehicle={vehicle._id}
+          onRemoveClick={this.handleRemoveClick(vehicle._id)}
+          onSaveClick={this.handleSaveClick(vehicle._id)}
+          name={vehicle.text}
         />
       );
     });
@@ -130,13 +130,13 @@ class StatementList extends PureComponent {
         <div className={styles.container}>
           <ErrorList />
           <h3 className={styles.h6}>
-            Statement List ({`${page.current} / ${page.total}`})
+            Vehicle List ({`${page.current} / ${page.total}`})
           </h3>
           <input
             disabled={false}
             type="text"
             ref={c => {
-              this.statementtext = c;
+              this.vehicletext = c;
             }}
           />
           <button
@@ -144,43 +144,43 @@ class StatementList extends PureComponent {
             disabled={false}
             onClick={this.handleAddClick}
           >
-            Add Statement
+            Add Vehicle
           </button>
           {page.current !== 1 && (
             <div>The input box is only available for page 1</div>
           )}
-          {this.renderStatementList()}
+          {this.renderVehicleList()}
         </div>
       </div>
     );
   }
 }
 
-const mapStateToProps = ({ location, statementList, pagination, entity }: ReduxState) => {
-  const { page, pages } = pagination.statements;
-  const statementIds = Array.prototype.flatten(
+const mapStateToProps = ({ location, vehicleList, pagination, entity }: ReduxState) => {
+  const { page, pages } = pagination.vehicles;
+  const vehicleIds = Array.prototype.flatten(
     Object
       .keys(pages)
       .map(pageId => pages[pageId].ids)
   );
 
-  const statements =  ("ids" in statementIds) ? statementIds.ids.map(id => entity.statements[id]) : [];
+  const vehicles =  ("ids" in vehicleIds) ? vehicleIds.ids.map(id => entity.vehicles[id]) : [];
 
   return {
     location,
-    statementList,
-    statements,
+    vehicleList,
+    vehicles,
     page
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   push: (pathname, query) => dispatch(push(pathname, query)),
-  createStatement: text => dispatch(createStatement(text)),
-  updateStatement: (id, text) => dispatch(updateStatement(id, text)),
-  removeStatement: id => dispatch(removeStatement(id)),
-  fetchStatementsIfNeeded: () => dispatch(fetchStatementsIfNeeded()),
-  setCrrentPage: page => dispatch(setCrrentPage('STATEMENT', page))
+  createVehicle: text => dispatch(createVehicle(text)),
+  updateVehicle: (id, text) => dispatch(updateVehicle(id, text)),
+  removeVehicle: id => dispatch(removeVehicle(id)),
+  fetchVehiclesIfNeeded: () => dispatch(fetchVehiclesIfNeeded()),
+  setCrrentPage: page => dispatch(setCrrentPage('VEHICLE', page))
 });
 
 const connector: Connector<{}, Props> = connect(
@@ -188,4 +188,4 @@ const connector: Connector<{}, Props> = connect(
   mapDispatchToProps
 );
 
-export default compose(hot(module), withRouter, connector)(StatementList);
+export default compose(hot(module), withRouter, connector)(VehicleList);

@@ -13,12 +13,13 @@
 @import 'base/typography';
 
 // 4. Components
-@import 'components/ErrorDisplay',
+@import 'components/DropdownMenu',
+  'components/ErrorDisplay',
   'components/LoginForm',
   'components/Loading',
   'components/FormField',
-  'components/StatementDetailCard',
-  'components/StatementListCard';
+  'components/VehicleDetailCard',
+  'components/VehicleListCard';
 
 // 5. Atoms
 @import 'atoms/button';
@@ -29,22 +30,48 @@
   'containers/Home',
   'containers/Login',
   'containers/NotFound',
-  'containers/StatementDetail',
-  'containers/StatementList',
+  'containers/VehicleDetail',
+  'containers/VehicleList',
   'containers/UserInfo';
 
 // 7. Layout-related sections
 @import 'layout/header',
   'layout/navMenu';
 
-.btnFacebook {
-  background-color: #3b5998;
+.iconFacebook {
+  display: inline-block;
+  position: relative;
+  right: 20%;
+  align-content: left;
   background-image: url('../../public/facebook.svg');
   background-repeat: no-repeat;
+  z-index: 5;
 }
 
-.btnGoogle {
-  background-color: #dd4b39;
+.iconGoogle {
+  display: inline-block;
+  position: relative;
+  right: 20%;
+  align-content: left;
   background-image: url('../../public/google.svg');
   background-repeat: no-repeat;
+  z-index: 5;
+}
+
+.buttonBoxFB{
+  margin: 30px 0 15px 0;
+  background: url('../../public/facebook.svg') 4px 4px no-repeat;
+  background-color: #3b5998;
+  background-position: left center;
+
+  @extend .loginButtonBox;
+}
+
+.buttonBoxGoogle{
+  margin: 0 0 15px 0;
+  background: url('../../public/google.svg') 4px 4px no-repeat;
+  background-color: #dd4b39;
+  background-position: left center;
+
+  @extend .loginButtonBox;
 }

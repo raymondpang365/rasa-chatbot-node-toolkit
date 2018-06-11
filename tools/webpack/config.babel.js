@@ -29,7 +29,7 @@ const vendor = [
   'react-router-dom',
   'react-router-config',
   'history',
-  'react-router-redux',
+  'connected-react-router',
   'react-helmet',
   'loadable-components',
   'axios'

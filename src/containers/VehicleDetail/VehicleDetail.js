@@ -7,20 +7,20 @@ import type { Connector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { hot } from 'react-hot-loader';
 
-import { fetchStatementIfNeeded } from '../../actions/statement';
+import { fetchVehicleIfNeeded } from '../../actions/vehicle';
 import type {
-  Statement as StatementType,
+  Vehicle as VehicleType,
   Dispatch,
   ReduxState
 } from '../../types/index';
 
 type Props = {
-  statement: StatementType,
+  vehicle: VehicleType,
   match: Object,
-  fetchStatementIfNeeded: (id: string) => void
+  fetchVehicleIfNeeded: (id: string) => void
 };
 
-class StatementDetail extends PureComponent {
+class VehicleDetail extends PureComponent {
   constructor() {
     super();
     this.state = {
@@ -76,15 +76,15 @@ class StatementDetail extends PureComponent {
   }
 
   render() {
-    const { statementDetail, match: { params } } = this.props;
-    const statementDetailById = statementDetail[params.id];
+    const { vehicleDetail, match: { params } } = this.props;
+    const vehicleDetailById = vehicleDetail[params.id];
 
     if (
-      !statementDetailById ||
-      statementDetailById.readyStatus === 'STATEMENT_REQUESTING'
+      !vehicleDetailById ||
+      vehicleDetailById.readyStatus === 'VEHICLE_REQUESTING'
     ) {
       return <p>Loading...</p>;
-    } else if (statementDetailById.readyStatus === 'STATEMENT_FAILURE') {
+    } else if (vehicleDetailById.readyStatus === 'VEHICLE_FAILURE') {
       return <p>Oops, Failed to load detail!</p>;
     }
 
@@ -103,11 +103,11 @@ class StatementDetail extends PureComponent {
 }
 
 const connector: Connector<{}, Props> = connect(
-  ({ statementDetail, role }: ReduxState) => ({ statementDetail, role }),
+  ({ vehicleDetail, role }: ReduxState) => ({ vehicleDetail, role }),
   (dispatch: Dispatch) => ({
-    fetchStatementIfNeeded: (id: string) => dispatch(fetchStatementIfNeeded(id))
+    fetchVehicleIfNeeded: (id: string) => dispatch(fetchVehicleIfNeeded(id))
   })
 );
 
 // Enable hot reloading for async component
-export default compose(hot(module), withRouter, connector)(StatementDetail);
+export default compose(hot(module), withRouter, connector)(VehicleDetail);

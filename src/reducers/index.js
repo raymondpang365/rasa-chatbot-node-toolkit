@@ -7,19 +7,17 @@ import entity from './entity';
 import errors from './error';
 import intl from './intl';
 import pagination from './pagination';
-import statement from './statementDetail';
-import statementList from './statementList';
-import routing from './router';
+import vehicle from './vehicleDetail';
+import vehicleList from './vehicleList';
 
 const reducers = {
   cookies,
   entity,
   errors,
-  statementList,
+  vehicleList,
   intl,
   pagination,
-  statement,
-  routing
+  vehicle
 };
 
 export type Reducers = typeof reducers;

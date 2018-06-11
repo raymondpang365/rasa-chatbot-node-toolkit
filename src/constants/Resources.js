@@ -1,4 +1,4 @@
 export default {
-  STATEMENT: 'STATEMENT',
+  VEHICLE: 'VEHICLE',
   USER: 'USER'
 };

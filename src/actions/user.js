@@ -1,5 +1,5 @@
 import { normalize, arrayOf } from 'normalizr';
-import { push } from 'react-router-redux'
+import { push } from 'connected-react-router'
 import { userSchema } from '../schemas';
 import Resources from '../constants/Resources';
 import { setCookies, removeCookie } from './cookie';
@@ -20,7 +20,31 @@ export const loginUser = ({ token, info }, res = null) => dispatch => {
       res
     )
   );
-}
+};
+
+export const emailLogin = values =>
+  async (dispatch, getState, apiEngine) => {
+    try{
+      const json = await userAPI(apiEngine).emailLogin(values);
+      return json;
+    } catch (err){
+      throw err;
+    }
+  };
+
+
+export const emailRegister = values =>
+  async (dispatch, getState, apiEngine) => {
+    console.log("hello");
+    console.log(values);
+    try{
+      const json = await userAPI(apiEngine).emailRegister(values);
+      return json;
+    } catch (err){
+      throw err;
+    }
+  };
+
 
 export const logoutUser = () =>
   async (dispatch, getState, apiEngine) => {

@@ -4,6 +4,7 @@ import {jwt} from '../../config/index'
 import { jwtExtractor, genAccessToken } from '../utils/tokenHelper'
 import Errors from '../../constants/Errors';
 
+
 export const refreshAccessToken = (req, res, next) => {
 
   p.query('SELECT refresh_token FROM session WHERE session_id = $1',
@@ -17,7 +18,7 @@ export const refreshAccessToken = (req, res, next) => {
           if (err){
             res.pushError(err);
             res.pushError(Errors.USER_UNAUTHORIZED);
-            res.error();
+            res.errors();
           }
           const { user_id, session_id } = decoded;
 
@@ -34,39 +35,46 @@ export const refreshAccessToken = (req, res, next) => {
       )
     }).catch(queryErr => {
       res.pushError(queryErr);
-      res.error();
+      res.errors();
   });
 };
 
-export const jwtAuth = type => (req, res, next) => {
+export const jwtAuth = (req, res, next) => {
 
-  if (type === null) type = "required";
-
+  console.log(req.store.getState());
   jsonwebtoken.verify(
     jwtExtractor(req),
     jwt.accessToken.secret,
+    {
+      ignoreExpiration: true
+    },
     (err, decoded) => {
+      console.log(err);
       if (err) {
-        return (type === "optional") ?
-          next() :
-          () => {
-            res.pushError(err);
-            res.pushError(Errors.USER_UNAUTHORIZED);
-            res.error();
-          }
+        if (res.locals.authType === "optional") {
+          return next()
+        }else {
+
+          res.pushError(err);
+          res.pushError(Errors.USER_UNAUTHORIZED);
+          res.errors();
+        }
       }
-      else if (jwt.exp < Date.now() / 1000) {
+
+      else if (decoded.expiredAt < Date.now()) {
+        console.log("ues");
         res.locals.decoded = decoded;
         return refreshAccessToken(res, req, next);
       }
       else {
+        res.locals.decoded = decoded;
         p.query(
           "SELECT * FROM user_info WHERE user_id= $1",
-          [decoded.userId]
+          [decoded.user_id]
         ).then(results => {
-          if (results.rows.length() === 0) {
+          if (results.rows.rowCount === 0) {
             res.pushError(Errors.USER_UNAUTHORIZED);
-            res.error();
+            res.errors();
           }
           else {
             const user = results.rows[0];
@@ -75,10 +83,15 @@ export const jwtAuth = type => (req, res, next) => {
           }
         }).catch(queryErr => {
           res.pushError(queryErr);
-          res.error();
+          console.log(queryErr);
+          res.errors();
         });
       }
     }
   )
 };
 
+export const jwtAuthOptional = (req, res, next) => {
+  res.locals.authType = "optional";
+  return jwtAuth(req, res, next);
+};

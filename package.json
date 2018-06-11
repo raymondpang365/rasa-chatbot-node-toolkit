@@ -287,6 +287,7 @@
   },
   "dependencies": {
     "axios": "0.18.0",
+    "axios-cookiejar-support": "^0.3.5",
     "axios-extensions": "^1.2.0",
     "babel-polyfill": "^6.26.0",
     "babel-register": "^6.26.0",
@@ -294,6 +295,7 @@
     "chalk": "2.3.1",
     "classnames": "^2.2.5",
     "compression": "1.7.2",
+    "connected-react-router": "^4.3.0",
     "cookie": "^0.3.1",
     "dot-env": "^0.0.1",
     "express": "4.16.2",
@@ -333,13 +335,15 @@
     "react-router-config": "^1.0.0-beta.4",
     "react-router-dom": "^4.2.2",
     "react-router-last-location": "^1.1.0",
-    "react-router-redux": "5.0.0-alpha.8",
+    "react-simple-dropdown": "^3.2.0",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
     "sequelize": "^4.37.6",
     "serialize-javascript": "^1.4.0",
     "serve-favicon": "2.4.5",
     "snapsvg": "^0.5.1",
+    "superagent": "^3.8.3",
+    "tough-cookie": "^2.3.4",
     "uuid": "^3.2.1"
   },
   "devDependencies": {

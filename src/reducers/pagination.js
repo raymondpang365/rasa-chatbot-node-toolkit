@@ -113,7 +113,7 @@ const paginate = resource => (state = {}, action) => {
 };
 
 const paginationReducer = combineReducers({
-  statements: paginate(Resources.STATEMENT),
+  vehicles: paginate(Resources.VEHICLE),
   users: paginate(Resources.USER)
 });
 

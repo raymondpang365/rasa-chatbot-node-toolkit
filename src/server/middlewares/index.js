@@ -5,7 +5,6 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import favicon from 'serve-favicon';
 import express from 'express';
-import userAgent from 'express-useragent';
 import mountStore from './mountStore';
 import mountHelper from './mountHelper';
 import initCookie from './initCookie';
@@ -13,11 +12,11 @@ import passportInit from './passportInit';
 
 export default app => {
   // Use helmet to secure Express with various HTTP headers
-  app.use(helmet());
+  // app.use(helmet());
   // Prevent HTTP parameter pollution.
-  app.use(hpp());
+  // app.use(hpp());
   // Compress all requests
-  app.use(compression());
+  // app.use(compression());
 
   // Use for http request debug (show errors only)
   app.use(morgan('dev'));
@@ -39,7 +38,6 @@ export default app => {
     app.use(
       require('webpack-dev-middleware')(compiler, {
         publicPath: webpackConfig.output.publicPath,
-        headers: { 'Access-Control-Allow-Origin': '*' },
         hot: true,
         quiet: true, // Turn it on for friendly-errors-webpack-plugin
         noInfo: true,
@@ -57,7 +55,10 @@ export default app => {
 
 
   // Add headers
+/*
   app.use((req, res, next) => {
+
+    console.log(req.headers);
 
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -66,7 +67,7 @@ export default app => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 
     // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 
     // Set to true if you need the website to include cookies in the requests sent
     // to the API (e.g. in case you use sessions)
@@ -75,8 +76,7 @@ export default app => {
     // Pass to next layer of middleware
     next();
   });
-
-  app.use(userAgent.express());
+*/
 
   app.use(mountStore);
   app.use(mountHelper);

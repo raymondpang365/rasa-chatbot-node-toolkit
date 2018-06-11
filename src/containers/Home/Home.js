@@ -9,11 +9,10 @@ import Helmet from 'react-helmet';
 import { hot } from 'react-hot-loader';
 import type { ReduxState } from '../../types';
 import ErrorList from '../../components/utils/ErrorList';
-// import PageLayout from '../layout/PageLayout';
 import styles from '../../styles/main.scss';
 import updateLocale from '../../actions/intl';
 import { pushErrors } from '../../actions/error';
-import FormField from '../../components/elements/widgets/FormField';
+import RegisterForm from '../user/Register/RegisterForm';
 
 type Props = {};
 
@@ -32,22 +31,49 @@ export class Home extends Component<Props> {
   }
 
   render() {
+
+    const { isAuth, user } = this.props;
+    console.log('Home props:');
+    console.log(this.props);
     return (
       <div className={styles.siteContent}>
-        <div className={styles.container}>
-          <div className={styles.login}>
-            <ErrorList />
-            <Helmet title="Home" />
-            <h2 className={styles.loud}>Cartoon animal community </h2>
+        <div className={styles.bgContainer}>
+
+          <Helmet title="Home" />
+          <div className={styles.mainContent}>
+            <h1>Car Sharing?</h1>
+            <h3>Let us know more about you, if you are interested to... </h3>
+          </div>
+          <div className={styles.flex}>
+            <div className={styles.half}>
+              <div className={styles.overlay} />
+              <div className={styles.half_content}>
+                <h2>Rent a Car</h2>
+                <h4>Drive when you need it</h4>
+                <a className={styles.btn_more}>Do a survey</a>
+              </div>
+            </div>
+            <div className={styles.half}>
+              <div className={styles.overlay} />
+              <div className={styles.half_content}>
+                <h2>Lease a Car</h2>
+                <h5>Earn passive income with your car</h5>
+                <a className={styles.btn_more}>Do a survey</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
     );
   }
 }
 
-const connector: Connector<{}, Props> = connect(({ home }: ReduxState) => ({
-  home
+const connector: Connector<{}, Props> = connect(({ home, routing, cookies: { token, user } }: ReduxState) => ({
+  home,
+  routing,
+  isAuth: !!token,
+  user: user || {}
 }));
 
 // Enable hot reloading for async componet
