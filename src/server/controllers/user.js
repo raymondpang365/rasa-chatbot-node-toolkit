@@ -111,10 +111,10 @@ export default {
         }
         else{
           console.log("wrong password");
-          res.status(401).json({status: 401, isAuth: false});
+          throw Errors.USER_UNAUTHORIZED;
         }
       }).then(results => {
-        const { user_id, session_id } = results[1].rows[0];
+        const { user_id, session_id } = results[0].rows[0];
         const access_token = genAccessToken({ user_id, session_id });
         console.log('case 2');
         const info = { user_id, session_id };
