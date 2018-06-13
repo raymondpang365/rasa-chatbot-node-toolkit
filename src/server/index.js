@@ -14,7 +14,19 @@ middlewares(app);
 serverRoutes(app);
 
 if (port && listenTo) {
-  app.listen(port, listenTo, err => {
+  const server = (process.env.NODE_ENV === "production") ? () => {
+      const fs = require('fs');
+      const privateKey = fs.readFileSync('../.sslcert/privkey.pem', 'utf8');
+      const certificate = fs.readFileSync('../.sslcert/fullchain.pem', 'utf8');
+      const credentials = {key: privateKey, cert: certificate};
+      const https = require('https');
+      return https.createServer(credentials, app);
+    }
+    : () => {
+      const http = require('http');
+      return http.createServer(app);
+    };
+  server().listen(port, listenTo, err => {
     const url = `http://${listenTo}:${port}`;
 
     if (err) console.error(chalk.red(`==> 😭  OMG!!! ${err}`));

@@ -61,6 +61,8 @@
       "env": {
         "NODE_PATH": "./src",
         "NODE_ENV": "development",
+        "NODE_HOST": "127.0.0.1",
+        "LISTEN_TO": "localhost",
         "PORT": 3000
       }
     },
@@ -69,7 +71,8 @@
       "env": {
         "NODE_PATH": "./src",
         "NODE_ENV": "production",
-        "PORT": 8080
+        "LISTEN_TO": "0.0.0.0",
+        "PORT": 80
       }
     },
     "build": {
@@ -302,9 +305,12 @@
     "express-promise-router": "^3.0.2",
     "express-useragent": "^1.0.12",
     "final-form": "^4.4.0",
+    "fs": "^0.0.1-security",
     "helmet": "3.11.0",
     "history": "^4.7.2",
     "hpp": "^0.2.2",
+    "http": "^0.0.0",
+    "https": "^1.0.0",
     "imports-loader": "^0.8.0",
     "jsonwebtoken": "^8.1.1",
     "loadable-components": "1.1.1",

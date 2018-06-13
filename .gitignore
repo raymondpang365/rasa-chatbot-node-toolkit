@@ -166,6 +166,10 @@ typings/
 #database
 db
 
+#sslcert
+*.pem
+.sslcert
+
 coverage
 
 
