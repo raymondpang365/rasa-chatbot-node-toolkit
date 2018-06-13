@@ -16,8 +16,8 @@ serverRoutes(app);
 if (port && listenTo) {
   const server = (process.env.NODE_ENV === "production") ? () => {
       const fs = require('fs');
-      const privateKey = fs.readFileSync('../.sslcert/privkey.pem', 'utf8');
-      const certificate = fs.readFileSync('../.sslcert/fullchain.pem', 'utf8');
+      const privateKey = fs.readFileSync('../../.sslcert/privkey.pem', 'utf8');
+      const certificate = fs.readFileSync('../../.sslcert/fullchain.pem', 'utf8');
       const credentials = {key: privateKey, cert: certificate};
       const https = require('https');
       return https.createServer(credentials, app);
