@@ -1,13 +1,13 @@
 import axios from 'axios';
 import { cacheAdapterEnhancer } from 'axios-extensions';
-import { host, port, sslEnabled } from '../config';
+import { host, publicPort, sslEnabled } from '../config';
 
 const methods = ['get', 'post', 'put', 'patch', 'del'];
 
 const formatUrl = path =>
   sslEnabled?
-    `https://${host}:${port}${path}`
-    : `http://${host}:${port}${path}`;
+    `https://${host}:${publicPort}${path}`
+    : `http://${host}:${publicPort}${path}`;
 /*
 const tough = require('tough-cookie');
 
