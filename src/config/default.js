@@ -15,7 +15,7 @@ module.exports = {
       }
     ],
     links: [
-      'http://fonts.googleapis.com/css?family=Tangerine',
+      'https://fonts.googleapis.com/css?family=Tangerine',
       '/css/main.css'
     ]
   },
