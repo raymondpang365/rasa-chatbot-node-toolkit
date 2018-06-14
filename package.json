@@ -71,8 +71,7 @@
       "env": {
         "NODE_PATH": "./src",
         "NODE_ENV": "production",
-        "LISTEN_TO": "0.0.0.0",
-        "PORT": 80
+        "PORT": 8080
       }
     },
     "build": {
