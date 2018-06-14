@@ -2,10 +2,10 @@
 
 module.exports = {
   listenTo: process.env.LISTEN_TO || 'localhost',
-  host: process.env.NODE_HOST, // Define your host from 'package.json'
-  port: process.env.PORT,
-  publicPort: process.env.PUBLIC_PORT,
-  sslEnabled: process.env.SSL_ENABLED,
+  host: process.env.NODE_HOST || '128.199.140.120', // Define your host from 'package.json'
+  port: process.env.PORT || 8080,
+  publicPort: process.env.PUBLIC_PORT || 80,
+  sslEnabled: process.env.SSL_ENABLED || true,
   app: {
     htmlAttributes: { lang: 'en' },
     title: 'Test',
