@@ -7,6 +7,6 @@ module.exports = {
   production: {
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: `http://${process.env.NODE_HOST}:8080/auth/google/callback`
+    callbackURL: `https://${proccess.env.WEBSITE_URL}/auth/google/callback`
   }
 };

@@ -23,7 +23,7 @@ export default (
           <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
         <![endif]-->
 
-        <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Tangerine">
+        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Tangerine">
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
         <link rel="shortcut icon" href="/favicon.ico">
         <link rel="facebook icon" href="/facebook.svg">

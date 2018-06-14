@@ -8,6 +8,6 @@ module.exports = {
     clientID: process.env.FACEBOOK_CLIENT_ID,
     clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
     callbackURL:
-      `http://${process.env.NODE_HOST}:8080/auth/facebook/callback`
+      `https://${proccess.env.WEBSITE_URL}/auth/facebook/callback`
   }
 };
