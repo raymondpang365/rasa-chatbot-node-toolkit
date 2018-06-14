@@ -1,6 +1,6 @@
 /* @flow */
 
-if (process.env.NODE_ENV) {
+if (process.env.NODE_ENV === "development") {
   console.log('hi1');
   module.exports = require('./default');
 } else {

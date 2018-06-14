@@ -4,6 +4,7 @@ module.exports = {
   listenTo: process.env.LISTEN_TO || 'localhost',
   host: process.env.NODE_HOST || 'localhost', // Define your host from 'package.json'
   port: process.env.PORT || 3000,
+  sslEnabled: false,
   app: {
     htmlAttributes: { lang: 'en' },
     title: 'Test',
