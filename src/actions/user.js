@@ -41,7 +41,7 @@ export const emailRegister = values =>
       const json = await userAPI(apiEngine).emailRegister(values);
       return json;
     } catch (err){
-      throw err;
+      console.log(err);
     }
   };
 

@@ -8,7 +8,8 @@ module.exports =merge(defaultConfig,{
   host: process.env.NODE_HOST || '128.199.140.120', // Define your host from 'package.json'
   port: process.env.PORT || 8080,
   publicPort: process.env.PUBLIC_PORT || 999,
-  sslEnabled: process.env.SSL_ENABLED || true,
+  domainName: process.env.DOMAIN_NAME,
+  hasDomainName: process.env.HAS_DOMAIN_NAME || true,
   passportStrategy: {
     facebook: require('./passportStrategy/facebook/credential').production,
     google: require('./passportStrategy/google/credential').production,

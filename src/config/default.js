@@ -5,7 +5,8 @@ module.exports = {
   host: process.env.NODE_HOST || 'hahahost', // Define your host from 'package.json'
   port: process.env.PORT || 3000,
   publicPort: process.env.PORT || 999,
-  sslEnabled: false,
+  domainName: '',
+  hasDomainName: false,
   app: {
     htmlAttributes: { lang: 'en' },
     title: 'Test',
