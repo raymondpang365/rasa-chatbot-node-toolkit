@@ -11,6 +11,8 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 const nodeEnv = process.env.NODE_ENV || 'development';
 const isDev = nodeEnv === 'development';
 
+const Dotenv = require('dotenv-webpack');
+
 // Disable CSSModules here
 const CSSModules = true;
 // Enable build process terminated while there's an eslint error
@@ -66,7 +68,12 @@ const getPlugins = () => {
       __DEV__: isDev
     }),
     new webpack.NoEmitOnErrorsPlugin(),
-    new FriendlyErrorsWebpackPlugin()
+    new FriendlyErrorsWebpackPlugin(),
+    new Dotenv({
+      safe: true, // load '.env.example' to verify the '.env' variables are all set. Can also be a string to a different file.
+      systemvars: true, // load all the predefined 'process.env' variables which will trump anything local per dotenv specs.
+      silent: false // hide any errors
+    })
   ];
 
   if (isDev) {
