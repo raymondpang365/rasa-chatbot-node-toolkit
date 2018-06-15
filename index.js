@@ -10,6 +10,10 @@ global.__CLIENT__ = false;
 global.__SERVER__ = true;
 global.__DEV__ = process.env.NODE_ENV === 'development';
 
+console.log(process.env.PUBLIC_PORT);
+
+console.log(process.env.NODE_HOST);
+
 console.log(`Server starts in ${process.env.NODE_ENV} environment.`);
 
 // Run assets require hooks

@@ -10,6 +10,8 @@ import mountHelper from './mountHelper';
 import initCookie from './initCookie';
 import passportInit from './passportInit';
 
+const Dotenv = require('dotenv-webpack');
+
 export default app => {
   // Use helmet to secure Express with various HTTP headers
   // app.use(helmet());
@@ -34,6 +36,11 @@ export default app => {
 
     compiler.apply(new webpack.ProgressPlugin());
     compiler.apply(new DashboardPlugin());
+    compiler.apply(new Dotenv({
+      safe: true, // load '.env.example' to verify the '.env' variables are all set. Can also be a string to a different file.
+      systemvars: true, // load all the predefined 'process.env' variables which will trump anything local per dotenv specs.
+      silent: false // hide any errors
+    }))
 
     app.use(
       require('webpack-dev-middleware')(compiler, {

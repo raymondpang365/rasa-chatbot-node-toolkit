@@ -4,7 +4,7 @@
 import express from 'express';
 import React from 'react';
 import chalk from 'chalk';
-import { port, listenTo } from '../config/index';
+import { jwt, port, listenTo } from '../config/index';
 import middlewares from './middlewares';
 import serverRoutes from './routes';
 
@@ -15,6 +15,7 @@ serverRoutes(app);
 
 if (port && listenTo) {
   app.listen(port, listenTo, err => {
+    console.log(jwt.accessToken.secret);
     const url = `http://${listenTo}:${port}`;
 
     if (err) console.error(chalk.red(`==> 😭  OMG!!! ${err}`));
