@@ -1,7 +1,8 @@
-import configs from '../../../config';
+import { jwt } from '../../../config';
 import Roles from '../../../constants/Roles';
 import bodyParser from '../../middlewares/bodyParser';
 import { jwtAuth } from '../../middlewares/jwtAuth';
+import mailController from '../../controllers/mail';
 import roleRequired from '../../middlewares/roleRequired';
 import validate from '../../middlewares/validate';
 import fileUpload from '../../middlewares/fileUpload';
@@ -14,13 +15,14 @@ export default app => {
     '/api/users',
     bodyParser.json,
     validate.recaptcha,
-    userController.emailRegister
+    userController.emailRegister,
+    mailController.sendVerification
   );
 
   app.post(
     '/api/users/email/verify',
     bodyParser.json,
-    bodyParser.jwt('verifyEmailToken', configs.jwt.verifyEmail.secret),
+    bodyParser.jwt('verifyEmailToken', jwt.verifyEmail.secret),
     validate.verifyUserNonce('verifyEmail'),
     userController.verifyEmail
   );
@@ -42,7 +44,7 @@ export default app => {
   app.put(
     '/api/users/password',
     bodyParser.json,
-    bodyParser.jwt('resetPasswordToken', configs.jwt.resetPassword.secret),
+    bodyParser.jwt('resetPasswordToken', jwt.resetPassword.secret),
     validate.verifyUserNonce('resetPassword'),
     validate.form('user/ResetPasswordForm'),
     userController.emailResetPassword

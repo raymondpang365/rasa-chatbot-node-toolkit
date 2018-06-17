@@ -17,5 +17,27 @@ module.exports = {
   genRefreshToken: data =>
   jsonwebtoken.sign(JSON.parse(JSON.stringify(data)), jwt.refreshToken.secret, {
     expiresIn: jwt.refreshToken.expiresIn
-  })
+  }),
+
+  genVerifyEmailToken: (id, verifyEmailNonce) => {
+    const user = {
+      _id: id,
+      nonce: verifyEmailNonce,
+    };
+    const token = jwt.sign(user, jwt.verifyEmail.secret, {
+      expiresIn: jwt.verifyEmail.expiresIn,
+    });
+    return token;
+  },
+
+  genResetPasswordToken: (id, resetPasswordNonce) => {
+    const user = {
+      _id: id,
+      nonce: resetPasswordNonce,
+    };
+    const token = jwt.sign(user, jwt.resetPassword.secret, {
+      expiresIn: jwt.resetPassword.expiresIn,
+    });
+    return token;
+  }
 }

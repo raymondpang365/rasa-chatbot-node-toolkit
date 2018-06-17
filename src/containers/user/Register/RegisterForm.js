@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { push } from 'connected-react-router';
 import { compose } from 'redux';
 import { Form, Field } from 'react-final-form';
 import { connect } from 'react-redux';
@@ -7,12 +6,16 @@ import Helmet from 'react-helmet';
 import { hot } from 'react-hot-loader';
 import { Link, withRouter } from 'react-router-dom';
 import type { Connector } from 'react-redux';
+import MakeAsyncFunction from "react-redux-promise-listener";
 import styles from '../../../styles/main.scss'
 import type { ReduxState } from '../../../types';
-import {  emailRegister } from'../../../actions/user';
-import { pushErrors } from '../../../actions/error';
 import SocialAuthButtonList from '../../../components/utils/SocialAuthButtonList';
-
+import {
+  REGISTER,
+  REGISTER_SUCCESS,
+  REGISTER_FAILURE
+} from "../../../reducers/registration";
+import promiseListener from '../../../helpers/reduxPromiseListener';
 
 import FormFieldAdapter from '../../../components/elements/adapters/FormFieldAdapter';
 
@@ -27,23 +30,20 @@ const required = value => (value ? undefined : "Required");
 const composeValidators = (...validators) => value =>
   validators.reduce((error, validator) => error || validator(value), undefined);
 
+const SubmitError = ({ name }) => (
+  <Field
+    name={name}
+    subscription={{ submitError: true, dirtySinceLastSubmit: true }}
+  >
+    {({ meta: { submitError, dirtySinceLastSubmit } }) =>
+      submitError && !dirtySinceLastSubmit ? <span className={styles.errorLabel}>{submitError}</span> : null
+    }
+  </Field>
+);
+
 type Props = {};
 
 class Register extends PureComponent<Props> {
-
-  onSubmit(values){
-    console.log(this);
-    const{ dispatch } = this.props;
-
-    dispatch(emailRegister(values))
-      .catch((err) => {
-        dispatch(pushErrors(err));
-        throw err;
-      })
-      .then(json => {
-        dispatch(push('/user/login'));
-      });
-  };
 
   render() {
     console.log('Register props');
@@ -63,54 +63,64 @@ class Register extends PureComponent<Props> {
               {' '}Please login first.
             </alert>
           )}
-          <Form
-            onSubmit={this.onSubmit.bind(this)}
-            render={({
-                       handleSubmit,
-                       submitError,
-                       reset,
-                       submitting,
-                       pristine,
-                       validating,
-                       values
-                     }) => (
-                       <form onSubmit={handleSubmit}>
-                         <div>
-                           <Field
-                             name="name"
-                             component={FormFieldAdapter}
-                             validate={composeValidators(required)}
-                             hintText="Display Name"
-                             type="name"
-                             spellcheck="false"
-                             floatingLabelText="Display Name :"
-                           />
-                           <Field
-                             name="email"
-                             component={FormFieldAdapter}
-                             validate={composeValidators(validEmail, required)}
-                             hintText="Email"
-                             type="email"
-                             spellcheck="false"
-                             floatingLabelText="Email :"
-                           />
-                           <Field
-                             name="password"
-                             component={FormFieldAdapter}
-                             validate={composeValidators(required)}
-                             type="password"
-                             hintText="Password"
-                             spellcheck="false"
-                             floatingLabelText="Password :"
-                           />
-                           {submitError && <div className="error">{submitError}</div>}
-                         </div>
-                         <button className={styles.loginButton}>
-                           Sign Up with Email
-                         </button>
-                       </form>
+          <MakeAsyncFunction
+            listener={promiseListener}
+            start={REGISTER}
+            resolve={REGISTER_SUCCESS}
+            reject={REGISTER_FAILURE}
+          >
+            {onSubmit => (
+              <Form
+                onSubmit={onSubmit}
+                render={({
+                   handleSubmit,
+                   submitError,
+                   reset,
+                   submitting,
+                   pristine,
+                   validating,
+                   values
+                 }) => (
+                   <form onSubmit={handleSubmit}>
+                     <div>
+                       <Field
+                         name="name"
+                         component={FormFieldAdapter}
+                         validate={composeValidators(required)}
+                         hintText="Display Name"
+                         type="name"
+                         spellcheck="false"
+                         floatingLabelText="Display Name :"
+                       />
+                       <Field
+                         name="email"
+                         component={FormFieldAdapter}
+                         validate={composeValidators(validEmail, required)}
+                         hintText="Email"
+                         type="email"
+                         spellcheck="false"
+                         floatingLabelText="Email :"
+                       />
+                       <SubmitError name="email" />
+                       <Field
+                         name="password"
+                         component={FormFieldAdapter}
+                         validate={composeValidators(required)}
+                         type="password"
+                         hintText="Password"
+                         spellcheck="false"
+                         floatingLabelText="Password :"
+                       />
+                       {submitError && <div className="error">{submitError}</div>}
+                     </div>
+                     <button className={styles.loginButton} type="submit" disabled={submitting}>
+                       Sign Up with Email
+                     </button>
+                   </form>
+                )}
+              />
             )}
-          />
+          </MakeAsyncFunction>
           <br />
           <hr className={styles.orSeparator} />
           <SocialAuthButtonList routing={this.props.routing} prependText="Continue" />
@@ -120,9 +130,10 @@ class Register extends PureComponent<Props> {
     )
   }
 }
-const connector: Connector<{}, Props> = connect(({  location, routing }: ReduxState) => ({
+const connector: Connector<{}, Props> = connect(({  location, routing, registration }: ReduxState) => ({
   location,
-  routing
+  routing,
+  registration
 }));
 
 // Enable hot reloading for async componet

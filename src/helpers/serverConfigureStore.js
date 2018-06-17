@@ -3,6 +3,8 @@
 import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
+import promiseListener from './reduxPromiseListener';
+import { asyncSubmissionMiddleware } from '../actions/user';
 
 import type { Store } from '../types';
 import rootReducer from '../reducers';
@@ -12,7 +14,9 @@ export default (req, initialState: Object = {}): Store => {
   const apiEngine = new ApiEngine(req);
   const middlewares = [
     thunk.withExtraArgument(apiEngine),
-    routerMiddleware(req.history)
+    routerMiddleware(req.history),
+    promiseListener.middleware,
+    asyncSubmissionMiddleware
     // Add other middlewares here
   ];
   const composeEnhancers =

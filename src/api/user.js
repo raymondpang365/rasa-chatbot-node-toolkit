@@ -5,6 +5,7 @@ export default apiEngine => ({
     apiEngine.post('/api/users/email/verify', {
       data: { verifyEmailToken: token }
     }),
+  emailAvailable: value => apiEngine.get('/api/users/usernameAvailable'),
   requestVerifyEmail: form =>
     apiEngine.post('/api/users/email/request-verify', { data: form }),
   emailLogin: user => apiEngine.post('/api/users/emaillogin', { data: user }),

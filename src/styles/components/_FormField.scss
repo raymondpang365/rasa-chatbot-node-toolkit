@@ -1,4 +1,11 @@
 
+.errorLabel{
+  font-size: 0.8em;
+  transition: all 0.5s ease;
+  color: #ff5252 !important;
+  line-height: 80%;
+}
+
 .formWrap {
   position: relative;
   height: 50px;

@@ -37,20 +37,23 @@ export default {
 
   emailRegister: (req, res, next) => {
     console.log("email register");
+    let userReturned = {};
     p.query('SELECT * FROM user_info where email = $1', [req.body.email])
       .then(results => {
         if (results.rowCount > 0) {
-          console.log("user existed");
           throw Errors.USER_EXISTED;
         } else {
           return Promise.all([hashPassword(req.body.password),randomValueHex(6)]);
         }
       }).then( results =>
          p.transaction(conn =>
-          p.query("INSERT INTO user_info (display_name, email, password, verify_email_nonce) " +
-            "VALUES ($1, $2, $3, $4) RETURNING id",
+           p.query("INSERT INTO user_info (display_name, email, password, verify_email_nonce) " +
+            "VALUES ($1, $2, $3, $4) RETURNING id, display_name, email, verify_email_nonce",
             [ req.body.name, req.body.email, results[0], results[1] ])
             .then(insertResult => {
+              const {display_name, email, verify_email_nonce} = insertResult.row[0];
+              userReturned = {display_name, email, verify_email_nonce};
+
               const lastId = insertResult.rows[0].id;
               const lastIdStr = `${lastId}`;
               const pad = (`U00000000`).slice(0, -lastIdStr.length);
@@ -69,15 +72,18 @@ export default {
               ]);
             })
         )
-    ).then( result => {
-        console.log(result);
-        const _user = result.rows[0];
-        req.user = _user;
+    ).then( results => {
+        console.log(results);
+        const { user_id } = results.rows[0];
+        userReturned = { user_id, ...userReturned };
+        req.user = userReturned;
+        console('double omg');
         if (!nodemailer) {
-          return res.status(200).json({status: 200, data: _user });
+          return res.status(200).json({status: 200, data: userReturned, isUnused: true });
         }
         return next();
       }).catch( err => {
+        console.log('omg');
         console.log(err);
         res.pushError(err);
         res.errors();
@@ -90,7 +96,7 @@ export default {
       .then(result => {
         if (result.rowCount === 0) {
           console("no user found");
-          res.status(401).json({status: 401, isAuth: false});
+          throw Errors.USER_UNAUTHORIZED;
         }
         else if(result.rows[0].password === hashPassword(req.body.password)) {
           const {user_id} = result.rows[0];
@@ -143,8 +149,6 @@ export default {
         res.errors();
       });
   },
-
-
 
   emailSetNonce: (nonceKey) => (req, res, next) => {
 
