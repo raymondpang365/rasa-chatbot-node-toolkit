@@ -24,7 +24,7 @@ module.exports = {
       _id: id,
       nonce: verifyEmailNonce,
     };
-    const token = jwt.sign(user, jwt.verifyEmail.secret, {
+    const token = jsonwebtoken.sign(user, jwt.verifyEmail.secret, {
       expiresIn: jwt.verifyEmail.expiresIn,
     });
     return token;
@@ -35,7 +35,7 @@ module.exports = {
       _id: id,
       nonce: resetPasswordNonce,
     };
-    const token = jwt.sign(user, jwt.resetPassword.secret, {
+    const token = jsonwebtoken.sign(user, jwt.resetPassword.secret, {
       expiresIn: jwt.resetPassword.expiresIn,
     });
     return token;

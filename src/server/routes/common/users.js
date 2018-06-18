@@ -23,7 +23,7 @@ export default app => {
     '/api/users/email/verify',
     bodyParser.json,
     bodyParser.jwt('verifyEmailToken', jwt.verifyEmail.secret),
-    validate.verifyUserNonce('verifyEmail'),
+    validate.verifyUserNonce('verify_email_nonce'),
     userController.verifyEmail
   );
   app.post(

@@ -12,6 +12,7 @@ import {
   asyncRegister,
   asyncVehicleDetail,
   asyncVehicleList,
+  asyncVerifyEmail,
   asyncLogout,
   NotFound
 } from './containers';
@@ -53,6 +54,10 @@ export default [
         path: '/vehicle/page/:id',
         component: asyncVehicleList,
         loadData: ({ params }: Object) => [fetchVehiclesIfNeeded(params.id)]
+      },
+      {
+        path: '/user/email/verify',
+        component: asyncVerifyEmail
       },
       {
         component: NotFound

@@ -4,21 +4,22 @@ import { nodemailer as nodemailerConfig, mailOptions } from '../../config';
 
 let defaultTransport;
 if (nodemailerConfig) {
-  defaultTransport = nodemailerConfig[process.env.NODE_ENV];
+  defaultTransport = nodemailerConfig;
 }
-
 export default (transport = defaultTransport) => {
+  console.log(defaultTransport);
+  console.log('defaultTransport');
   const transporter = nodemailer.createTransport(transport);
   return {
     sendMail: options => new Promise((resolve, reject) => {
       options = assign(
         {},
-        mailOptions.default,
-        mailOptions[process.env.NODE_ENV],
+        mailOptions,
         options
       );
-      transporter.sendMail(mailOptions, (err, info) => {
-        if (process.env.NODE_ENV !== 'test' && err) {
+      console.log(options);
+      transporter.sendMail(options, (err, info) => {
+        if (err) {
           return reject(err);
         }
         return resolve(info);

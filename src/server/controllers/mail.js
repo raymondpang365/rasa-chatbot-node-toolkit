@@ -12,14 +12,14 @@ export default {
     console.log('send verification');
     const { user } = req;
     console.log(user);
-    const {userId, verifyEmailNonce} = user;
-    const token = genVerifyEmailToken(userId, verifyEmailNonce);
+    const {access_token, user_id, session_id, verify_email_nonce} = user;
+    const token = genVerifyEmailToken(user_id, verify_email_nonce);
     console.log(token);
     nodemailerAPI()
       .sendMail({
         ...(
           process.env.NODE_ENV === 'development' ?
-          { to: user.email.value } :
+          { to: user.email } :
           {}
         ),
         subject: 'Email Verification',
@@ -29,12 +29,16 @@ export default {
       })
       .catch((err) => {
         res.errors([Errors.SEND_EMAIL_FAIL]);
+        console.log(err);
         throw err;
       })
-      .then((info) => {
-        res.json({
-          user,
-          email: info && info.envelope,
+      .then(detail => {
+        const info = { user_id, session_id };
+        res.status(200).json({
+          status: 200,
+          info,
+          token: access_token,
+          email: detail && detail.envelope
         });
       });
   },

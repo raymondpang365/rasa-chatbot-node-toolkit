@@ -8,5 +8,16 @@ import asyncVehicleList from './VehicleList';
 import asyncVehicleDetail from './VehicleDetail';
 import asyncLogout from './user/Logout'
 import NotFound from './NotFound';
+import asyncVerifyEmail from './user/VerifyEmail'
 
-export { App, asyncHome, asyncLogin, asyncRegister, asyncLogout, asyncVehicleList, asyncVehicleDetail, NotFound };
+export {
+  App,
+  asyncHome,
+  asyncLogin,
+  asyncRegister,
+  asyncLogout,
+  asyncVehicleList,
+  asyncVehicleDetail,
+  asyncVerifyEmail,
+  NotFound
+};

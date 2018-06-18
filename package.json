@@ -356,7 +356,8 @@
     "snapsvg": "^0.5.1",
     "superagent": "^3.8.3",
     "tough-cookie": "^2.3.4",
-    "uuid": "^3.2.1"
+    "uuid": "^3.2.1",
+    "xoauth2": "^1.2.0"
   },
   "devDependencies": {
     "asset-require-hook": "^1.2.0",

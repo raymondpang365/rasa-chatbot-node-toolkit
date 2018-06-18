@@ -1,4 +1,5 @@
 /* @flow */
+const xoauth2 = require('xoauth2');
 
 module.exports = {
   listenTo: process.env.LISTEN_TO || 'localhost',
@@ -50,6 +51,19 @@ module.exports = {
   passportStrategy: {
     facebook: require('./passportStrategy/facebook/credential').development,
     google: require('./passportStrategy/google/credential').development,
+  },
+  nodemailer:{
+    service: 'gmail',
+    auth: {
+      user: process.env.GMAIL_USERNAME,
+      pass: process.env.GMAIL_PASSWORD,
+    },
+  },
+  mailOptions: {
+    subject: 'Untitled Mail',
+    from: 'Express-React-Hmr-Boilerplate <psfr937@gmail.com>',
+    text: 'No Text',
+    html: '<pre>no html content<pre>',
   },
   fcmServerKey: process.env.FCM_SERVER_KEY,
   recaptcha: process.env.RECAPTCHA_KEY

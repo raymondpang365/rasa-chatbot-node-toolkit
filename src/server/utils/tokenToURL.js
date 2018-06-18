@@ -1,4 +1,7 @@
-import configs from '../../config';
+import { host, publicPort, hasDomainName, domainName } from '../../config';
 
 export default (baseURL, token) =>
-  `${configs.host[process.env.NODE_ENV]}${baseURL}?token=${token}`;
+  hasDomainName?
+    `https://${domainName}${baseURL}?token=${token}`
+    : `http://${host}:${publicPort}${baseURL}?token=${token}`;
+

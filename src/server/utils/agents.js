@@ -5,6 +5,7 @@ const { Pool } = require('pg');
 
 const databaseConfig = getDatabaseConfig(process.env.NODE_ENV);
 
+
 class Agent {
 
   constructor(config) {
@@ -38,6 +39,7 @@ class Agent {
     return new Promise((resolve, reject) => {
       this.pool.connect((conErr, client, done) => {
         const errs = [];
+        let results;
         const shouldAbort = tsError => {
           if (tsError) {
             console.log({...Errors.DB_OPERATION_FAIL, stack: tsError.stack});
@@ -56,13 +58,19 @@ class Agent {
         };
 
         client.query('BEGIN')
-          .then(bodyPromises())
-          .then(client.query('COMMIT'))
-          .then(results => {
-            client.release();
-            resolve(results);
-          })
-          .catch(error => shouldAbort(error));
+            .then(res => new Promise((resu, reje) => bodyPromises(client, resu, reje)))
+            .then(res => {
+              console.log('super');
+              console.log(res);
+              console.log('super');
+              results = res;
+            })
+            .then(client.query('COMMIT'))
+            .then(() => {
+              client.release();
+              resolve(results);
+            })
+            .catch(error => shouldAbort(error));
       })
     })
   }

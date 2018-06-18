@@ -41,7 +41,6 @@ class NavigationBar extends PureComponent {
     const { isAuth, user } = this.props;
     console.log(`isAuth:${isAuth}`);
     console.log(`user.avatarURL:${user.avatarURL}`);
-    console.log('bibibo');
 
     return(
       <header className={styles.header}>
@@ -58,19 +57,23 @@ class NavigationBar extends PureComponent {
           }
           {isAuth &&
             <div className={styles.dropdown__button}>
-              {user.avatarURL ? (
-                <img
-                  alt="me"
-                  style={{ height: 30 }}
-                  src={user.avatarURL}
-                  rounded
-                />
-              ) : <text id={user.name || user.email} />}
+              <img
+                alt="me"
+                style={{ height: 30 }}
+                src={user.avatarURL ? user.avatarURL: 'https://i.imgur.com/aBcof3d.png'}
+                rounded
+              />
+              <img
+                alt="me"
+                style={{ height: 10, width: 10, marginLeft: 5 }}
+                src='https://i.imgur.com/8njP92d.png'
+              />
               <div className={styles.dropdown__content}>
                 <a href="#">Setting</a>
                 <a href="#">Security</a>
                 <Link className={styles.menu__anchor} to="/user/logout">Logout</Link>
               </div>
+
             </div>
           }
         </nav>

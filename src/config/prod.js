@@ -13,5 +13,12 @@ module.exports =merge(defaultConfig,{
   passportStrategy: {
     facebook: require('./passportStrategy/facebook/credential').production,
     google: require('./passportStrategy/google/credential').production,
+  },
+  nodemailer:{
+    service: 'gmail',
+    auth: {
+      user: 'your_gmail_username',
+      pass: 'your_gmail_password',
+    },
   }
 });

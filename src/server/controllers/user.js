@@ -46,40 +46,52 @@ export default {
           return Promise.all([hashPassword(req.body.password),randomValueHex(6)]);
         }
       }).then( results =>
-         p.transaction(conn =>
-           p.query("INSERT INTO user_info (display_name, email, password, verify_email_nonce) " +
-            "VALUES ($1, $2, $3, $4) RETURNING id, display_name, email, verify_email_nonce",
-            [ req.body.name, req.body.email, results[0], results[1] ])
-            .then(insertResult => {
-              const {display_name, email, verify_email_nonce} = insertResult.row[0];
-              userReturned = {display_name, email, verify_email_nonce};
+         p.transaction((conn, resolve, reject) => {
+           console.log('kuku');
+           conn.query("INSERT INTO user_info (display_name, email, password, verify_email_nonce) " +
+             "VALUES ($1, $2, $3, $4) RETURNING id, display_name, email, verify_email_nonce",
+             [req.body.name, req.body.email, results[0], results[1]])
+             .then(insertResult => {
+               console.log(insertResult);
+               const { display_name, email, verify_email_nonce } = insertResult.rows[0];
+               userReturned = {display_name, email, verify_email_nonce};
 
-              const lastId = insertResult.rows[0].id;
-              const lastIdStr = `${lastId}`;
-              const pad = (`U00000000`).slice(0, -lastIdStr.length);
-              const session_id = uuidv4();
-              const refresh_token = genRefreshToken({ session_id });
-              const user_id = `${pad}${lastIdStr}`;
-              return Promise.all([
-                p.query(
-                  "UPDATE user_info SET user_id = $1 WHERE id = $2 RETURNING user_id",
-                  [user_id, lastId]),
-                p.query(
-                  "INSERT INTO session (user_id, session_id, refresh_token ,login_time, create_time ) " +
-                  "VALUES ($1, $2, $3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) " +
-                  "RETURNING session_id, refresh_token",
-                  [user_id, session_id, refresh_token])
-              ]);
+               const lastId = insertResult.rows[0].id;
+               const lastIdStr = `${lastId}`;
+               const pad = (`U00000000`).slice(0, -lastIdStr.length);
+               const session_id = uuidv4();
+               const refresh_token = genRefreshToken({session_id});
+               const user_id = `${pad}${lastIdStr}`;
+
+               resolve(Promise.all([
+                 conn.query(
+                   "INSERT INTO session (user_id, session_id, refresh_token ,login_time, create_time ) " +
+                   "VALUES ($1, $2, $3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) " +
+                   "RETURNING user_id, session_id",
+                   [user_id, session_id, refresh_token]),
+                 conn.query(
+                   "INSERT INTO email (address, is_verified) VALUES ($1, $2)",
+                   [email, false]),
+                 conn.query(
+                   "UPDATE user_info SET user_id = $1 WHERE id = $2",
+                   [user_id, lastId]),
+               ]));
+             }).catch( err => {
+              reject(err);
             })
-        )
-    ).then( results => {
+         })
+      ).then( results => {
+        console.log('bibibo');
         console.log(results);
-        const { user_id } = results.rows[0];
-        userReturned = { user_id, ...userReturned };
+        console.log('bibibo');
+      const { user_id, session_id } = results[0].rows[0];
+        const access_token = genAccessToken({ user_id, session_id });
+        userReturned = { user_id, session_id, access_token, ...userReturned };
         req.user = userReturned;
-        console('double omg');
         if (!nodemailer) {
-          return res.status(200).json({status: 200, data: userReturned, isUnused: true });
+          const info = { user_id, session_id };
+          const data = {token: access_token, info};
+          return res.status(200).json({status: 200, ...data, isUnused: true });
         }
         return next();
       }).catch( err => {
@@ -87,7 +99,7 @@ export default {
         console.log(err);
         res.pushError(err);
         res.errors();
-    })
+      })
   },
 
   emailLogin: (req, res) => {
@@ -135,9 +147,6 @@ export default {
 
   verifyEmail: (req, res) => {
     const { user } = req;
-
-    user.email.isVerified = true;
-    user.email.verifiedAt = new Date();
     p.query('UPDATE email SET is_verified = true, verified_at = CURRENT_TIMESTAMP ' +
       'WHERE address = $1',
       [user.email])
@@ -155,7 +164,7 @@ export default {
     p.query('SELECT * FROM user_info where email = $1', req.body.email)
       .then( result => {
         const user = result.rows[0];
-        user.nonce[nonceKey] = Math.random();
+        user[nonceKey] = Math.random();
         return p.query('UPDATE * FROM user_info where user_id = $1', user.user_id)
       })
       .then( result => {

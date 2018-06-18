@@ -59,8 +59,16 @@ export const asyncSubmissionMiddleware = store => (next) => (
   if (action && action.type === REGISTER) {
     store.dispatch(emailRegister(action.payload))
       .then(json => {
+        const { data } = json;
         store.dispatch({type: REGISTER_SUCCESS });
-        store.dispatch(push('/user/login'));
+        console.log('asyncRegisterMiddleware');
+        console.log(data);
+        console.log('asyncRegisterMiddleware');
+        store.dispatch(loginUser({
+          token: data.token,
+          info: data.info,
+        }));
+        store.dispatch(push('/'));
       }).catch(err => {
         if(err.response.data.errors[0].code === "USER_EXISTED") {
           const payload = ({email: 'Email is already registered.'});
@@ -120,4 +128,18 @@ export const setUsers = res => dispatch => {
 
   dispatch(setEntities(normalized));
   dispatch(setPages(Resources.USER, res.page, normalized.result));
+};
+
+export const verifyEmail = token =>
+  async (dispatch, getState, apiEngine) => {
+  console.log('nana bibibo');
+  console.log(getState());
+  try {
+    const json = await userAPI(apiEngine).verifyEmail({token});
+    return json;
+  }catch (err){
+    console.log(err)
+    throw err;
+  }
+
 };

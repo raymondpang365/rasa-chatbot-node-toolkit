@@ -2,8 +2,7 @@ import axios from 'axios';
 import Errors from '../../constants/Errors';
 import configs from '../../config';
 import validateErrorObject from '../utils/validateErrorObject';
-import { handleDbError } from '../decorators/handleError';
-import { getter } from '../utils/agents';
+import p from '../utils/agents';
 
 export default {
   form: (formPath, onlyFields = []) => (req, res, next) => {
@@ -32,11 +31,14 @@ export default {
 
   verifyUserNonce: nonceKey => async (req, res, next) => {
     const { _id, nonce } = req.decodedPayload;
-    const user = await getter.query('SELECT * FROM User WHERE user_id = $1', _id);
-    if (nonce !== user.nonce[nonceKey]) {
+    console.log(_id);
+    console.log(nonce);
+    const user = await p.query('SELECT * FROM user_info WHERE user_id = $1', [_id]);
+    if (nonce !== user[nonceKey]) {
       return res.errors([Errors.TOKEN_REUSED]);
     }
-    user.nonce[nonceKey] = -1;
+    user[nonceKey] = -1;
+    console.log('hiki haki');
     req.user = user;
     return next();
   },
