@@ -40,29 +40,85 @@ export class Home extends Component<Props> {
         <div className={styles.bgContainer}>
 
           <Helmet title="Home" />
-          <div className={styles.first_section} >
-            t
-          </div>
-          <div className={styles.second_section} >
-            &nbsp;
-          </div>
-          <div className={styles.flex}>
+          <div className={styles.first_section}>
             <div className={styles.half}>
               <div className={styles.overlay} />
               <div className={styles.half_content}>
-                <h2>Rent a Car</h2>
+                <h2>Rent a Car From Anyone</h2>
                 <h5>Drive when you need it</h5>
-                <a className={styles.btn_more}>Do a survey</a>
+                <a className={styles.btn_more}>Explore Now</a>
               </div>
             </div>
+          </div>
+          <div className={styles.second_section}>
+            <div className={styles.card}>
+              <div>
+                Secure
+              </div>
+              <div>
+                Sample dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
+              </div>
+            </div>
+            <div className={styles.card}>
+              <div>
+                Affordable
+              </div>
+              <div>
+                Example Lorem ipsum dolor sit amet, conscing elit. Aenean commodo ligula eget dolor. Aenean massa.
+              </div>
+            </div>
+            <div className={styles.card}>
+              <div>
+                Convenient
+              </div>
+              <div>
+                Random Lorem ipsum dolor sit amet, co. Aenean commodo ligula eget dolor. Aenean massa.
+              </div>
+            </div>
+          </div>
+          <div className={styles.third_section}>
             <div className={styles.half}>
               <div className={styles.overlay} />
               <div className={styles.half_content}>
                 <h2>Lease a Car</h2>
                 <h5>Earn passive income with your car</h5>
-                <a className={styles.btn_more}>Do a survey</a>
+                <a className={styles.btn_more}>Explore Now</a>
               </div>
             </div>
+          </div>
+          <div className={styles.second_section}>
+            <div className={styles.card}>
+              <div>
+                Secure
+              </div>
+              <div>
+                Sample dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
+              </div>
+            </div>
+            <div className={styles.card}>
+              <div>
+                Affordable
+              </div>
+              <div>
+                Example Lorem ipsum dolor sit amet, conscing elit. Aenean commodo ligula eget dolor. Aenean massa.
+              </div>
+            </div>
+            <div className={styles.card}>
+              <div>
+                Convenient
+              </div>
+              <div>
+                Random Lorem ipsum dolor sit amet, co. Aenean commodo ligula eget dolor. Aenean massa.
+              </div>
+            </div>
+          </div>
+          <div className={styles.media_section}>
+            <br />
+            <h3>Need help renting or leasing a car?</h3>
+            <a className={styles.btn_more}>Contact Us</a>
+          </div>
+          <div className={styles.footer_section}>
+            Footer
           </div>
         </div>
       </div>

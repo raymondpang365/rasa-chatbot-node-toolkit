@@ -16,6 +16,8 @@
     right: 15px;
     position: relative;
 
+    @extend .no_highlight;
+
     @include anchor__button(
       $header_height,
       block,

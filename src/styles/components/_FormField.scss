@@ -4,6 +4,8 @@
   transition: all 0.5s ease;
   color: #ff5252 !important;
   line-height: 80%;
+
+  @extend .no_highlight;
 }
 
 .formWrap {
@@ -17,6 +19,8 @@
     top: 25px;
     font-size: 1em;
     transition: all 0.5s ease;
+
+    @extend .no_highlight;
   }
 
   hr {
