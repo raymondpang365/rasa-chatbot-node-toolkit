@@ -1,4 +1,4 @@
-import vehicleController from '../../controllers/test';
+import vehicleController from '../../controllers/product';
 import bodyParser from '../../middlewares/bodyParser';
 import { jwtAuth } from '../../middlewares/jwtAuth';
 

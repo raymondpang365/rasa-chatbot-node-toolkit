@@ -2,12 +2,17 @@ import jsonwebtoken from 'jsonwebtoken';
 import { jwt } from '../../config/index';
 
 module.exports = {
-  jwtExtractor: req => (req.query.env === "native") ?
-    ((req.headers.authorization)?
-        req.headers.authorization.match(/Bearer ([^#]+)/)[1]
-        : null
-    )
-    : req.store.getState().cookies.token,
+  jwtExtractor: req => {
+    console.log(req.headers.authorization);
+    console.log(req.headers.platform);
+    console.log(typeof req.headers.authorization.match(/Bearer ([^#]+)/)[1]);
+    return (req.query.env === "native" || ( req.headers.platform && req.headers.platform === 'native')) ?
+      ((typeof req.headers.authorization !== 'undefined') ?
+          req.headers.authorization.match(/Bearer ([^#]+)/)[1]
+          : null
+      )
+      : req.store.getState().cookies.token
+  },
 
   genAccessToken: data =>
   jsonwebtoken.sign(JSON.parse(JSON.stringify(data)), jwt.accessToken.secret, {

@@ -39,7 +39,7 @@ export default {
           res.json({
             test: _test
           });
-      });
+        });
   },
 
   update(req, res) {

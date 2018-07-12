@@ -37,6 +37,7 @@ export default class ApiEngine {
             adapter: cacheAdapterEnhancer(axios.defaults.adapter, true)
           });
         }
+
         if (params) {
           Object.assign(content, { params });
         }

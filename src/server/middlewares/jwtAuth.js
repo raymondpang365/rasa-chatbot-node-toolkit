@@ -41,7 +41,7 @@ export const refreshAccessToken = (req, res, next) => {
 
 export const jwtAuth = (req, res, next) => {
 
-  console.log(req.store.getState());
+  console.log(jwt.accessToken.secret);
   jsonwebtoken.verify(
     jwtExtractor(req),
     jwt.accessToken.secret,
