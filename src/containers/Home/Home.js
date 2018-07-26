@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import type { Connector } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import Helmet from 'react-helmet';
 import { hot } from 'react-hot-loader';
 import type { ReduxState } from '../../types';
@@ -38,15 +38,16 @@ export class Home extends Component<Props> {
     return (
       <div className={styles.siteContent}>
         <div className={styles.bgContainer}>
-
           <Helmet title="Home" />
           <div className={styles.first_section}>
             <div className={styles.half}>
               <div className={styles.overlay} />
               <div className={styles.half_content}>
-                <h2>Rent a Car From Anyone</h2>
-                <h5>Drive when you need it</h5>
-                <a className={styles.btn_more}>Explore Now</a>
+                <h2>Find someone to assist you achieving your dream</h2>
+                <h5>And Ignite Together</h5>
+                <Link className={styles.btn_more} to="/addstory">
+                  Post Your Current Goal & Difficulty
+                </Link>
               </div>
             </div>
           </div>
@@ -80,13 +81,13 @@ export class Home extends Component<Props> {
             <div className={styles.half}>
               <div className={styles.overlay} />
               <div className={styles.half_content}>
-                <h2>Lease a Car</h2>
-                <h5>Earn passive income with your car</h5>
-                <a className={styles.btn_more}>Explore Now</a>
+                <h2>Give and Take</h2>
+                <h5>Help each other to solve limitations in life</h5>
+                <a className={styles.btn_more}>Give a little, Gain a lot</a>
               </div>
             </div>
           </div>
-          <div className={styles.second_section}>
+          <div className={styles.story_section}>
             <div className={styles.card}>
               <div>
                 Secure

@@ -79,7 +79,7 @@ class FormField extends PureComponent {
     console.log(inputStyle);
 
     return (
-      <div className={styles.formWrap}>
+      <div className={styles.loginFormField}>
         <div className={inputStyle} >
           <label htmlFor="mail">{floatingLabelText}</label>
           <input

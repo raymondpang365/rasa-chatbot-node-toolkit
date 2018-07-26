@@ -1,0 +1,44 @@
+@import '../abstracts/variables';
+@import '../base/theme';
+@import '../base/typography';
+
+.addStoryForm {
+  margin: 20px 0;
+  padding: 5px 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-basis: 100%;
+  vertical-align: middle;
+  background-color: transparent;
+  border: 3px solid $secondary-color;
+  border-radius: 1em;
+}
+
+.addStoryFormTitle {
+  text-align: center;
+  font-size: 1em;
+  flex-basis: 100%;
+  color: $third-color;
+  font-weight: 900;
+  padding-bottom: 3rem;
+}
+
+.submitStoryFormButtonWrapper{
+  text-align: center;
+}
+
+.submitStoryFormButton {
+  @extend .loginButtonBox;
+
+  width: 80%;
+  display: block;
+  padding:3px 5px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+  background-color: $third-color;
+  font-size: 0.5em;
+}

@@ -1,4 +1,5 @@
 export default {
-  VEHICLE: 'VEHICLE',
-  USER: 'USER'
+  STORY: 'STORY',
+  USER: 'USER',
+  COMMENT: 'COMMRNT'
 };

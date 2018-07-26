@@ -6,6 +6,8 @@ import { Cookie, Action } from '../types';
 
 type State = Cookie;
 
+export const SET_COOKIE = 'SET_COOKIE';
+
 let initCookies = {};
 
 if (process.env.BROWSER) {
@@ -16,7 +18,7 @@ if (process.env.BROWSER) {
 
 export default (state: State = initCookies, action: Action) => {
   switch (action.type) {
-    case 'SET_COOKIE': {
+    case SET_COOKIE: {
       console.log('haha');
       console.log(action.cookie);
       console.log('haha');

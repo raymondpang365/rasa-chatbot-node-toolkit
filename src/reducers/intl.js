@@ -3,6 +3,8 @@ import messages from '../constants/i18n/en-us';
 
 type State = Intl;
 
+export const UPDATE_LOCALE = 'UPDATE_LOCALE';
+
 const initLocale = {
   locale: 'en-us',
   messages

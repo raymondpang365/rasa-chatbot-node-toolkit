@@ -1,0 +1,282 @@
+.Home {
+  padding: 20px 15px;
+}
+
+.homeBgFull {
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://i.imgur.com/GxpLBVZ.jpg');
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+}
+
+.homeBg {
+  background-attachment: fixed;
+  background-color: $secondary-color;
+  background-position: center;
+  background-size: cover;
+  color: #fff;
+}
+
+.mainContent {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.hover_wrap {
+  max-width:1400px;
+  width:100%;
+  margin:0 auto;
+  display:flex;
+  height:100vh;
+  align-items:center;
+  position:relative;
+}
+
+@mixin impress_section($overlay, $bg, $h2_left, $h5_left, $btn_left){
+  position: relative;
+  width: 100%;
+  display:block;
+
+  .half {
+    background: linear-gradient(rgba(0,0,0,$overlay), rgba(0,0,0,$overlay)), url($bg);
+    background-position:center;
+    background-size:cover;
+    background-repeat:no-repeat;
+    width: 100%;
+    height: 350px;
+    display: inline-flex;
+    padding-top: 50px;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    flex-direction:column;
+    transition:all 0.75s;
+    position:relative;
+
+    h2 {
+      font-weight:400;
+      letter-spacing:0;
+      font-size:2.25rem;
+      margin:0;
+      transition:all 2s;
+
+      @extend .no_highlight;
+
+
+    }
+
+    h5 {
+      transition:all 2s;
+
+      @extend .no_highlight;
+    }
+
+    .btn_more {
+      border:1px solid #fff;
+      width:auto;
+      height:45px;
+      display: inline-flex;
+      align-items:center;
+      justify-content:center;
+      white-space: nowrap;
+      padding: 0 1rem;
+      text-transform:uppercase;
+      font-size:0.9rem;
+      font-weight:500;
+      letter-spacing:1px;
+      transition:all 0.75s;
+      position: relative;
+
+      @extend .no_highlight;
+
+      @media only screen and (max-width: 992px) {
+        position: relative;
+        top: 20%;
+      }
+
+
+    }
+
+
+    .overlay {
+      transition-duration: 2s;
+      position:absolute;
+      z-index:2;
+      top:0;
+      left:0;
+      right:0;
+      bottom:0;
+      background-color:#000;
+      opacity:0.3;
+    }
+
+    .half_content {
+      position:relative;
+      z-index:5;
+      color:#fff;
+      display: flex;
+      flex-direction:column;
+      align-items:center;
+      max-width:400px;
+    }
+
+    &:hover {
+      .overlay {
+        opacity:0.7;
+      }
+
+      h2 {
+        letter-spacing:2.5px;
+      }
+
+      h5 {
+        letter-spacing:2.5px;
+      }
+
+      .btn_more {
+        background: #fff;
+        color: #000;
+        margin: 10px 0;
+      }
+    }
+
+    @media only screen and (max-width: 992px) {
+      height:250px;
+      width: 100%;
+
+      &:hover {
+        h2 {
+          letter-spacing:2.5px;
+        }
+
+        .btn_more {
+          background:#fff;
+          color:#000;
+          margin: 10px 0;
+        }
+      }
+    }
+
+  }
+}
+
+.first_section{
+  @include impress_section(0.6, 'https://i.imgur.com/VyId9FC.jpg', 40%, -15%, -10%);
+}
+
+
+.second_section{
+  width: 90%;
+  padding: 1em 0;
+  margin: 0 auto;
+
+
+  @extend .section;
+  @extend .group;
+
+  .card{
+    display: grid;
+    border-radius: 15px;
+    grid-template-rows: 0.15fr 0.3fr;
+    background-color: #03262a;
+
+    @extend .col;
+    @extend .span_1_of_3;
+
+    div{
+      width: auto;
+      text-align: center;
+      vertical-align: middle;
+      box-shadow: 0 7px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.3);
+
+      @extend .no_highlight;
+    }
+
+    div:nth-of-type(1){
+      background-color: #000;
+      border-top-right-radius: 15px;
+      border-top-left-radius: 15px;
+      color: white;
+    }
+
+    div:nth-of-type(2){
+      padding: 10%;
+      font-size: 0.8em;
+      color: white;
+      background-color: #03262a;
+      border-bottom-right-radius: 15px;
+      border-bottom-left-radius: 15px;
+    }
+
+    &:hover{
+      transition-duration: 500ms;
+      box-shadow: 0 7px 8px 0 rgba(0, 0, 0, 0.5), 0 10px 20px 0 rgba(0, 0, 0, 0.5);
+    }
+
+  }
+}
+
+
+
+.third_section{
+  @include impress_section(0.4, 'https://i.imgur.com/3Xs2mJc.jpg', 15%, -10%, -15%);
+}
+
+
+
+.media_section{
+  width: 100%;
+  height: auto;
+  background-color: black;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align: top ;
+  text-align: center;
+
+  h2{
+    position: relative;
+    top: -30px;
+
+    @extend .no_highlight;
+  }
+
+  a{
+    text-align: center;
+    border:1px solid #fff;
+    max-width:125px;
+    padding: 1% 2%;
+    width:100%;
+    height: auto;
+    margin-left :20px;
+    text-transform:uppercase;
+    font-size:0.9rem;
+    font-weight:500;
+    letter-spacing:1px;
+    transition:all 0.75s;
+    position: relative;
+
+    @extend .no_highlight;
+  }
+}
+
+.footer_section{
+  width: 100%;
+  background-color: #343434;
+  height: 150px;
+
+
+  @extend .section;
+  @extend .group;
+
+  .organization {
+    display: grid;
+    grid-template-rows: 0.15fr 0.3fr;
+
+    @extend .col;
+    @extend .span_1_of_5;
+
+  }
+}

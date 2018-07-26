@@ -2,24 +2,30 @@
 
 import { combineReducers } from 'redux';
 
+import comments from './comments';
 import cookies from './cookie';
 import entity from './entity';
 import errors from './error';
 import intl from './intl';
+import login from './login';
 import registration from './registration';
 import pagination from './pagination';
-import vehicle from './vehicleDetail';
-import vehicleList from './vehicleList';
+import submitStory from './submitStory';
+import story from './story';
+import stories from './stories';
 
 const reducers = {
   cookies,
+  pagination,
   entity,
   errors,
+  comments,
+  login,
   registration,
-  vehicleList,
+  story,
+  stories,
+  submitStory,
   intl,
-  pagination,
-  vehicle
 };
 
 export type Reducers = typeof reducers;

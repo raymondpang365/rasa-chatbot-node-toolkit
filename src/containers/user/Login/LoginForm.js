@@ -1,11 +1,9 @@
 import React, { PureComponent } from 'react';
-import { push } from 'connected-react-router';
 import { compose } from 'redux';
 import { Form, Field } from 'react-final-form';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import { hot } from 'react-hot-loader';
-import { FORM_ERROR } from "final-form";
 import { Link, withRouter } from 'react-router-dom';
 import MakeAsyncFunction from "react-redux-promise-listener";
 import type { Connector } from 'react-redux';
@@ -50,80 +48,77 @@ class Login extends PureComponent<Props> {
     console.log('Login props:');
     console.log(this.props);
     return (
-      <div className={styles.login}>
-        <div className={styles.loginForm}>
-          <Helmet title='Login' />
-          <text className={styles.loginFormTitle}>Sign In</text>
-          {this.props.location !== undefined && this.props.location.query.next && (
-            <alert>
-              <strong>Authentication Required</strong>
-              {' '}Please login first.
-            </alert>
+      <div className={styles.loginForm}>
+        <Helmet title='Login' />
+        <text className={styles.loginFormTitle}>Sign In</text>
+        {this.props.location !== undefined && this.props.location.query.next && (
+          <alert>
+            <strong>Authentication Required</strong>
+            {' '}Please login first.
+          </alert>
+        )}
+        <MakeAsyncFunction
+          listener={promiseListener}
+          start={LOGIN}
+          resolve={LOGIN_SUCCESS}
+          reject={LOGIN_FAILURE}
+        >
+          {onSubmit => (
+            <Form
+              onSubmit={onSubmit}
+              render={({
+                         handleSubmit,
+                         submitError,
+                         reset,
+                         submitting,
+                         pristine,
+                         validating,
+                         values
+                       }) => (
+                         <form onSubmit={handleSubmit}>
+                           <div>
+                             <Field
+                               name="email"
+                               component={FormFieldAdapter}
+                               validate={composeValidators(validEmail, required)}
+                               hintText="Email"
+                               type="email"
+                               spellcheck="false"
+                               floatingLabelText="Email :"
+                             />
+                             <Field
+                               name="password"
+                               component={FormFieldAdapter}
+                               validate={composeValidators(required)}
+                               type="password"
+                               hintText="Password"
+                               spellcheck="false"
+                               floatingLabelText="Password :"
+                             />
+                             <SubmitError name="login" />
+                           </div>
+
+                           <button className={styles.loginButton}>
+                             Login with Email
+                           </button>
+                           <br />
+
+                           <Link className={styles.loginFormText} to="/user/register">
+                             Create an account
+                           </Link>
+                           <text className={styles.loginFormTextSeparator} >|</text>
+                           <Link className={styles.loginFormText} to="/user/password/forget">
+                             Forget password
+                           </Link>
+
+                         </form>
+              )}
+            />
           )}
-          <MakeAsyncFunction
-            listener={promiseListener}
-            start={LOGIN}
-            resolve={LOGIN_SUCCESS}
-            reject={LOGIN_FAILURE}
-          >
-            {onSubmit => (
-              <Form
-                onSubmit={onSubmit}
-                render={({
-                           handleSubmit,
-                           submitError,
-                           reset,
-                           submitting,
-                           pristine,
-                           validating,
-                           values
-                         }) => (
-                           <form onSubmit={handleSubmit}>
-                             <div>
-                               <Field
-                                 name="email"
-                                 component={FormFieldAdapter}
-                                 validate={composeValidators(validEmail, required)}
-                                 hintText="Email"
-                                 type="email"
-                                 spellcheck="false"
-                                 floatingLabelText="Email :"
-                               />
-                               <Field
-                                 name="password"
-                                 component={FormFieldAdapter}
-                                 validate={composeValidators(required)}
-                                 type="password"
-                                 hintText="Password"
-                                 spellcheck="false"
-                                 floatingLabelText="Password :"
-                               />
-                               <SubmitError name="login" />
-                             </div>
-
-                             <button className={styles.loginButton}>
-                               Login with Email
-                             </button>
-                             <br />
-
-                             <Link className={styles.loginFormText} to="/user/register">
-                               Create an account
-                             </Link>
-                             <text className={styles.loginFormTextSeparator} >|</text>
-                             <Link className={styles.loginFormText} to="/user/password/forget">
-                               Forget password
-                             </Link>
-
-                           </form>
-                )}
-              />
-            )}
-          </MakeAsyncFunction>
-          <br />
-          <hr className={styles.orSeparator} />
-          <SocialAuthButtonList routing={this.props.routing} prependText="Login" />
-        </div>
-
+        </MakeAsyncFunction>
+        <br />
+        <hr className={styles.orSeparator} />
+        <SocialAuthButtonList routing={this.props.routing} prependText="Login" />
       </div>
     )
   }

@@ -1,8 +1,8 @@
 import users from './common/users';
 import forms from './common/forms';
 import locales from './common/locales';
-import products from './common/products';
-import purchases from './common/purchases';
+import products from './common/comments';
+import purchases from './common/stories';
 import auth from './common/auth';
 import react from './web/react';
 

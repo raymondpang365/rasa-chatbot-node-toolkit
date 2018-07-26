@@ -6,3 +6,17 @@
 
   @extend .siteContent;
 }
+
+.loginBgFull {
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://i.imgur.com/VyId9FC.jpg');
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+}
+
+.loginContainerFull {
+  height: 100%;
+
+  @extend .container;
+  @extend .loginBgFull;
+}

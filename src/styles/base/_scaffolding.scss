@@ -25,11 +25,14 @@ a {
   color: inherit;
 }
 
-.bgContainerFull {
+
+
+
+.addStoryBgFull {
   height: 100%;
 
   @extend .container;
-  @extend .homeBgFull;
+  @extend .addStoryBgFull;
 }
 
 .bgContainer {

@@ -6,25 +6,27 @@ import type { UserInfo, Action } from '../types';
 
 type State = UserInfo;
 
+
+
 export default (state: State = {}, action: Action): State => {
   switch (action.type) {
-    case 'USER_REQUESTING':
+    case 'FETCH_USER_REQUESTING':
       return fp.assign(state, {
         [action.userId]: {
-          readyStatus: 'USER_REQUESTING'
+          readyStatus: 'FETCH_USER_REQUESTING'
         }
       });
-    case 'USER_FAILURE':
+    case 'FETCH_USER_FAILURE':
       return fp.assign(state, {
         [action.userId]: {
-          readyStatus: 'USER_FAILURE',
+          readyStatus: 'FETCH_USER_FAILURE',
           err: action.err
         }
       });
-    case 'USER_SUCCESS':
+    case 'FETCH_USER_SUCCESS':
       return fp.assign(state, {
         [action.userId]: {
-          readyStatus: 'USER_SUCCESS',
+          readyStatus: 'FETCH_USER_SUCCESS',
           info: action.data
         }
       });

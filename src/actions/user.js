@@ -4,19 +4,9 @@ import { userSchema } from '../schemas';
 import Resources from '../constants/Resources';
 import { setCookies, removeCookie } from './cookie';
 import { setEntities } from './entity';
-import { pushErrors } from './error';
 import { setPages } from './page';
 import userAPI from '../api/user';
-import {
-  REGISTER,
-  REGISTER_SUCCESS,
-  REGISTER_FAILURE
-} from '../reducers/registration';
-import {
-  LOGIN,
-  LOGIN_SUCCESS,
-  LOGIN_FAILURE
-} from "../reducers/login";
+
 
 export const loginUser = ({ token, info }, res = null) => dispatch => {
   console.log('again again ');
@@ -53,49 +43,6 @@ export const emailLogin = values =>
     }
   };
 
-export const asyncSubmissionMiddleware = store => (next) => (
-  action
-) => {
-  if (action && action.type === REGISTER) {
-    store.dispatch(emailRegister(action.payload))
-      .then(json => {
-        const { data } = json;
-        store.dispatch({type: REGISTER_SUCCESS });
-        console.log('asyncRegisterMiddleware');
-        console.log(data);
-        console.log('asyncRegisterMiddleware');
-        store.dispatch(loginUser({
-          token: data.token,
-          info: data.info,
-        }));
-        store.dispatch(push('/'));
-      }).catch(err => {
-        if(err.response.data.errors[0].code === "USER_EXISTED") {
-          const payload = ({email: 'Email is already registered.'});
-          store.dispatch({type: REGISTER_SUCCESS, payload});
-        }
-      })
-    }
-  if (action && action.type === LOGIN) {
-    store.dispatch(emailLogin(action.payload))
-      .then(json => {
-        const { data } = json;
-        store.dispatch(loginUser({
-          token: data.token,
-          info: data.info,
-        }));
-        store.dispatch({type: LOGIN_SUCCESS });
-        store.dispatch(push('/'));
-      }).catch((err) => {
-        store.dispatch(pushErrors(err));
-        if(err.response.data.errors[0].code === "USER_UNAUTHORIZED") {
-          const payload =  { login: "Login failed. \nYou may have typed in a wrong email or password." };
-          store.dispatch({type: LOGIN_SUCCESS, payload });
-        }
-      })
-  }
-  return next(action);
-};
 
 
 

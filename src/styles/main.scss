@@ -13,12 +13,16 @@
 @import 'base/typography';
 
 // 4. Components
-@import 'components/DropdownMenu',
+@import 'components/CommentListItem',
+  'components/DropdownMenu',
   'components/ErrorDisplay',
   'components/Grid',
+  'components/InfiniteScroll',
   'components/LoginForm',
   'components/Loading',
-  'components/FormField',
+  'components/LoginFormField',
+  'components/AddStoryForm',
+  'components/AddStoryFormField',
   'components/VehicleDetailCard',
   'components/VehicleListCard';
 
@@ -28,11 +32,11 @@
 
 // 6. Containers
 @import 'containers/App',
-  'containers/Home',
+  'containers/home/Home',
+  'containers/home/StorySection',
   'containers/Login',
   'containers/NotFound',
-  'containers/VehicleDetail',
-  'containers/VehicleList',
+  'containers/AddStory',
   'containers/UserInfo';
 
 // 7. Layout-related sections

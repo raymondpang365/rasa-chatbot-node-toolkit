@@ -4,7 +4,7 @@ import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import promiseListener from './reduxPromiseListener';
-import { asyncSubmissionMiddleware } from '../actions/user';
+import asyncSubmissionMiddleware from '../actions/submissionMiddleware';
 
 import type { Store } from '../types';
 import rootReducer from '../reducers';

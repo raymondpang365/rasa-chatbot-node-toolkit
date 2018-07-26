@@ -6,7 +6,7 @@ export const setPages = (resource, page, ids): ThunkAction => dispatch => {
   dispatch({ type: 'SET_PAGES', resource, page, ids });
 };
 
-export const setCrrentPage = (resource, currentPage): ThunkAction => (
+export const setCurrentPage = (resource, currentPage): ThunkAction => (
   dispatch: Dispatch
 ) => {
   dispatch({ type: 'SET_CURRENT_PAGE', resource, currentPage });
@@ -26,7 +26,7 @@ export const prependEntitiesIntoPage = (
   });
 };
 
-export const apendEntitiesIntoPage = (
+export const appendEntitiesIntoPage = (
   resource,
   normalized,
   intoPage
