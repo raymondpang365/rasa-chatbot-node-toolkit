@@ -9,46 +9,8 @@ const uuidv4 = require('uuid/v4');
 export default {
 
   list(req, res) {
-    /*
-    Promise.all([
-      p.query('SELECT t1.*, category_count FROM story t1 ' +
-      'INNER JOIN (SELECT t2.category_id, COUNT(category_id) as category_count FROM story t2 WHERE business_id = $1' +
-      'GROUP BY category_id) AS t3 ON t1.category_id = t3.category_id WHERE business_id = $1 ORDER BY t1.category_id',
-        [1]),
-      p.query('SELECT * FROM story_category WHERE business_id = $1 ORDER BY business_category_id',
-        [1])
-      ])
-      .then(
-        ([v1, v2]) => {
-        let _stories = v1.rows;
-        const _categories = v2.rows;
-
-        console.log(_stories);
-        const data = [];
-        let i = 0;
-        const  { length } = _stories;
-        while(i <= length - 1) {
-          const { category_count } = _stories[i];
-          const categoryCount = parseInt(category_count, 10);
-          console.log(categoryCount);
-          const categoryData = _stories.slice(i, i + categoryCount);
-          data.push({
-            category: _categories[_stories[i].category_id - 1].category_name,
-            data: categoryData
-          });
-          i += categoryCount;
-        }
-
-        if("page" in req.query && "limit" in req.query) {
-          _stories = paginate(_stories, req.query.page, req.query.limit);
-        }
-        res.json({
-          stories: data
-        });
-      })
-      */
-    p.query('SELECT * FROM story').then(
-      results => res.json({stories: results.rows})
+    p.query('SELECT * FROM comment WHERE story_id = $1', [req.params.storyId]).then(
+      results => res.json({comments: results.rows})
     )
 
   },
@@ -72,7 +34,7 @@ export default {
     if(typeof(req.body.limitationTag) !== 'undefined' && req.body.limitationTag.length > 0){
       req.body.limitationTag.map(t => {
           const tag_id = uuidv4();
-        limitationTagsInsert.push([
+          limitationTagsInsert.push([
             p.query('INSERT INTO tag (tag_id, tag_name, category) VALUES ($1, $2)', [tag_id, t, 'limitation']),
             p.query('INSERT INTO limitation_tag (limitation_id, tag_id) VALUES ($1, $2)', [limitation_id, tag_id])
           ])
@@ -104,12 +66,12 @@ export default {
         ...goalTagsInsert
       ])
     ).then(results => {
-            console.log(results[0].rows[0]);
-            const {id} = results[0].rows[0];
-           // const rows = results[4].rows;
-            res.json({
-              storyId: id
-            });
+      console.log(results[0].rows[0]);
+      const {id} = results[0].rows[0];
+      // const rows = results[4].rows;
+      res.json({
+        storyId: id
+      });
     }).catch(err =>{
       console.log(err);
     });

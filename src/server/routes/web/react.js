@@ -19,6 +19,7 @@ export default app => {
     console.log(req.store.getState());
     // The method for loading data from server-side
     const loadBranchData = (): Promise<any> => {
+
       const branch = matchRoutes(routes, req.path);
 
       const promises = branch.map(({ route, match }) => {

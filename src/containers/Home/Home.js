@@ -43,10 +43,10 @@ export class Home extends Component<Props> {
             <div className={styles.half}>
               <div className={styles.overlay} />
               <div className={styles.half_content}>
-                <h2>Find someone to assist you achieving your dream</h2>
-                <h5>And Ignite Together</h5>
+                <h2>Truly solving your needs</h2>
+                <h5>powered by buzzword technology</h5>
                 <Link className={styles.btn_more} to="/addstory">
-                  Post Your Current Goal & Difficulty
+                  Call to Action Button Now
                 </Link>
               </div>
             </div>
@@ -81,9 +81,9 @@ export class Home extends Component<Props> {
             <div className={styles.half}>
               <div className={styles.overlay} />
               <div className={styles.half_content}>
-                <h2>Give and Take</h2>
-                <h5>Help each other to solve limitations in life</h5>
-                <a className={styles.btn_more}>Give a little, Gain a lot</a>
+                <h2>Truly solve your needs</h2>
+                <h5>powered by multiple buzzword technologies</h5>
+                <a className={styles.btn_more}>What are you waiting for?</a>
               </div>
             </div>
           </div>
@@ -115,7 +115,7 @@ export class Home extends Component<Props> {
           </div>
           <div className={styles.media_section}>
             <br />
-            <h3>Need help renting or leasing a car?</h3>
+            <h3>Need help?</h3>
             <a className={styles.btn_more}>Contact Us</a>
           </div>
           <div className={styles.footer_section}>

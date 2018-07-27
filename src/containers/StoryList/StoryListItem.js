@@ -11,7 +11,7 @@ const StoryListItem = ({id, title}) => {
   return(
     <div>
       <h3>{id}</h3>
-      <Link to={`/Story/${id}`}>
+      <Link to={`/story/${id}`}>
         <div>
           {title}
         </div>

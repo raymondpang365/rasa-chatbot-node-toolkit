@@ -1,4 +1,4 @@
-import commentController from '../../controllers/story';
+import commentController from '../../controllers/comment';
 import bodyParser from '../../middlewares/bodyParser';
 import { jwtAuth } from '../../middlewares/jwtAuth';
 

@@ -4,9 +4,9 @@ export default apiEngine => ({
   //     resolve(apiEngine.get('/api/vehicle'));
   //   }, 5000);
   // }),
-  list: ({ page }) => apiEngine.get('/api/comments', { params: { page } }),
-  create: story => apiEngine.post('/api/comments', { data: story }),
-  update: (id, story) =>
-    apiEngine.put(`/api/comments/${id}`, { data: story }),
+  list: ({ storyId }) => apiEngine.get('/api/comments', { params: { storyId } }),
+  create: comment => apiEngine.post('/api/comments', { data: comment }),
+  update: (id, comment) =>
+    apiEngine.put(`/api/comments/${id}`, { data: comment }),
   remove: id => apiEngine.del(`/api/comments/${id}`)
 });

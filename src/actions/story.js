@@ -19,15 +19,17 @@ export const addStory = values =>
   };
 
 export const fetchStory = (
-  storyId: string,
+  storyId: number,
   page
-): ThunkAction => async (dispatch: Dispatch, apiEngine) => {
+): ThunkAction => async (dispatch: Dispatch, getState: GetState, apiEngine) => {
   dispatch({ type: FETCH_STORY_REQUESTING, storyId });
   try {
-    const res = await storyAPI(apiEngine).list({ page });
+    console.log('what the fuck action/story')
+    const json = await storyAPI(apiEngine).check(storyId);
+    console.log(json);
 
     /* istanbul ignore next */
-    dispatch({ type: FETCH_STORY_SUCCESS, storyId, data: res.data });
+    dispatch({ type: FETCH_STORY_SUCCESS, storyId, data: json.data.story });
   } catch (err) {
     /* istanbul ignore next */
     dispatch({ type: FETCH_STORY_FAILURE, storyId, err: err.message });
@@ -46,13 +48,10 @@ const shouldFetchStory = (
   const story = state.story[storyId];
 
   // Fetching data once on production
-  if (story && story.readyStatus === FETCH_STORY_SUCCESS)
-    return false;
-
-  return true;
+  return story && story.readyStatus !== FETCH_STORY_SUCCESS;
 };
 /* istanbul ignore next */
-export const fetchStoryIfNeeded = (storyId: string): ThunkAction => (
+export const fetchStoryIfNeeded = (storyId: number): ThunkAction => (
   dispatch: Dispatch,
   getState: GetState
 ) => {

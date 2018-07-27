@@ -29,6 +29,7 @@ export default class ApiEngine {
           url: formatUrl(path),
           withCredentials: true
         };
+        console.log(content);
         const headers = {};
         const config = { };
         if (cache) {

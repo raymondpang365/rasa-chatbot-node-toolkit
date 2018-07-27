@@ -15,7 +15,7 @@ export const FETCH_COMMENTS_SUCCESS = 'FETCH_COMMENTS_SUCCESS';
 const initialState = {
   readyStatus: FETCH_COMMENTS_INVALID,
   err: null,
-  list: []
+  data: []
 };
 
 export default (state: State = initialState, action: Action): State => {
@@ -32,7 +32,7 @@ export default (state: State = initialState, action: Action): State => {
     case FETCH_COMMENTS_SUCCESS:
       return fp.assign(state, {
         readyStatus: FETCH_COMMENTS_SUCCESS,
-        list: action.data
+        data: action.data
       });
     default:
       return state;

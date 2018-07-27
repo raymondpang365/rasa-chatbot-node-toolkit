@@ -14,6 +14,19 @@ import { fetchCommentsIfNeeded } from '../../actions/comments';
 import { fetchStoryIfNeeded } from '../../actions/story';
 
 import CommentListItem from './CommentListItem';
+
+import {
+  FETCH_COMMENTS_SUCCESS,
+  FETCH_COMMENTS_REQUESTING,
+  FETCH_COMMENTS_FAILURE,
+  FETCH_COMMENTS_INVALID
+} from "../../reducers/comments";
+
+import {
+  FETCH_STORY_REQUESTING,
+  FETCH_STORY_FAILURE
+} from "../../reducers/story";
+
 import type {
   Story as StoryType,
   Dispatch,
@@ -23,7 +36,7 @@ import type {
 type Props = {
   story: StoryType,
   match: Object,
-  fetchStoryIfNeeded: (id: string) => void
+  fetchStoryIfNeeded: (id: number) => void
 };
 
 class StoryDetail extends PureComponent {
@@ -36,15 +49,40 @@ class StoryDetail extends PureComponent {
   }
 
   componentDidMount() {
-
+    this.props.fetchStoryIfNeeded(1);
     this.props.fetchCommentsIfNeeded(1);
+
   }
-
-
-
 
   loadMore(page){
     this.props.fetchCommentsIfNeeded(page);
+  }
+
+  _loadItems(page) {
+    const { location } = this.props;
+    this.props.setCurrentPage(page);
+    this.props.fetchStoriesIfNeeded(page);
+    if (location !== undefined) {
+      this.props.push({
+        pathname: location.pathname,
+        query: {page: this.props.page.current}
+      });
+    }
+  }
+
+  renderInput() {
+    const { inputValue } = this.state;
+    return (
+      <input
+        type="text"
+        value={inputValue}
+        onChange={e =>
+          this.setState({
+            inputValue: e.target.value
+          })
+        }
+      />
+    );
   }
 
   renderControlButtons() {
@@ -77,69 +115,64 @@ class StoryDetail extends PureComponent {
     );
   }
 
-  renderInput() {
-    const { inputValue } = this.state;
-    return (
-      <input
-        type="text"
-        value={inputValue}
-        onChange={e =>
-          this.setState({
-            inputValue: e.target.value
-          })
-        }
-      />
-    );
-  }
 
   renderCommentList() {
+    const { comments } = this.props;
     let loader;
-    const items = [];
     if (
-      this.props.comments.readyStatus === "FETCH_COMMENTS_FAILURE"
+      !comments.readyStatus ||
+      comments.readyStatus === FETCH_COMMENTS_INVALID ||
+      comments.readyStatus === FETCH_COMMENTS_REQUESTING
     ) {
-      loader = <p>Oops, Failed to load items!</p>;
-    } else if (this.props.comments.readyStatus === 'FETCH_COMMENTS_SUCCESS') {
-      this.props.comments.data.map(comment => {
-        items.push(
-          <CommentListItem
-            user={comment.user_id}
-            content={comment.content}
-            likes={comment.likes}
-          />
-        );
-      });
-    } else {
       loader = <div className="loader">Loading ...</div>;
+    } else if (comments.readyStatus === FETCH_COMMENTS_FAILURE) {
+      loader = <p>Oops, Failed to load items!</p>;
     }
 
+    console.log(this.props.comments);
+    const items = (
+      <div>
+        {this.props.comments.data.map(comment => {
+          console.log(comment.id);
+          return (<CommentListItem
+            key={comment.key}
+            user={comment.user}
+            content={comment.content}
+            likes={comment.likes}
+          />);
+        })}
+      </div>
+    );
     console.log(items);
     return (
       (items === []) ?
         <div>
           <p>Uh oh, seems like there is no any items yet! Please add one :)</p>
         </div> :
-        <InfiniteScroll
-          page={this.props.page.current}
-          hasMore={this.props.page.current < this.props.page.last}
-          loadMore={this.loadMore}
-          loader={loader}
-        >
-          <div className="tracks">{items}</div>
-        </InfiniteScroll>
+        <div className={styles.infinite_scroll}>
+          <InfiniteScroll
+            page={this.props.page.current}
+            hasMore={this.props.page.current < this.props.page.last}
+            loadMore={this.loadItems}
+            loader={loader}
+            useWindow={false}
+          >
+            {items}
+          </InfiniteScroll>
+        </div>
     );
   }
 
   render() {
-    const { storyDetail, match: { params } } = this.props;
-    const storyDetailById = storyDetail[params.id];
+    const { story, match: { params } } = this.props;
+    const storyDetailById = story[params.id];
 
     if (
       !storyDetailById ||
-      storyDetailById.readyStatus === 'STORY_REQUESTING'
+      storyDetailById.readyStatus === FETCH_STORY_REQUESTING
     ) {
       return <p>Loading...</p>;
-    } else if (storyDetailById.readyStatus === 'STORY_FAILURE') {
+    } else if (storyDetailById.readyStatus === FETCH_STORY_FAILURE) {
       return <p>Oops, Failed to load detail!</p>;
     }
 
@@ -158,12 +191,40 @@ class StoryDetail extends PureComponent {
   }
 }
 
+
+const mapStateToProps = ({ story, comments, role, location, pagination, entity }: ReduxState) => {
+
+
+  const { page, pages } = pagination.stories;
+
+  /*
+    const storyIds = Array.prototype.flatten(
+      Object
+        .keys(pages)
+        .map(pageId => pages[pageId].ids)
+    );
+    console.log(storyIds);
+
+    stories =  ("ids" in storyIds) ? storyIds.ids.map(id => entity.stories[id]) : [];
+
+  */
+
+  return {
+    location,
+    story,
+    comments,
+    page
+  };
+};
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  fetchCommentsIfNeeded: (id: number) => dispatch(fetchCommentsIfNeeded(id)),
+  fetchStoryIfNeeded: (id: number) => dispatch(fetchStoryIfNeeded(id))
+});
+
 const connector: Connector<{}, Props> = connect(
-  ({ comments, role }: ReduxState) => ({ comments, role }),
-  (dispatch: Dispatch) => ({
-    fetchCommentsIfNeeded: (id: string) => dispatch(fetchCommentsIfNeeded(id)),
-    fetchStoryIfNeeded: (id: string) => dispatch(fetchStoryIfNeeded(id))
-  })
+  mapStateToProps,
+  mapDispatchToProps
 );
 
 // Enable hot reloading for async component

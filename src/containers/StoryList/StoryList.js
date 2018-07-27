@@ -20,6 +20,13 @@ import StoryListItem from './StoryListItem';
 import InfiniteScroll from '../../components/utils/InfiniteScroll';
 import styles from '../../styles/main.scss'
 
+import {
+  FETCH_STORIES_SUCCESS,
+  FETCH_STORIES_FAILURE,
+  FETCH_STORIES_REQUESTING,
+  FETCH_STORIES_INVALID
+} from "../../reducers/stories";
+
 import type {
   StoryList as StoryListType,
   Dispatch,
@@ -87,11 +94,11 @@ class StoryList extends PureComponent {
     let loader;
     if (
       !stories.readyStatus ||
-      stories.readyStatus === 'FETCH_STORIES_INVALID' ||
-      stories.readyStatus === 'FETCH_STORIES_REQUESTING'
+      stories.readyStatus === FETCH_STORIES_INVALID ||
+      stories.readyStatus === FETCH_STORIES_REQUESTING
     ) {
       loader = <div className="loader">Loading ...</div>;
-    } else if (stories.readyStatus === 'FETCH_STORIES_FAILURE') {
+    } else if (stories.readyStatus === FETCH_STORIES_FAILURE) {
       loader = <p>Oops, Failed to load items!</p>;
     }
 

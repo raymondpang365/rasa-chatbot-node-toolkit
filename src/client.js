@@ -4,6 +4,7 @@ import React from 'react';
 // $FlowFixMe: isn't an issue
 import { hydrate } from 'react-dom';
 import { Provider } from 'react-redux';
+import { Switch, Router } from 'react-router-dom';
 import createHistory from 'history/createBrowserHistory';
 import { ConnectedRouter } from 'connected-react-router';
 import { renderRoutes } from 'react-router-config';
@@ -11,6 +12,7 @@ import { loadComponents } from 'loadable-components';
 import configureStore from './helpers/configureStore';
 import routes from './routes';
 import LocaleProvider from './components/utils/LocaleProvider';
+
 
 // Get the initial state from server-side rendering
 const initialState = window.__INITIAL_STATE__;

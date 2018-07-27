@@ -4,7 +4,15 @@ export default apiEngine => ({
   //     resolve(apiEngine.get('/api/vehicle'));
   //   }, 5000);
   // }),
-  list: ({ page }) => apiEngine.get('/api/stories', { params: { page } }),
+  list: ({ page }) => {
+    console.log(apiEngine.get);
+    return apiEngine.get('/api/stories', {params: {page}})
+  },
+  check: (id) => {
+    console.log(apiEngine.get);
+    console.log(id);
+    return apiEngine.get(`/api/stories/${id}`);
+  },
   create: story => apiEngine.post('/api/stories', { data: story }),
   update: (id, story) =>
     apiEngine.put(`/api/stories/${id}`, { data: story }),

@@ -25,41 +25,27 @@ export default [
       {
         path: '/',
         exact: true,
+        strict: true,
         component: asyncHome
       },
       {
-        path: '/addstory',
-        exact: true,
-        component: asyncAddStory,
-      },
-      {
-        path: '/user/login',
-        exact: true,
-        component: asyncLogin,
-      },
-      {
-        path: '/user/register',
-        exact: true,
-        component: asyncRegister,
-      },
-      {
-        path: '/user/logout',
-        component: asyncLogout
-      },
-      {
         path: '/story/:id',
+        exact: true,
         component: asyncStoryDetail,
-        loadData: ({ params }: Object) => [fetchStoryIfNeeded(params.id)]
+      },
+      {
+        path: '/story',
+        exact: true,
+        component: () => <Redirect to="/story/1" />
+      },
+      {
+        path: '/feed/page/:id',
+        component: asyncStoryList,
       },
       {
         path: '/feed',
         exact: true,
         component: () => <Redirect to="/feed/page/1" />
-      },
-      {
-        path: '/feed/page/:id',
-        component: asyncStoryList,
-        loadData: ({ params }: Object) => [fetchStoriesIfNeeded(params.id)]
       },
       {
         path: '/user/email/verify',
