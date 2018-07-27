@@ -1,24 +1,24 @@
 // QUACK! This is a duck. https://github.com/erikras/ducks-modular-redux
 
 // Actions
-export const SUBMIT_STORY = 'SUBMIT_STORY';
-export const SUBMIT_STORY_SUCCESS = 'SUBMIT_STORY_SUCCESS';
-export const SUBMIT_STORY_FAILURE = 'SUBMIT_STORY_FAILURE';
+export const SUBMIT_COMMENT = 'SUBMIT_COMMENT';
+export const SUBMIT_COMMENT_SUCCESS = 'SUBMIT_COMMENT_SUCCESS';
+export const SUBMIT_COMMENT_FAILURE = 'SUBMIT_COMMENT_FAILURE';
 
 // Reducer
 export default function reducer(state = {}, action = {}) {
   switch (action.type) {
-    case SUBMIT_STORY:
+    case SUBMIT_COMMENT:
       return {
         ...state,
         submitting: true
       };
-    case SUBMIT_STORY_SUCCESS:
+    case SUBMIT_COMMENT_SUCCESS:
       return {
         ...state,
         submitting: false
       };
-    case SUBMIT_STORY_FAILURE:
+    case SUBMIT_COMMENT_FAILURE:
       return {
         ...state,
         submitting: false

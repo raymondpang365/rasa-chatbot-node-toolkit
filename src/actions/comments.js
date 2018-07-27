@@ -87,7 +87,7 @@ export const createComment = text => async (dispatch, apiEngine) => {
   try {
     console.log('creating Comment from actions/comment');
     json = await commentAPI(apiEngine).create({ text });
-    dispatch(addCommentIntoList(json.data.comment));
+    // dispatch(addCommentIntoList(json.data.comment));
   } catch (err) {
     dispatch(pushErrors(err));
   }

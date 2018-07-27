@@ -24,6 +24,7 @@ import {
 
 import {
   FETCH_STORY_REQUESTING,
+  FETCH_STORY_SUCCESS,
   FETCH_STORY_FAILURE
 } from "../../reducers/story";
 
@@ -32,6 +33,7 @@ import type {
   Dispatch,
   ReduxState
 } from '../../types/index';
+import StoryDetailItem from "./StoryDetailItem";
 
 type Props = {
   story: StoryType,
@@ -166,14 +168,26 @@ class StoryDetail extends PureComponent {
   render() {
     const { story, match: { params } } = this.props;
     const storyDetailById = story[params.id];
+    console.log(params.id);
+    console.log( storyDetailById);
+    let storyDetailElement = <p>Loading...</p>;
 
     if (
       !storyDetailById ||
       storyDetailById.readyStatus === FETCH_STORY_REQUESTING
     ) {
-      return <p>Loading...</p>;
+      storyDetailElement = <p>Loading...</p>;
     } else if (storyDetailById.readyStatus === FETCH_STORY_FAILURE) {
-      return <p>Oops, Failed to load detail!</p>;
+      storyDetailElement = <p>Oops, Failed to load detail!</p>;
+    } else if (storyDetailById.readyStatus === FETCH_STORY_SUCCESS) {
+      const detail = storyDetailById.info;
+      storyDetailElement =
+        (<StoryDetailItem
+          id={detail.id}
+          title={detail.title}
+          goal={detail.goal}
+          limitation={detail.limitation}
+        />);
     }
 
     const { onRemoveClick, text } = this.props;
@@ -182,6 +196,7 @@ class StoryDetail extends PureComponent {
     return (
       <div className={styles.siteContent}>
         <div className={styles.container}>
+          {storyDetailElement}
           <PostCommentForm />
           {this.renderCommentList()}
         </div>

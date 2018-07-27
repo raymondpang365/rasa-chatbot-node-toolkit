@@ -12,8 +12,8 @@
     </database>
     <schema id="4" parent="2" name="public">
       <ObjectId>2200</ObjectId>
-      <IntrospectionTimestamp>2018-07-25.00:15:41.148</IntrospectionTimestamp>
-      <IntrospectionStateNumber>2036</IntrospectionStateNumber>
+      <IntrospectionTimestamp>2018-07-27.17:38:54.608</IntrospectionTimestamp>
+      <IntrospectionStateNumber>2051</IntrospectionStateNumber>
       <Current>1</Current>
       <Visible>1</Visible>
     </schema>
@@ -252,8 +252,9 @@
     <column id="54" parent="27" name="id">
       <Position>1</Position>
       <DataType>integer|0</DataType>
-      <StateNumber>1859</StateNumber>
+      <StateNumber>2051</StateNumber>
       <SequenceName>goal_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;goal_id_seq&apos;::regclass)</DefaultExpression>
     </column>
     <column id="55" parent="27" name="content">
       <Position>3</Position>

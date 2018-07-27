@@ -50,7 +50,7 @@ class Login extends PureComponent<Props> {
       <div className={styles.addStory}>
         <div className={styles.addStoryForm}>
           <Helmet title='Login' />
-          <text className={styles.addStoryFormTitle}>Add Your Story</text>
+          <text className={styles.addStoryFormTitle}>Add Your Comment</text>
           {this.props.location !== undefined && this.props.location.query.next && (
             <alert>
               <strong>Authentication Required</strong>

@@ -11,6 +11,12 @@ import {
 } from "../reducers/registration";
 
 import {
+  SUBMIT_COMMENT,
+  SUBMIT_COMMENT_FAILURE,
+  SUBMIT_COMMENT_SUCCESS
+} from "../reducers/submitComment";
+
+import {
   LOGIN,
   LOGIN_FAILURE,
   LOGIN_SUCCESS
@@ -77,6 +83,22 @@ const asyncSubmissionMiddleware = store => (next) => (
       if(err.response.data.errors[0].code === "USER_UNAUTHORIZED") {
         const payload =  { login: "Login failed. \nYou may have typed in a wrong email or password." };
         store.dispatch({type: SUBMIT_STORY_SUCCESS, payload });
+      }
+    })
+  }
+
+  if (action && action.type === SUBMIT_COMMENT) {
+    store.dispatch(addStory(action.payload))
+      .then(json => {
+        store.dispatch({type: SUBMIT_COMMENT_SUCCESS });
+        const { storyId } = json.data;
+        store.dispatch(push(`/story/${storyId}`));
+      }).catch((err) => {
+      store.dispatch(pushErrors(err));
+      if(err.response.data.errors[0].code === "USER_UNAUTHORIZED") {
+        const payload =  { login: "Login failed. \nYou may have typed in a wrong email or password." };
+        store.dispatch({type: SUBMIT_COMMENT_SUCCESS, payload });
+        store.dispatch({})
       }
     })
   }

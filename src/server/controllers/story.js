@@ -54,13 +54,31 @@ export default {
   },
 
   check(req, res) {
-    p.query('SELECT * FROM story WHERE id = $1', [req.params.id]).then(
-      results => {
-        const _story = results.rows;
-        res.json({
-          story: _story
-        });
+    let _story;
+    Promise.all([
+      p.query('SELECT * FROM story WHERE id = $1', [req.params.id]),
+      p.query('SELECT * FROM story_goal WHERE story_id = $1', [req.params.id]),
+      p.query('SELECT * FROM story_limitation WHERE story_id = $1', [req.params.id])
+    ]).then(
+      ([res1, res2, res3]) => {
+        console.log('res2.rows');
+        console.log(res2.rows);
+        _story = res1.rows[0];
+        return Promise.all([
+          p.query('SELECT * FROM goal WHERE id = $1', [res2.rows[0].goal_id]),
+          p.query('SELECT * FROM limitation WHERE id = $1', [res3.rows[0].limitation_id])
+        ])
+
+      }).then(([res1, res2]) => {
+      const goal = res1.rows[0].content;
+      const limitation = res2.rows[0].content;
+      const finalresult = {..._story, goal, limitation};
+      console.log('finalresult');
+      console.log(finalresult);
+      res.json({
+        story: finalresult
       });
+    })
   },
 
   create(req, res) {
@@ -94,8 +112,11 @@ export default {
         [req.user.user_id, req.body.title]),
       p.query('INSERT INTO goal (content) VALUES ($1) RETURNING id, content', [req.body.goal]),
       p.query('INSERT INTO limitation (content) VALUES ($1) RETURNING id, content', [req.body.limitation])
-    ]).then(results =>
-      Promise.all([
+    ]).then(results => {
+      console.log(results[0]);
+      console.log(results[1]);
+      console.log(results[2]);
+      return Promise.all([
         p.query('INSERT INTO story_goal (story_id, goal_id) VALUES ($1, $2) RETURNING id',
           [results[0].id, results[1].id]),
         p.query('INSERT INTO story_limitation (story_id, limitation_id) VALUES ($1, $2)',
@@ -103,7 +124,7 @@ export default {
         ...limitationTagsInsert,
         ...goalTagsInsert
       ])
-    ).then(results => {
+    }).then(results => {
             console.log(results[0].rows[0]);
             const {id} = results[0].rows[0];
            // const rows = results[4].rows;
