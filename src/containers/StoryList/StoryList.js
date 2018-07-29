@@ -121,17 +121,17 @@ class StoryList extends PureComponent {
       <div>
         <p>Uh oh, seems like there is no any items yet! Please add one :)</p>
       </div> :
-      <div className={styles.infinite_scroll}>
-        <InfiniteScroll
-          page={this.props.page.current}
-          hasMore={this.props.page.current < this.props.page.last}
-          loadMore={this.loadItems}
-          loader={loader}
-          useWindow={false}
-        >
-          {items}
-        </InfiniteScroll>
-      </div>
+
+      <InfiniteScroll
+        page={this.props.page.current}
+        hasMore={this.props.page.current < this.props.page.last}
+        loadMore={this.loadItems}
+        loader={loader}
+        useWindow={false}
+      >
+        {items}
+      </InfiniteScroll>
+
     );
   }
 
@@ -139,8 +139,8 @@ class StoryList extends PureComponent {
     const { page } = this.props;
     console.log(page);
     return (
-      <div className={styles.siteContent}>
-        <div className={styles.container}>
+      <div className={styles.pageContainer}>
+        <div className={styles.storyListPage}>
           <ErrorList />
           <h3 className={styles.h6}>
             Story List ({`${page.current} / ${page.total}`})
@@ -165,7 +165,6 @@ class StoryList extends PureComponent {
 
 
           {this.renderStoryList()}
-
         </div>
       </div>
     );

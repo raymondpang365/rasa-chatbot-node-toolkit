@@ -47,76 +47,73 @@ class Login extends PureComponent<Props> {
     console.log('Login props:');
     console.log(this.props);
     return (
-      <div className={styles.addStory}>
-        <div className={styles.addStoryForm}>
-          <Helmet title='Login' />
-          <text className={styles.addStoryFormTitle}>Add Your Story</text>
-          {this.props.location !== undefined && this.props.location.query.next && (
-            <alert>
-              <strong>Authentication Required</strong>
-              {' '}Please login first.
-            </alert>
+      <div className={styles.addStoryForm}>
+        <Helmet title='Login' />
+        <text className={styles.addStoryFormTitle}>Add Your Story</text>
+        {this.props.location !== undefined && this.props.location.query.next && (
+          <alert>
+            <strong>Authentication Required</strong>
+            {' '}Please login first.
+          </alert>
+        )}
+        <MakeAsyncFunction
+          listener={promiseListener}
+          start={SUBMIT_STORY}
+          resolve={SUBMIT_STORY_SUCCESS}
+          reject={SUBMIT_STORY_FAILURE}
+        >
+          {onSubmit => (
+            <Form
+              onSubmit={onSubmit}
+              render={({
+                         handleSubmit,
+                         submitError,
+                         reset,
+                         submitting,
+                         pristine,
+                         validating,
+                         values
+                       }) => (
+                         <form onSubmit={handleSubmit}>
+                           <div className={styles.textCenter}>
+                             <Field
+                               name="title"
+                               component={TextAreaAdapter}
+                               validate={composeValidators(required)}
+                               hintText="Title"
+                               spellcheck="false"
+                               floatingLabelText="Title"
+                             />
+                             <Field
+                               name="goal"
+                               component={TextAreaAdapter}
+                               validate={composeValidators(required)}
+                               hintText="Write your story"
+                               spellcheck="false"
+                               floatingLabelText="Your Goal"
+                             />
+                             <Field
+                               name="limitation"
+                               component={TextAreaAdapter}
+                               validate={composeValidators(required)}
+                               hintText="Write your limitation"
+                               spellcheck="false"
+                               floatingLabelText="Your Obstacle"
+                             />
+                             <SubmitError name="login" />
+                           </div>
+
+                           <button className={styles.submitCommentFormButton}>
+                            Submit your Dream
+                           </button>
+
+                           <br />
+
+                         </form>
+              )}
+            />
           )}
-          <MakeAsyncFunction
-            listener={promiseListener}
-            start={SUBMIT_STORY}
-            resolve={SUBMIT_STORY_SUCCESS}
-            reject={SUBMIT_STORY_FAILURE}
-          >
-            {onSubmit => (
-              <Form
-                onSubmit={onSubmit}
-                render={({
-                           handleSubmit,
-                           submitError,
-                           reset,
-                           submitting,
-                           pristine,
-                           validating,
-                           values
-                         }) => (
-                           <form onSubmit={handleSubmit}>
-                             <div className={styles.textCenter}>
-                               <Field
-                                 name="title"
-                                 component={TextAreaAdapter}
-                                 validate={composeValidators(required)}
-                                 hintText="Title"
-                                 spellcheck="false"
-                                 floatingLabelText="Title"
-                               />
-                               <Field
-                                 name="goal"
-                                 component={TextAreaAdapter}
-                                 validate={composeValidators(required)}
-                                 hintText="Write your story"
-                                 spellcheck="false"
-                                 floatingLabelText="Your Goal"
-                               />
-                               <Field
-                                 name="limitation"
-                                 component={TextAreaAdapter}
-                                 validate={composeValidators(required)}
-                                 hintText="Write your limitation"
-                                 spellcheck="false"
-                                 floatingLabelText="Your Obstacle"
-                               />
-                               <SubmitError name="login" />
-                             </div>
-                             <div className={styles.submitStoryFormButtonWrapper}>
-                               <button className={styles.submitStoryFormButton}>
-                                Submit your Dream
-                               </button>
-                             </div>
-                             <br />
-
-                           </form>
-                )}
-              />
-            )}
-          </MakeAsyncFunction>
-        </div>
-
+        </MakeAsyncFunction>
       </div>
     )
   }

@@ -4,8 +4,13 @@ import type { Dispatch, GetState, ThunkAction, ReduxState } from '../types';
 import {
   FETCH_STORY_FAILURE,
   FETCH_STORY_REQUESTING,
-  FETCH_STORY_SUCCESS
+  FETCH_STORY_SUCCESS,
+  SET_SELECTED_STORY
 } from "../reducers/story";
+
+export const setSelectedStory = id => dispatch => {
+  dispatch({ type: SET_SELECTED_STORY, storyId: id });
+};
 
 export const addStory = values =>
   async (dispatch, getState, apiEngine) => {
@@ -24,7 +29,7 @@ export const fetchStory = (
 ): ThunkAction => async (dispatch: Dispatch, getState: GetState, apiEngine) => {
   dispatch({ type: FETCH_STORY_REQUESTING, storyId });
   try {
-    console.log('what the fuck action/story')
+    console.log('what the fuck action/story');
     const json = await storyAPI(apiEngine).check(storyId);
     console.log(json);
 

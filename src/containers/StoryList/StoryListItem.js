@@ -9,7 +9,7 @@ import styles from '../../styles/main.scss';
 const StoryListItem = ({id, title}) => {
   console.log(id);
   return(
-    <div>
+    <div className={styles.storyListItem}>
       <h3>{id}</h3>
       <Link to={`/story/${id}`}>
         <div>

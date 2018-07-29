@@ -11,10 +11,10 @@ import styles from '../../styles/main.scss'
 import type { ReduxState } from '../../types';
 import promiseListener from '../../helpers/reduxPromiseListener';
 import {
-  SUBMIT_STORY,
-  SUBMIT_STORY_SUCCESS,
-  SUBMIT_STORY_FAILURE
-} from "../../reducers/submitStory";
+  SUBMIT_COMMENT,
+  SUBMIT_COMMENT_SUCCESS,
+  SUBMIT_COMMENT_FAILURE
+} from "../../reducers/submitComment";
 
 import TextAreaAdapter from '../../components/elements/adapters/TextAreaAdapter';
 
@@ -41,67 +41,63 @@ const SubmitError = ({ name }) => (
   </Field>
 );
 
-class Login extends PureComponent<Props> {
+class PostCommentForm extends PureComponent<Props> {
 
   render() {
     console.log('Login props:');
     console.log(this.props);
     return (
-      <div className={styles.addStory}>
-        <div className={styles.addStoryForm}>
-          <Helmet title='Login' />
-          <text className={styles.addStoryFormTitle}>Add Your Comment</text>
-          {this.props.location !== undefined && this.props.location.query.next && (
-            <alert>
-              <strong>Authentication Required</strong>
-              {' '}Please login first.
-            </alert>
+      <div className={styles.addCommentForm}>
+        <Helmet title='Login' />
+        {this.props.location !== undefined && this.props.location.query.next && (
+          <alert>
+            <strong>Authentication Required</strong>
+            {' '}Please login first.
+          </alert>
+        )}
+        <MakeAsyncFunction
+          listener={promiseListener}
+          start={SUBMIT_COMMENT}
+          resolve={SUBMIT_COMMENT_SUCCESS}
+          reject={SUBMIT_COMMENT_FAILURE}
+        >
+          {onSubmit => (
+            <Form
+              onSubmit={onSubmit}
+              render={({
+                         handleSubmit,
+                         submitError,
+                         reset,
+                         submitting,
+                         pristine,
+                         validating,
+                         values
+                       }) => (
+                         <form onSubmit={handleSubmit}>
+                           <Field
+                             name="content"
+                             component={TextAreaAdapter}
+                             validate={composeValidators(required)}
+                             hintText="Comment or answer"
+                             spellcheck="false"
+                             floatingLabelText="Comment or answer"
+                           />
+                           <SubmitError name="login" />
+                           <div className={styles.submitCommentFormButtonWrapper}>
+                             <button className={styles.submitCommentFormButton}>
+                               Submit your Comment
+                             </button>
+                           </div>
+                           <br />
+
+                         </form>
+              )}
+            />
           )}
-          <MakeAsyncFunction
-            listener={promiseListener}
-            start={SUBMIT_STORY}
-            resolve={SUBMIT_STORY_SUCCESS}
-            reject={SUBMIT_STORY_FAILURE}
-          >
-            {onSubmit => (
-              <Form
-                onSubmit={onSubmit}
-                render={({
-                           handleSubmit,
-                           submitError,
-                           reset,
-                           submitting,
-                           pristine,
-                           validating,
-                           values
-                         }) => (
-                           <form onSubmit={handleSubmit}>
-                             <div className={styles.textCenter}>
-                               <Field
-                                 name="Comment or answer"
-                                 component={TextAreaAdapter}
-                                 validate={composeValidators(required)}
-                                 hintText="Comment or answer"
-                                 spellcheck="false"
-                                 floatingLabelText="Comment or answer"
-                               />
-                               <SubmitError name="login" />
-                             </div>
-                             <div className={styles.submitStoryFormButtonWrapper}>
-                               <button className={styles.submitStoryFormButton}>
-                                 Submit your Comment-
-                               </button>
-                             </div>
-                             <br />
-
-                           </form>
-                )}
-              />
-            )}
-          </MakeAsyncFunction>
-        </div>
-
+        </MakeAsyncFunction>
       </div>
+
+
     )
   }
 }
@@ -111,4 +107,4 @@ const connector: Connector<{}, Props> = connect(({  location, routing }: ReduxSt
 }));
 
 // Enable hot reloading for async componet
-export default compose(hot(module), withRouter, connector)(Login);
+export default compose(hot(module), withRouter, connector)(PostCommentForm);

@@ -36,8 +36,8 @@ export class Home extends Component<Props> {
     console.log('Home props:');
     console.log(this.props);
     return (
-      <div className={styles.siteContent}>
-        <div className={styles.bgContainer}>
+      <div className={styles.pageContainer}>
+        <div className={styles.homeContainer}>
           <Helmet title="Home" />
           <div className={styles.first_section}>
             <div className={styles.half}>
@@ -136,4 +136,4 @@ const connector: Connector<{}, Props> = connect(({ home, routing, cookies: { tok
 }));
 
 // Enable hot reloading for async componet
-export default compose(hot(module), withRouter, connector)(Home);
+export default compose(withRouter, connector)(Home);

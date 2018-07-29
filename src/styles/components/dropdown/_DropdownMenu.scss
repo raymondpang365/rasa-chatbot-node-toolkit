@@ -24,8 +24,8 @@
       80%,
       #fff,
       #fff,
-      $header-bg,
-      darken($header-bg, 10)
+      lighten($header-bg, 10),
+      lighten($header-bg, 20)
     );
   }
 

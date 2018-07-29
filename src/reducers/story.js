@@ -7,6 +7,7 @@ import type { Story, Action } from '../types';
 type State = Story;
 
 // Actions
+export const SET_SELECTED_STORY = 'SET_SELECTED_STORY';
 export const FETCH_STORY_INVALID = 'FETCH_STORY_INVALID';
 export const FETCH_STORY_REQUESTING = 'FETCH_STORY_REQUESTING';
 export const FETCH_STORY_FAILURE = 'FETCH_STORY_FAILURE';
@@ -16,6 +17,7 @@ export const ADD_STORY = 'ADD_STORY';
 export const REMOVE_STORY = 'REMOVE_STORY';
 
 const initialState = {
+  selected: 0,
   readyStatus: FETCH_STORY_INVALID,
   err: null,
   data: []
@@ -23,6 +25,10 @@ const initialState = {
 
 export default (state: State = {}, action: Action): State => {
   switch (action.type) {
+    case SET_SELECTED_STORY:
+      return fp.assign(state, {
+        selected: action.storyId
+      });
     case FETCH_STORY_REQUESTING:
       return fp.assign(state, {
         [action.storyId]: {

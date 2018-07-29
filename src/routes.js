@@ -25,7 +25,6 @@ export default [
       {
         path: '/',
         exact: true,
-        strict: true,
         component: asyncHome
       },
       {
@@ -46,6 +45,18 @@ export default [
         path: '/feed',
         exact: true,
         component: () => <Redirect to="/feed/page/1" />
+      },
+      {
+        path: '/user/register',
+        component: asyncRegister
+      },
+      {
+        path: '/user/login',
+        component: asyncLogin
+      },
+      {
+        path: '/addstory',
+        component: asyncAddStory
       },
       {
         path: '/user/email/verify',

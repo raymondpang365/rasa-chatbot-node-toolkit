@@ -19,9 +19,8 @@ class AddStoryPage extends PureComponent<Props> {
     console.log('Register props');
 
     return (
-
-      <div className={styles.addStoryContainerFull}>
-        <div className={styles.addStory}>
+      <div className={styles.pageContainer}>
+        <div className={styles.addStoryContainerFull}>
           <AddStoryForm />
         </div>
       </div>

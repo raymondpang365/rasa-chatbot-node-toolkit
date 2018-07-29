@@ -45,12 +45,13 @@ export default app => {
         serverSideRender: true
       })
     );
-
+/*
     app.use(
       require('webpack-hot-middleware')(compiler, {
         log: false // Turn it off for friendly-errors-webpack-plugin
       })
     );
+    */
   }
 
 

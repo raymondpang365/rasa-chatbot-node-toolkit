@@ -19,9 +19,11 @@ class Register extends PureComponent<Props> {
     console.log('Register props');
 
     return (
-      <div className={styles.login}>
-        <div className={styles.bgContainerFull}>
-          <RegisterForm />
+      <div className={styles.pageContainer}>
+        <div className={styles.login}>
+          <div>
+            <RegisterForm />
+          </div>
         </div>
       </div>
 

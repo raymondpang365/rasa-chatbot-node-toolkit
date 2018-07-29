@@ -16,8 +16,8 @@ class Login extends PureComponent<Props> {
     console.log('Login props:');
     console.log(this.props);
     return (
-      <div className={styles.loginContainerFull}>
-        <div className={styles.login}>
+      <div className={styles.pageContainer}>
+        <div className={styles.loginContainerFull}>
           <LoginForm />
         </div>
       </div>

@@ -1,0 +1,59 @@
+@import '../abstracts/mixin/mixins';
+@import '../base/theme';
+
+html{
+  min-height: 100%;
+}
+
+body{
+  color: $text-color;
+  font-size: $base-font-size;
+  font-family: $base-font-family;
+  font-weight: $base-font-weight;
+  line-height: 1.6;
+  position:fixed;
+  padding:0;
+  margin:0;
+  top:0;
+  left:0;
+  width: 100%;
+  height: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+hr {
+  margin-bottom: 0;
+  margin-top: 0;
+  opacity: 0.15;
+}
+
+.pageContainer {
+  margin-top: $header_height;
+  overflow: scroll;
+  height: 100%;
+  background-color: rgba(220, 220, 220, 0.3);
+
+  @media only screen and (max-width: 768px) {
+    margin-top: 0;
+  }
+}
+
+
+.siteContainer {
+  padding:0;
+  margin:0;
+  height: 100%;
+}
+
+
+.clear{
+  clear: both;
+  display: block;
+}
+
+
+

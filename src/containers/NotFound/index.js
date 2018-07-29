@@ -3,7 +3,7 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 
-import styles from '../../styles/containers/_NotFound.scss';
+import styles from '../../styles/components/notFound/_NotFound.scss';
 
 type Props = { staticContext: Object };
 

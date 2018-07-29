@@ -46,7 +46,7 @@ class VerificationPage extends Component {
     if (isVerifying) {
       return (
         <div className={styles.siteContent}>
-          <div className={styles.bgContainer}>
+          <div className={styles.pageContainer}>
             <p>Please wait for a while...</p>
           </div>
         </div>
@@ -56,7 +56,7 @@ class VerificationPage extends Component {
     if (isFail) {
       return (
         <div className={styles.siteContent}>
-          <div className={styles.bgContainer}>
+          <div className={styles.pageContainer}>
             <Alert bsStyle="danger">
               <strong>Verification Failed</strong>
             </Alert>

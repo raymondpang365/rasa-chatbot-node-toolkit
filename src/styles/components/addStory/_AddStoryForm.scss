@@ -1,6 +1,6 @@
-@import '../abstracts/variables';
-@import '../base/theme';
-@import '../base/typography';
+@import '../../abstracts/variables';
+@import '../../base/theme';
+@import '../../base/typography';
 
 .addStoryForm {
   margin: 20px 0;
@@ -21,7 +21,7 @@
   text-align: center;
   font-size: 1em;
   flex-basis: 100%;
-  color: $third-color;
+  color: black;
   font-weight: 900;
   padding-bottom: 3rem;
 }

@@ -82,9 +82,7 @@ class TextArea extends PureComponent {
       <div className={styles.addStoryFormField}>
         <div className={inputStyle} />
         <label className={styles.addStoryFormFieldLabel} htmlFor="mail">{floatingLabelText}</label>
-        <hr className={hrStyle} />
         <textarea
-
           rows="4"
           cols="80"
           type={type}

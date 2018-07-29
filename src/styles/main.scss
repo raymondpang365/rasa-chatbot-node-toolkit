@@ -8,36 +8,35 @@
 // 2. Vendors
 
 // 3. Base stuff
-@import 'base/scaffolding';
 @import 'base/theme';
 @import 'base/typography';
 
 // 4. Components
-@import 'components/CommentListItem',
-  'components/DropdownMenu',
-  'components/ErrorDisplay',
-  'components/Grid',
-  'components/InfiniteScroll',
-  'components/LoginForm',
-  'components/Loading',
-  'components/LoginFormField',
-  'components/AddStoryForm',
-  'components/AddStoryFormField',
-  'components/VehicleDetailCard',
-  'components/VehicleListCard';
+@import 'components/addStory/CommentListItem';
+@import 'components/addStory/AddStory';
+@import 'components/addStory/AddStoryForm';
+@import 'components/addStory/AddStoryFormField';
+@import 'components/dropdown/DropdownMenu';
+@import 'components/home/Home';
+@import 'components/home/_StorySection';
+@import 'components/login/Login';
+@import 'components/login/LoginForm';
+@import 'components/login/LoginFormField';
+@import 'components/login/PasswordField';
+@import 'components/notFound/NotFound';
+@import 'components/storyDetail/StoryDetail';
+@import 'components/storyDetail/AddCommentForm';
+@import 'components/storyList/StoryList';
+@import 'components/App';
+@import 'components/ErrorDisplay';
+@import 'components/Grid';
+@import 'components/Loading';
 
 // 5. Atoms
 @import 'atoms/button';
 @import 'atoms/socialbutton';
 
-// 6. Containers
-@import 'containers/App',
-  'containers/home/Home',
-  'containers/home/StorySection',
-  'containers/Login',
-  'containers/NotFound',
-  'containers/AddStory',
-  'containers/UserInfo';
+
 
 // 7. Layout-related sections
 @import 'layout/header',

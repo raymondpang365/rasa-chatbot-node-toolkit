@@ -24,7 +24,6 @@ const App = ({ route }: Props) => (
         <div className={styles.clear} />
         {/* child routes won't render without this */}
         {renderRoutes(route.routes)}
-        <div className="site-cache" id="site-cache" />
       </div>
     </div>
   </React.Fragment>

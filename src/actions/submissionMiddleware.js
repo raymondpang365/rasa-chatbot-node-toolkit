@@ -1,7 +1,8 @@
-import { push } from 'connected-react-router';
+import { push, replace } from 'connected-react-router';
 
 import {emailLogin, emailRegister, loginUser} from "./user";
 import {addStory} from "./story";
+import {addComment, appendCommentIntoList, fetchCommentsIfNeeded} from "./comments"
 import { pushErrors } from "./error";
 
 import {
@@ -32,24 +33,26 @@ import {
 const asyncSubmissionMiddleware = store => (next) => (
   action
 ) => {
-  console.log('asyncRegisterMiddleware');
+  console.log('asyncSubmissionMiddleware');
   if (action && action.type === REGISTER) {
     store.dispatch(emailRegister(action.payload))
       .then(json => {
         const { data } = json;
         store.dispatch({type: REGISTER_SUCCESS });
-        console.log('asyncRegisterMiddleware');
         console.log(data);
-        console.log('asyncRegisterMiddleware');
+
         store.dispatch(loginUser({
           token: data.token,
           info: data.info,
         }));
-        store.dispatch(push('/'));
+       // store.dispatch(push('/'));
       }).catch(err => {
       if(err.response.data.errors[0].code === "USER_EXISTED") {
         const payload = ({email: 'Email is already registered.'});
         store.dispatch({type: REGISTER_SUCCESS, payload});
+      }
+      else {
+        store.dispatch({type: REGISTER_FAILURE, err });
       }
     })
   }
@@ -62,12 +65,15 @@ const asyncSubmissionMiddleware = store => (next) => (
           info: data.info,
         }));
         store.dispatch({type: LOGIN_SUCCESS });
-        store.dispatch(push('/'));
+       // store.dispatch(push('/'));
       }).catch((err) => {
       store.dispatch(pushErrors(err));
       if(err.response.data.errors[0].code === "USER_UNAUTHORIZED") {
         const payload =  { login: "Login failed. \nYou may have typed in a wrong email or password." };
         store.dispatch({type: LOGIN_SUCCESS, payload });
+      }
+      else {
+        store.dispatch({type: LOGIN_FAILURE, err });
       }
     })
   }
@@ -83,23 +89,36 @@ const asyncSubmissionMiddleware = store => (next) => (
       if(err.response.data.errors[0].code === "USER_UNAUTHORIZED") {
         const payload =  { login: "Login failed. \nYou may have typed in a wrong email or password." };
         store.dispatch({type: SUBMIT_STORY_SUCCESS, payload });
+      } else{
+        store.dispatch({type: SUBMIT_STORY_FAILURE, err });
       }
     })
   }
 
   if (action && action.type === SUBMIT_COMMENT) {
-    store.dispatch(addStory(action.payload))
+    if (store.getState().story.selected === 0)
+      return store.dispatch({type: SUBMIT_COMMENT_FAILURE, err: "please wait" });
+
+    console.log(store.getState().story.selected);
+    console.log(action.payload);
+
+    store.dispatch(addComment(store.getState().story.selected, action.payload))
       .then(json => {
+        console.log(json);
         store.dispatch({type: SUBMIT_COMMENT_SUCCESS });
-        const { storyId } = json.data;
-        store.dispatch(push(`/story/${storyId}`));
+        store.dispatch(fetchCommentsIfNeeded(store.getState().story.selected));
+        // const { comment } = json.data;
+        // store.dispatch(appendCommentIntoList(comment));
       }).catch((err) => {
-      store.dispatch(pushErrors(err));
-      if(err.response.data.errors[0].code === "USER_UNAUTHORIZED") {
-        const payload =  { login: "Login failed. \nYou may have typed in a wrong email or password." };
-        store.dispatch({type: SUBMIT_COMMENT_SUCCESS, payload });
-        store.dispatch({})
-      }
+        store.dispatch(pushErrors(err));
+        console.log(err);
+        if(err.response.data.errors[0].code === "USER_UNAUTHORIZED") {
+          const payload =  { login: "Login failed. \nYou may have typed in a wrong email or password." };
+          store.dispatch({type: SUBMIT_COMMENT_SUCCESS, payload });
+        }
+        else {
+          store.dispatch({type: SUBMIT_COMMENT_FAILURE, err });
+        }
     })
   }
   return next(action);

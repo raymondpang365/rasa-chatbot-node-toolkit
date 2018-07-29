@@ -16,6 +16,7 @@ import {
   FETCH_COMMENTS_SUCCESS
 } from "../reducers/comments";
 
+
 // Export this for unit testing more easily
 /* istanbul ignore next */
 
@@ -37,18 +38,18 @@ const shouldFetchComments = (state: ReduxState): boolean => {
 };
 
 
-export const fetchComments = (page): ThunkAction => async (
+export const fetchComments = storyId => async (
   dispatch: Dispatch,
   getState: GetState,
   apiEngine
 ) => {
-  console.log(`hi ${page}`);
+  console.log(`hi ${storyId}`);
   dispatch({ type: FETCH_COMMENTS_REQUESTING });
   let json;
   try {
-    const json = await commentAPI(apiEngine).list({ page });
+    const json = await commentAPI(apiEngine).list(storyId);
     /* istanbul ignore next */
-    console.log(json.data);
+    console.log(json);
     dispatch({ type: FETCH_COMMENTS_SUCCESS, data: json.data.comments });
 
     // dispatch(setCommentList(json.data));
@@ -77,17 +78,21 @@ export const fetchCommentsIfNeeded = (page): ThunkAction => (
   return null;
 };
 
-export const addCommentIntoList = comment => dispatch => {
+export const appendCommentIntoList = comment => dispatch => {
   const normalized = normalize([comment], arrayOfComment);
   dispatch(prependEntitiesIntoPage(Resources.COMMENT, normalized, 1));
 };
 
-export const createComment = text => async (dispatch, apiEngine) => {
+export const addComment = (storyId, text) =>
+  async (dispatch, getState, apiEngine) => {
   let json;
+  console.log(storyId);
+  console.log(text);
+  const { content } = text;
+  console.log(content);
   try {
-    console.log('creating Comment from actions/comment');
-    json = await commentAPI(apiEngine).create({ text });
-    // dispatch(addCommentIntoList(json.data.comment));
+    json = await commentAPI(apiEngine).create(storyId, content);
+    return json;
   } catch (err) {
     dispatch(pushErrors(err));
   }

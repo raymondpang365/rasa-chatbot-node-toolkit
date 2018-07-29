@@ -60,7 +60,7 @@ export const logoutUser = () =>
       ]).then(()=> {
           console.log('redirect now!');
 
-          dispatch(push('/'))
+   //       dispatch(push('/'))
         }
       );
     } catch (err) {

@@ -11,7 +11,7 @@ import InfiniteScroll from '../../components/utils/InfiniteScroll';
 
 import styles from '../../styles/main.scss';
 import { fetchCommentsIfNeeded } from '../../actions/comments';
-import { fetchStoryIfNeeded } from '../../actions/story';
+import { fetchStoryIfNeeded, setSelectedStory} from '../../actions/story';
 
 import CommentListItem from './CommentListItem';
 
@@ -23,6 +23,7 @@ import {
 } from "../../reducers/comments";
 
 import {
+
   FETCH_STORY_REQUESTING,
   FETCH_STORY_SUCCESS,
   FETCH_STORY_FAILURE
@@ -46,14 +47,26 @@ class StoryDetail extends PureComponent {
     super();
     this.state = {
       isEditable: false,
-      inputValue: ''
+      inputValue: '',
+      comments: {
+        readyStatus: FETCH_COMMENTS_INVALID,
+        err: null,
+        data: []
+      }
     };
   }
 
   componentDidMount() {
-    this.props.fetchStoryIfNeeded(1);
-    this.props.fetchCommentsIfNeeded(1);
+    const { match: { params } } = this.props;
+    this.props.setSelectedStory( params.id);
+    this.props.fetchStoryIfNeeded(params.id);
+    this.props.fetchCommentsIfNeeded(params.id);
+  }
 
+  componentWillReceiveProps(newProps){
+    if(JSON.stringify(newProps.comments) !== JSON.stringify(this.comments) ){
+      this.setState({comments: newProps.comments })
+    }
   }
 
   loadMore(page){
@@ -119,7 +132,7 @@ class StoryDetail extends PureComponent {
 
 
   renderCommentList() {
-    const { comments } = this.props;
+    const { comments } = this.state;
     let loader;
     if (
       !comments.readyStatus ||
@@ -131,14 +144,15 @@ class StoryDetail extends PureComponent {
       loader = <p>Oops, Failed to load items!</p>;
     }
 
-    console.log(this.props.comments);
+    console.log(this.state.comments);
     const items = (
       <div>
-        {this.props.comments.data.map(comment => {
+        {this.state.comments.data.map(comment => {
           console.log(comment.id);
           return (<CommentListItem
-            key={comment.key}
-            user={comment.user}
+            commentId={comment.id}
+            displayName={comment.display_name}
+            avatarUrl={comment.avatar_url}
             content={comment.content}
             likes={comment.likes}
           />);
@@ -151,17 +165,17 @@ class StoryDetail extends PureComponent {
         <div>
           <p>Uh oh, seems like there is no any items yet! Please add one :)</p>
         </div> :
-        <div className={styles.infinite_scroll}>
-          <InfiniteScroll
-            page={this.props.page.current}
-            hasMore={this.props.page.current < this.props.page.last}
-            loadMore={this.loadItems}
-            loader={loader}
-            useWindow={false}
-          >
-            {items}
-          </InfiniteScroll>
-        </div>
+
+        <InfiniteScroll
+          page={this.props.page.current}
+          hasMore={this.props.page.current < this.props.page.last}
+          loadMore={this.loadItems}
+          loader={loader}
+          useWindow={false}
+        >
+          {items}
+        </InfiniteScroll>
+
     );
   }
 
@@ -194,10 +208,10 @@ class StoryDetail extends PureComponent {
     const { isEditable } = this.state;
 
     return (
-      <div className={styles.siteContent}>
-        <div className={styles.container}>
+      <div className={styles.pageContainer}>
+        <div className={styles.storyListPage}>
           {storyDetailElement}
-          <PostCommentForm />
+          <PostCommentForm storyId={params.id} />
           {this.renderCommentList()}
         </div>
       </div>
@@ -207,7 +221,7 @@ class StoryDetail extends PureComponent {
 }
 
 
-const mapStateToProps = ({ story, comments, role, location, pagination, entity }: ReduxState) => {
+const mapStateToProps = ({ story, comments, role, location, routing, pagination, entity }: ReduxState) => {
 
 
   const { page, pages } = pagination.stories;
@@ -233,6 +247,7 @@ const mapStateToProps = ({ story, comments, role, location, pagination, entity }
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
+  setSelectedStory: (id: number) => dispatch(setSelectedStory(id)),
   fetchCommentsIfNeeded: (id: number) => dispatch(fetchCommentsIfNeeded(id)),
   fetchStoryIfNeeded: (id: number) => dispatch(fetchStoryIfNeeded(id))
 });
