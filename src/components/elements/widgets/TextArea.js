@@ -23,7 +23,7 @@ class TextArea extends PureComponent {
       hrStyle: ''
     };
 
-
+    console.log(value);
     if (!this.state.isFocused && value==="") {
 
       return {

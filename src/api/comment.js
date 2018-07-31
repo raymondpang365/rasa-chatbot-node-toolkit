@@ -15,6 +15,9 @@ export default apiEngine => ({
     console.log(content);
     return apiEngine.post('/api/comments', {data: {storyId, content}})
   },
+  addLikes:(id) => {
+    apiEngine.put(`/api/comments/addlikes/${id}`)
+  },
   update: (id, comment) =>
     apiEngine.put(`/api/comments/${id}`, { data: comment }),
   remove: id => apiEngine.del(`/api/comments/${id}`)

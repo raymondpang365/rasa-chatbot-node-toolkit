@@ -3,7 +3,35 @@
   font-size: 1rem;
 }
 
+.userBrief{
+  display: flex;
+  justify-content: flex-start;
+  align-content: center;
+  height: 30px;
+  margin-top: 0.5rem;
+
+  .profileIconWrapper{
+    display: flex;
+    padding-right: 0.5rem;
+    align-content: center;
+  }
+
+  .profileIcon{
+    border-radius: 15px;
+    height: 30px;
+  }
+
+  .userName{
+    align-self: center;
+    color: #333;
+    font-size: 1rem;
+  }
+}
+
+
+
 .storyDetailItem{
   color: black;
   font-size: 1rem;
+  padding-bottom: 2rem;
 }

@@ -16,7 +16,7 @@ export default {
         comments = results.rows;
         const userDetailsFetch = [];
         comments.map(({user_id}) =>
-          userDetailsFetch.push(p.query('SELECT * FROM user_info WHERE user_id = $1', [user_id]))
+          userDetailsFetch.push(p.query('SELECT display_name, avatar_url FROM user_info WHERE user_id = $1', [user_id]))
         );
         return Promise.all(userDetailsFetch);
       }
@@ -27,15 +27,16 @@ export default {
 
   },
 
-  check(req, res) {
-    p.query('SELECT * FROM story WHERE id = $1', [req.params.id]).then(
+  addLikes(req,res){
+    console.log(req.params.id);
+    p.query('UPDATE comment SET likes = likes + 1 WHERE id = $1', [req.params.id]).then(
       results => {
+        console.log(results.rows);
         const _story = results.rows;
-        res.json({
-          story: _story
-        });
+        res.status(200).json({});
       });
   },
+
 
   create(req, res) {
     console.log(req.body);

@@ -10,7 +10,7 @@ import PostCommentForm from './PostCommentForm'
 import InfiniteScroll from '../../components/utils/InfiniteScroll';
 
 import styles from '../../styles/main.scss';
-import { fetchCommentsIfNeeded } from '../../actions/comments';
+import { likeComment, fetchCommentsIfNeeded } from '../../actions/comments';
 import { fetchStoryIfNeeded, setSelectedStory} from '../../actions/story';
 
 import CommentListItem from './CommentListItem';
@@ -54,6 +54,7 @@ class StoryDetail extends PureComponent {
         data: []
       }
     };
+    this.onClickLike = this.onClickLike.bind(this);
   }
 
   componentDidMount() {
@@ -67,6 +68,18 @@ class StoryDetail extends PureComponent {
     if(JSON.stringify(newProps.comments) !== JSON.stringify(this.comments) ){
       this.setState({comments: newProps.comments })
     }
+  }
+
+  onClickLike(numInList, commentId){
+
+    const addLikes = function() {
+      console.log(numInList, commentId);
+      const {data} = this.state.comments;
+      if (typeof data[numInList].likes !== 'undefined') data[numInList].likes += 1;
+      this.props.likeComment(commentId);
+      this.setState({comments: {...this.state.comments, data}})
+    }
+    return addLikes.bind(this);
   }
 
   loadMore(page){
@@ -147,14 +160,16 @@ class StoryDetail extends PureComponent {
     console.log(this.state.comments);
     const items = (
       <div>
-        {this.state.comments.data.map(comment => {
+        {this.state.comments.data.map((comment, numInList) => {
           console.log(comment.id);
           return (<CommentListItem
+            numInList={numInList}
             commentId={comment.id}
             displayName={comment.display_name}
             avatarUrl={comment.avatar_url}
             content={comment.content}
             likes={comment.likes}
+            onClickLike={this.onClickLike}
           />);
         })}
       </div>
@@ -249,7 +264,8 @@ const mapStateToProps = ({ story, comments, role, location, routing, pagination,
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   setSelectedStory: (id: number) => dispatch(setSelectedStory(id)),
   fetchCommentsIfNeeded: (id: number) => dispatch(fetchCommentsIfNeeded(id)),
-  fetchStoryIfNeeded: (id: number) => dispatch(fetchStoryIfNeeded(id))
+  fetchStoryIfNeeded: (id: number) => dispatch(fetchStoryIfNeeded(id)),
+  likeComment: (id: number) => dispatch(likeComment(id))
 });
 
 const connector: Connector<{}, Props> = connect(

@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import { hot } from 'react-hot-loader';
 import { Link, withRouter } from 'react-router-dom';
 import type { Connector } from 'react-redux';
-import styles from '../../styles/main.scss'
+import styles from '../../styles/main.scss';
 import type { ReduxState } from '../../types';
 
-import AddStoryForm from './AddStoryForm'
+import AddStoryForm from './AddStoryForm';
 
 type Props = {};
 
@@ -24,10 +24,10 @@ class AddStoryPage extends PureComponent<Props> {
           <AddStoryForm />
         </div>
       </div>
-
     )
   }
 }
+
 const connector: Connector<{}, Props> = connect(({  location, routing }: ReduxState) => ({
   location,
   routing

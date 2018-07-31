@@ -51,8 +51,9 @@ export const logoutUser = () =>
   async (dispatch, getState, apiEngine) => {
     console.log(apiEngine);
     try {
-      const json = await userAPI(apiEngine).logout();
-
+      console.log('logoutUser action');
+      await userAPI(apiEngine).logout();
+      console.log('server loguted');
       /* istanbul ignore next */
       Promise.all([
         dispatch(removeCookie('token')),
@@ -60,7 +61,7 @@ export const logoutUser = () =>
       ]).then(()=> {
           console.log('redirect now!');
 
-   //       dispatch(push('/'))
+          dispatch(push('/'))
         }
       );
     } catch (err) {

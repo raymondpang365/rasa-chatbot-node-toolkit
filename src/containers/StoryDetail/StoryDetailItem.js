@@ -10,28 +10,21 @@ const StoryDetailItem = ({id, title, goal, limitation}) => {
   console.log(id);
   return(
     <div className={styles.storyDetailItem}>
-      <h3>{id}</h3>
-      <Link to={`/story/${id}`}>
-        <div>
-          Title:
-        </div>
-        <div>
-          {title}
-        </div>
-        <div>
-          Goal:
-        </div>
-        <div>
-          {goal}
-        </div>
-        <div>
-          Limitation:
-        </div>
-        <div>
-          {limitation}
-        </div>
-      </Link>
-
+      <h2>
+        {title}
+      </h2>
+      <h4>
+        Goal:
+      </h4>
+      <div>
+        {goal}
+      </div>
+      <h4>
+        Limitation:
+      </h4>
+      <div>
+        {limitation}
+      </div>
     </div>
   )
 };

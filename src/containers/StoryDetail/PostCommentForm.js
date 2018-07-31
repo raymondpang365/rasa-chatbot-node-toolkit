@@ -78,26 +78,23 @@ class PostCommentForm extends PureComponent<Props> {
                              name="content"
                              component={TextAreaAdapter}
                              validate={composeValidators(required)}
-                             hintText="Comment or answer"
+                             hintText="Write a follow-up question or suggestion..."
                              spellcheck="false"
-                             floatingLabelText="Comment or answer"
+                             floatingLabelText="Help solving the problem:"
                            />
                            <SubmitError name="login" />
                            <div className={styles.submitCommentFormButtonWrapper}>
                              <button className={styles.submitCommentFormButton}>
-                               Submit your Comment
+                               Reply
                              </button>
                            </div>
                            <br />
-
                          </form>
               )}
             />
           )}
         </MakeAsyncFunction>
       </div>
-
-
     )
   }
 }

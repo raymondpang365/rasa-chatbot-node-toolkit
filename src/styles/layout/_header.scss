@@ -4,6 +4,7 @@
 
 .header {
   position: fixed;
+  top: 0;
   left: 0;
   right: 0;
   padding-left: 6%;
@@ -46,7 +47,6 @@ a.header__logo {
 @media only screen and (max-width: 768px) {
   .header {
     background-color: $primary-color;
-    position: static;
     padding-right: 0;
     padding-left: 0;
   }

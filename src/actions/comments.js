@@ -37,6 +37,28 @@ const shouldFetchComments = (state: ReduxState): boolean => {
   return state.comments.readyStatus !== FETCH_COMMENTS_SUCCESS;
 };
 
+export const likeComment = commentId => async (
+  dispatch: Dispatch,
+  getState: GetState,
+  apiEngine
+) => {
+  dispatch({ type: FETCH_COMMENTS_REQUESTING });
+  let json;
+  try {
+    const json = await commentAPI(apiEngine).addLikes(commentId);
+    /* istanbul ignore next */
+    console.log(json);
+
+    // dispatch(setCommentList(json.data));
+    console.log(getState());
+  } catch (err) {
+    /* istanbul ignore next */
+    dispatch({ type: FETCH_COMMENTS_FAILURE, err: err.message });
+    console.log(`omg ${err.stack}`);
+  }
+};
+
+
 
 export const fetchComments = storyId => async (
   dispatch: Dispatch,

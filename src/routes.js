@@ -55,6 +55,10 @@ export default [
         component: asyncLogin
       },
       {
+        path: '/user/logout',
+        component: asyncLogout
+      },
+      {
         path: '/addstory',
         component: asyncAddStory
       },
