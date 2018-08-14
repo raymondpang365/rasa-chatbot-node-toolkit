@@ -12,10 +12,10 @@
 @import 'base/typography';
 
 // 4. Components
-@import 'components/addStory/CommentListItem';
 @import 'components/addStory/AddStory';
 @import 'components/addStory/AddStoryForm';
 @import 'components/addStory/AddStoryFormField';
+@import 'components/addStory/BudgetInput';
 @import 'components/dropdown/DropdownMenu';
 @import 'components/home/Home';
 @import 'components/home/_StorySection';
@@ -26,6 +26,7 @@
 @import 'components/notFound/NotFound';
 @import 'components/storyDetail/StoryDetail';
 @import 'components/storyDetail/AddCommentForm';
+@import 'components/storyDetail/CommentListItem';
 @import 'components/storyList/StoryList';
 @import 'components/App';
 @import 'components/ErrorDisplay';

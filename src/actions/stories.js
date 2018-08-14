@@ -53,8 +53,6 @@ export const fetchStories = (page): ThunkAction => async (
     console.log(json.data);
     dispatch({ type: FETCH_STORIES_SUCCESS, data: json.data.stories });
 
-   // dispatch(setStoryList(json.data));
-
     console.log(getState());
 
   } catch (err) {

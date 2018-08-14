@@ -160,6 +160,7 @@
       "es6": true
     },
     "rules": {
+      "react/no-unused-state": 0,
       "preder-destructuring": 0,
       "no-shadow": 0,
       "no-throw-literal": 0,

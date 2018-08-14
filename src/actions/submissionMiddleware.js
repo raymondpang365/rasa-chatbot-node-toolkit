@@ -33,7 +33,6 @@ import {
 const asyncSubmissionMiddleware = store => (next) => (
   action
 ) => {
-  console.log('asyncSubmissionMiddleware');
   if (action && action.type === REGISTER) {
     store.dispatch(emailRegister(action.payload))
       .then(json => {
@@ -82,6 +81,7 @@ const asyncSubmissionMiddleware = store => (next) => (
     store.dispatch(addStory(action.payload))
       .then(json => {
         store.dispatch({type: SUBMIT_STORY_SUCCESS });
+        console.log(json);
         const { storyId } = json.data;
         store.dispatch(push(`/story/${storyId}`));
       }).catch((err) => {

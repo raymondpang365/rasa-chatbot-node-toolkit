@@ -47,9 +47,23 @@ export default {
         });
       })
       */
+
+    let stories;
+
     p.query('SELECT * FROM story').then(
-      results => res.json({stories: results.rows})
-    )
+      results => {
+        stories = results.rows;
+        const userDetailsFetch = [];
+        stories.map(({user_id}) =>
+          userDetailsFetch.push(p.query('SELECT display_name, avatar_url FROM user_info WHERE user_id = $1', [user_id]))
+        );
+        return Promise.all(userDetailsFetch);
+      }
+    ).then(results => {
+      const detailStories = stories.map((c, i) => Object.assign({}, c, results[i].rows[0]));
+      console.log(detailStories);
+      res.json({ stories: detailStories} )
+    })
 
   },
 
@@ -91,7 +105,7 @@ export default {
       req.body.limitationTag.map(t => {
           const tag_id = uuidv4();
         limitationTagsInsert.push([
-            p.query('INSERT INTO tag (tag_id, tag_name, category) VALUES ($1, $2)', [tag_id, t, 'limitation']),
+            p.query('INSERT INTO tag (tag_id, tag_name, category) VALUES ($1, $2, $3)', [tag_id, t, 'limitation']),
             p.query('INSERT INTO limitation_tag (limitation_id, tag_id) VALUES ($1, $2)', [limitation_id, tag_id])
           ])
         }
@@ -101,15 +115,15 @@ export default {
       req.body.goalTag.map(t => {
           const tag_id = uuidv4();
           goalTagsInsert.push([
-            p.query('INSERT INTO tag (tag_id, tag_name, category) VALUES ($1, $2)', [tag_id, t, 'limitation']),
+            p.query('INSERT INTO tag (tag_id, tag_name, category) VALUES ($1, $2, $3)', [tag_id, t, 'limitation']),
             p.query('INSERT INTO goal_tag (goal_id, tag_id) VALUES ($1, $2)', [goal_id, tag_id,])
           ])
         }
       )
     }
     Promise.all([
-      p.query('INSERT INTO story (user_id, title) VALUES ($1, $2) RETURNING id',
-        [req.user.user_id, req.body.title]),
+      p.query('INSERT INTO story (user_id, title, v_budget, c_budget) VALUES ($1, $2, $3, $4) RETURNING id',
+        [req.user.user_id, req.body.title, req.body.v_budget, req.body.c_budget]),
       p.query('INSERT INTO goal (content) VALUES ($1) RETURNING id, content', [req.body.goal]),
       p.query('INSERT INTO limitation (content) VALUES ($1) RETURNING id, content', [req.body.limitation])
     ]).then(results => {
@@ -117,19 +131,19 @@ export default {
       console.log(results[1]);
       console.log(results[2]);
       return Promise.all([
-        p.query('INSERT INTO story_goal (story_id, goal_id) VALUES ($1, $2) RETURNING id',
-          [results[0].id, results[1].id]),
+        p.query('INSERT INTO story_goal (story_id, goal_id) VALUES ($1, $2) RETURNING story_id',
+          [results[0].rows[0].id, results[1].rows[0].id]),
         p.query('INSERT INTO story_limitation (story_id, limitation_id) VALUES ($1, $2)',
-          [results[0].id, results[2].id]),
+          [results[0].rows[0].id, results[2].rows[0].id]),
         ...limitationTagsInsert,
         ...goalTagsInsert
       ])
     }).then(results => {
             console.log(results[0].rows[0]);
-            const {id} = results[0].rows[0];
+            const {story_id} = results[0].rows[0];
            // const rows = results[4].rows;
             res.json({
-              storyId: id
+              storyId: story_id
             });
     }).catch(err =>{
       console.log(err);

@@ -17,12 +17,18 @@ import {
 } from "../../reducers/submitStory";
 
 import TextAreaAdapter from '../../components/elements/adapters/TextAreaAdapter';
+import BudgetInputAdapter from '../../components/elements/adapters/BudgetInputAdapter';
 
 type Props = {};
 
-const validEmail = value => {
-  const rg = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.]{3,9})+\.([A-Za-z]{2,4})$/;
-  return (rg.test(value) && value !== 0) ? undefined : 'Not an email';
+const validAmount = value => {
+  const rg = /^[+]?\d+$/;
+  return (rg.test(value) && value >= 100) ? undefined : 'Minimum cost of posting a problem is 100';
+};
+
+const isPositiveInteger = value => {
+  const rg = /^[+]?\d+$/;
+  return (rg.test(value) && value >= 0) ? undefined : 'Must be an integer';
 };
 
 const required = value => (value ? undefined : "Required");
@@ -42,6 +48,27 @@ const SubmitError = ({ name }) => (
 );
 
 class Login extends PureComponent<Props> {
+
+  state = {
+    data: {
+      title: '',
+      goal: '',
+      limitation: '',
+      v_budget: 100,
+      c_budget: 0
+    }
+  };
+
+  componentWillMount() {
+    this.setState({ data: {
+        title: '',
+        goal: '',
+        limitation: '',
+        v_budget: 100,
+        c_budget: 0
+      }
+    })
+  }
 
   render() {
     console.log('Login props:');
@@ -65,6 +92,7 @@ class Login extends PureComponent<Props> {
           {onSubmit => (
             <Form
               onSubmit={onSubmit}
+              initialValues={this.state.data}
               render={({
                          handleSubmit,
                          submitError,
@@ -100,15 +128,28 @@ class Login extends PureComponent<Props> {
                                spellcheck="false"
                                floatingLabelText="Your Obstacle"
                              />
+                             <Field
+                               name="v_budget"
+                               component={BudgetInputAdapter}
+                               validate={composeValidators(validAmount)}
+                               defaultValue='100'
+                               floatingLabelText="Score reward: (minimum 100)"
+                             />
+                             <Field
+                               name="c_budget"
+                               component={BudgetInputAdapter}
+                               validate={composeValidators(isPositiveInteger)}
+                               defaultValue='0'
+                               floatingLabelText="Real cash reward :"
+                             />
                              <SubmitError name="login" />
                            </div>
 
                            <button className={styles.submitCommentFormButton}>
-                            Submit your Dream
+                            Submit your Question
                            </button>
 
                            <br />
-
                          </form>
               )}
             />

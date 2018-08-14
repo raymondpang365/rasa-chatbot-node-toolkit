@@ -8,22 +8,22 @@
   @extend .no_highlight;
 }
 
-.addStoryFormField {
+.budgetInput {
   position: relative;
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-start;
   padding-bottom: 15px;
 
-  label.addStoryFormFieldLabel {
+  label.budgetInputLabel {
     margin: 0 auto;
+    padding: 0 auto;
     display: flex;
     color: black;
     position: relative;
     justify-self: flex-start;
     font-size: 1rem;
     transition: all 0.5s ease;
-    max-width: 100%;
 
     @extend .no_highlight;
   }
@@ -66,12 +66,11 @@
     color: #000;
     display: block;
     outline: none;
-    position: absolute;
-    width: 100%;
+    position: relative;
+    border: 1px solid black;
+    width: 50px;
     height: 100%;
     left: 0;
-    padding-top: 15px;
-    border: none;
     font-size: 0.8em;
     font-weight: 200;
     background: transparent;
@@ -81,6 +80,7 @@
 
   textarea{
     flex-wrap: wrap;
+    position: relative;
     align-self: center;
     background-color: rgba(255, 255, 255, 0);
     border-radius: 7px;

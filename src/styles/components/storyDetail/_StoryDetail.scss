@@ -1,6 +1,17 @@
+.storyDetailPage{
+  max-width: 1200px;
+  width: 85%;
+  margin: 0 auto;
+}
+
+.commentList{
+  overflow: visible;
+}
+
 .commentListItem{
   color: black;
   font-size: 1rem;
+  overflow: visible;
 }
 
 .userBrief{

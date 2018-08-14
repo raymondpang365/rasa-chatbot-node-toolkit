@@ -69,6 +69,7 @@ export const fetchComments = storyId => async (
   dispatch({ type: FETCH_COMMENTS_REQUESTING });
   let json;
   try {
+
     const json = await commentAPI(apiEngine).list(storyId);
     /* istanbul ignore next */
     console.log(json);

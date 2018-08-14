@@ -19,6 +19,7 @@ import { setCurrentPage } from '../../actions/page';
 import StoryListItem from './StoryListItem';
 import InfiniteScroll from '../../components/utils/InfiniteScroll';
 import styles from '../../styles/main.scss'
+import Footer from '../../components/utils/Footer'
 
 import {
   FETCH_STORIES_SUCCESS,
@@ -48,6 +49,14 @@ class StoryList extends PureComponent {
     // this.handleRemoveClick = this._handleRemoveClick.bind(this);
     // this.handleSaveClick = this._handleSaveClick.bind(this);
     console.log('another fff');
+
+    this.state = {
+      stories: {
+        readyStatus: FETCH_STORIES_INVALID,
+        err: null,
+        data: []
+      }
+    };
   }
 
   componentWillMount() {
@@ -58,24 +67,31 @@ class StoryList extends PureComponent {
     this.props.fetchStoriesIfNeeded(this.props.match.params.page);
     console.log('hello');
   }
-/*
-  _handleAddClick() {
-    const text = this.storytext.value;
-    console.log(text);
-    this.props.createStory(text).then(() => {
-      this.storytext.value = '';
-    });
 
+  componentWillReceiveProps(newProps){
+    if(JSON.stringify(newProps.stories) !== JSON.stringify(this.stories) ){
+      this.setState({stories: newProps.stories })
+    }
   }
 
-  _handleSaveClick(id, newText) {
-    this.props.updateStory(id, newText);
-  }
+  /*
+    _handleAddClick() {
+      const text = this.storytext.value;
+      console.log(text);
+      this.props.createStory(text).then(() => {
+        this.storytext.value = '';
+      });
 
-  _handleRemoveClick(id) {
-    this.props.removeStory(id);
-  }
-  */
+    }
+
+    _handleSaveClick(id, newText) {
+      this.props.updateStory(id, newText);
+    }
+
+    _handleRemoveClick(id) {
+      this.props.removeStory(id);
+    }
+    */
 
   _loadItems(page) {
     const { location } = this.props;
@@ -106,10 +122,13 @@ class StoryList extends PureComponent {
     console.log(this.props.stories);
     const items = (
       <div>
-        {this.props.stories.data.map(story => {
+        {this.props.stories.data.map((story, numInList) => {
           console.log(story.id);
           return (<StoryListItem
-            id={story.id}
+            numInList={numInList}
+            storyId={story.id}
+            displayName={story.display_name}
+            avatarUrl={story.avatar_url}
             title={story.title}
           />);
         })}
@@ -166,6 +185,7 @@ class StoryList extends PureComponent {
 
           {this.renderStoryList()}
         </div>
+        <Footer />
       </div>
     );
   }

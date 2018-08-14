@@ -39,5 +39,5 @@ const CommentListItem = ({numInList, commentId, displayName, avatarUrl, content,
       <hr />
     </div>
   );
-}
+};
 export default CommentListItem;

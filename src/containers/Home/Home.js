@@ -12,7 +12,7 @@ import ErrorList from '../../components/utils/ErrorList';
 import styles from '../../styles/main.scss';
 import updateLocale from '../../actions/intl';
 import { pushErrors } from '../../actions/error';
-import RegisterForm from '../user/Register/RegisterForm';
+import Footer from '../../components/utils/Footer'
 
 type Props = {};
 
@@ -118,9 +118,7 @@ export class Home extends Component<Props> {
             <h3>Need help?</h3>
             <a className={styles.btn_more}>Contact Us</a>
           </div>
-          <div className={styles.footer_section}>
-            Footer
-          </div>
+          <Footer />
         </div>
       </div>
 

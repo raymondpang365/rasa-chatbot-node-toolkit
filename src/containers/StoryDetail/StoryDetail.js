@@ -8,6 +8,7 @@ import { withRouter } from 'react-router-dom';
 import { hot } from 'react-hot-loader';
 import PostCommentForm from './PostCommentForm'
 import InfiniteScroll from '../../components/utils/InfiniteScroll';
+import Footer from '../../components/utils/Footer';
 
 import styles from '../../styles/main.scss';
 import { likeComment, fetchCommentsIfNeeded } from '../../actions/comments';
@@ -78,7 +79,7 @@ class StoryDetail extends PureComponent {
       if (typeof data[numInList].likes !== 'undefined') data[numInList].likes += 1;
       this.props.likeComment(commentId);
       this.setState({comments: {...this.state.comments, data}})
-    }
+    };
     return addLikes.bind(this);
   }
 
@@ -156,7 +157,6 @@ class StoryDetail extends PureComponent {
     } else if (comments.readyStatus === FETCH_COMMENTS_FAILURE) {
       loader = <p>Oops, Failed to load items!</p>;
     }
-
     console.log(this.state.comments);
     const items = (
       <div>
@@ -176,9 +176,9 @@ class StoryDetail extends PureComponent {
     );
     console.log(items);
     return (
-      (items === []) ?
+      (this.state.comments.data.length === 0) ?
         <div>
-          <p>Uh oh, seems like there is no any items yet! Please add one :)</p>
+          <p>Uh oh, seems like there is no any feedbacks yet! </p>
         </div> :
 
         <InfiniteScroll
@@ -216,6 +216,8 @@ class StoryDetail extends PureComponent {
           title={detail.title}
           goal={detail.goal}
           limitation={detail.limitation}
+          vReward={detail.v_budget}
+          cReward={detail.c_budget}
         />);
     }
 
@@ -224,11 +226,12 @@ class StoryDetail extends PureComponent {
 
     return (
       <div className={styles.pageContainer}>
-        <div className={styles.storyListPage}>
+        <div className={styles.storyDetailPage}>
           {storyDetailElement}
           <PostCommentForm storyId={params.id} />
           {this.renderCommentList()}
         </div>
+        <Footer />
       </div>
 
     );
