@@ -35,6 +35,13 @@ const randomValueHex = (len) =>
 
 export default {
 
+  readSelf(req, res) {
+    console.log(req.user);
+    res.json({
+      user: req.user
+    });
+  },
+
   emailRegister: (req, res, next) => {
     console.log("email register");
     let userReturned = {};
@@ -262,12 +269,6 @@ export default {
     }).catch(err => {
       res.pushError(err);
       res.errors();
-    });
-  },
-
-  readSelf(req, res) {
-    res.json({
-      user: req.user
     });
   },
 

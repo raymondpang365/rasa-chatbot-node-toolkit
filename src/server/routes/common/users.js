@@ -58,7 +58,9 @@ export default app => {
   );
 
   app.get('/api/users/logout', jwtAuth, userController.logout);
+
   app.get('/api/users/me', jwtAuth, userController.readSelf);
+
   app.put(
     '/api/users/me',
     jwtAuth,
