@@ -357,7 +357,7 @@
     "redux": "^3.7.2",
     "redux-promise-listener": "^1.0.0",
     "redux-thunk": "^2.2.0",
-    "request": "^2.87.0",
+    "request": "^2.88.0",
     "sequelize": "^4.37.6",
     "serialize-javascript": "^1.4.0",
     "serve-favicon": "2.4.5",

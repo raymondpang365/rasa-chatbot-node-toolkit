@@ -6,6 +6,7 @@ import Errors from '../../constants/Errors';
 import { loginUser } from '../../actions/user';
 import redirect from '../../actions/route';
 import { jwt, nodemailer } from '../../config/index';
+import subscribe from './mailchimp'
 import {  genAccessToken, genRefreshToken } from '../utils/tokenHelper'
 
 import p from '../utils/agents';
@@ -82,6 +83,7 @@ export default {
                  conn.query(
                    "UPDATE user_info SET user_id = $1 WHERE id = $2",
                    [user_id, lastId]),
+
                ]));
              }).catch( err => {
               reject(err);

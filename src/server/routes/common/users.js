@@ -7,6 +7,7 @@ import roleRequired from '../../middlewares/roleRequired';
 import validate from '../../middlewares/validate';
 import fileUpload from '../../middlewares/fileUpload';
 import userController from '../../controllers/user';
+import mailchimpController from '../../controllers/mailchimp'
 
 export default app => {
   // user
@@ -16,7 +17,8 @@ export default app => {
     bodyParser.json,
     validate.recaptcha,
     userController.emailRegister,
-    mailController.sendVerification
+    mailController.sendVerification,
+    mailchimpController.subscribe
   );
 
   app.post(

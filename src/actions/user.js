@@ -9,7 +9,7 @@ import userAPI from '../api/user';
 
 
 export const loginUser = ({ token, info }, res = null) => dispatch => {
-  console.log('again again ');
+  console.log('again agains ');
   console.log(token);
   console.log(info);
   dispatch(
