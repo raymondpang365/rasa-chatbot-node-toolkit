@@ -7,13 +7,20 @@ import asyncLogin from './user/Login/Login';
 import asyncRegister from './user/Register/Register';
 import asyncStoryList from './StoryList';
 import asyncStoryDetail from './StoryDetail';
-import asyncLogout from './user/Logout'
+import asyncLogout from './user/Logout';
+import asyncMatch from './Match';
+import asyncSearch from './Search';
+import asyncMatchList from './MatchList';
+import asyncMatchResult from './MatchResult';
 import NotFound from './NotFound';
-import asyncVerifyEmail from './user/VerifyEmail'
+import asyncVerifyEmail from './user/VerifyEmail';
 
 export {
   App,
   asyncHome,
+  asyncSearch,
+  asyncMatch,
+  asyncMatchList,
   asyncAddStory,
   asyncLogin,
   asyncRegister,
@@ -21,5 +28,6 @@ export {
   asyncStoryList,
   asyncStoryDetail,
   asyncVerifyEmail,
+  asyncMatchResult,
   NotFound
 };

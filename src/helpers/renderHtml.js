@@ -22,7 +22,9 @@ export default (
         <!--[if IE]>
           <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
         <![endif]-->
-
+       
+       
+         <link rel="stylesheet" type="text/css" href=" https://fullcalendar.io/js/fullcalendar-3.4.0/fullcalendar.css">
         <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Tangerine">
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
         <link rel="shortcut icon" href="/favicon.ico">
@@ -50,6 +52,7 @@ export default (
         <!-- Insert the router, which passed from server-side -->
         <div id="react-view">${htmlContent}</div>
         
+
         
         <!-- Hotjar Tracking Code for drivo.xyz -->
         <script>

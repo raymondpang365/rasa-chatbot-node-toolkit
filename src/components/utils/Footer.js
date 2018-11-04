@@ -7,17 +7,17 @@ const Footer = () => (
     <div className={styles.footerNav}>
       <div className={styles.footerCol}>
         <h5 className={styles.footerTitle}>
-          Drivo
+          TGT
         </h5>
         <ul className={styles.list}>
           <li className={styles.item}>
             <Link className={styles.footerLink} to="/">Home</Link>
           </li>
           <li className={styles.item}>
-            <Link className={styles.footerLink} to="/">Home</Link>
+            <Link className={styles.footerLink} to="/">Enterprise</Link>
           </li>
           <li className={styles.item}>
-            <Link className={styles.footerLink} to="/">Home</Link>
+            <Link className={styles.footerLink} to="/">Blog</Link>
           </li>
         </ul>
       </div>
@@ -49,13 +49,13 @@ const Footer = () => (
         </h5>
         <ul className={styles.list}>
           <li className={styles.item}>
-            <Link className={styles.footerLink} to="/">Home</Link>
+            <Link className={styles.footerLink} to="/">Reddit</Link>
           </li>
           <li className={styles.item}>
-            <Link className={styles.footerLink} to="/">Home</Link>
+            <Link className={styles.footerLink} to="/">Enterprise</Link>
           </li>
           <li className={styles.item}>
-            <Link className={styles.footerLink} to="/">Home</Link>
+            <Link className={styles.footerLink} to="/">Developers</Link>
           </li>
         </ul>
       </div>

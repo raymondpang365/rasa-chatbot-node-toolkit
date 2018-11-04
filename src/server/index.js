@@ -19,6 +19,16 @@ middlewares(app);
 middlewares(app);
 serverRoutes(app);
 
+let webpack = require('webpack');
+let webpackConfig = require('../../tools/webpack/config.babel');
+let compiler = webpack(webpackConfig);
+
+app.use(require("webpack-dev-middleware")(compiler, {
+  noInfo: true, publicPath: webpackConfig.output.publicPath
+}));
+
+app.use(require("webpack-hot-middleware")(compiler));
+
 if (port && listenTo) {
   const server = http.Server(app);
   websocket(server);

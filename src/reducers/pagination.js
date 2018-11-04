@@ -122,7 +122,9 @@ const paginate = resource => (state = {}, action) => {
 const paginationReducer = combineReducers({
   stories: paginate(Resources.STORY),
   users: paginate(Resources.USER),
-  comments: paginate(Resources.COMMENT)
+  comments: paginate(Resources.COMMENT),
+  businesses: paginate(Resources.BUSINESS),
+  matches: paginate(Resources.MATCH)
 });
 
 export default paginationReducer;

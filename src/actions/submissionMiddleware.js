@@ -30,6 +30,8 @@ import {
 } from "../reducers/submitStory";
 
 
+
+
 const asyncSubmissionMiddleware = store => (next) => (
   action
 ) => {
@@ -76,6 +78,8 @@ const asyncSubmissionMiddleware = store => (next) => (
       }
     })
   }
+
+
 
   if (action && action.type === SUBMIT_STORY) {
     store.dispatch(addStory(action.payload))

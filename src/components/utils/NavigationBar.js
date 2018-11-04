@@ -47,8 +47,9 @@ class NavigationBar extends PureComponent {
         <button onClick={this.toggleSideBar.bind(this)} className={styles.header__icon} id={styles.header__icon} />
         <nav className={styles.menuLeft}>
           <Link className={this.toggleButtonStyle('/')} to="/">Home</Link>
-          <Link className={this.toggleButtonStyle('/feed')} to="/feed">Recent</Link>
-          <Link className={this.toggleButtonStyle('/addstory')} to="/addstory">Or Post Your Problems</Link>
+          <Link className={this.toggleButtonStyle('/feed')} to="/feed">Featured</Link>
+          <Link className={this.toggleButtonStyle('/matchlist')} to="/matchlist">Match List</Link>
+          <Link className={this.toggleButtonStyle('/match')} to="/match">Match</Link>
         </nav>
         <nav className={styles.menuRight}>
           <Link className={this.toggleButtonStyle('/journey')} to="/journey">Path</Link>

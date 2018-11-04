@@ -1,12 +1,11 @@
 /* @flow */
 
 import React from 'react';
-
 import { Link } from 'react-router-dom';
+import styles from '../styles/main.scss';
 
-import styles from '../../styles/main.scss';
 // ({numInList, commentId, displayName, avatarUrl, content, likes, onClickLike})
-const StoryListItem = ({numInList, storyId, title, displayName, avatarUrl}) => {
+const MatchListItem = ({numInList, matchId, title, displayName}) => {
   let element;
   console.log(numInList);
   const changeSrc = newSrc => {
@@ -14,25 +13,16 @@ const StoryListItem = ({numInList, storyId, title, displayName, avatarUrl}) => {
   };
   return(
     <div className={styles.storyListItem}>
-      <Link to={`/story/${storyId}`}>
+      <Link to={`/match/${matchId}`}>
         <h2>
           {title}
         </h2>
       </Link>
       <div className={styles.userBrief}>
-        <div className={styles.profileIconWrapper}>
-          <img
-            className={styles.profileIcon}
-            alt="me"
-            onError={() => changeSrc('https://i.imgur.com/aBcof3d.png')}
-            ref={el => {element = el}}
-            src={avatarUrl}
-          />
-        </div>
         <h3 className={styles.userName}>{displayName}</h3>
 
       </div>
     </div>
   )
 };
-export default StoryListItem;
+export default MatchListItem;

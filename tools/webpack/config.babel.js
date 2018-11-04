@@ -67,7 +67,6 @@ const getPlugins = () => {
       __SERVER__: false,
       __DEV__: isDev
     }),
-    new webpack.NoEmitOnErrorsPlugin(),
     new FriendlyErrorsWebpackPlugin(),
     new Dotenv({
       safe: true, // load '.env.example' to verify the '.env' variables are all set. Can also be a string to a different file.

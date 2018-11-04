@@ -16,7 +16,7 @@ import {
   fetchStoriesIfNeeded
 } from '../../actions/stories';
 import { setCurrentPage } from '../../actions/page';
-import StoryListItem from './StoryListItem';
+import StoryListItem from '../../components/StoryListItem';
 import InfiniteScroll from '../../components/utils/InfiniteScroll';
 import styles from '../../styles/main.scss'
 import Footer from '../../components/utils/Footer'

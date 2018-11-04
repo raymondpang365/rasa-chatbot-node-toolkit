@@ -43,10 +43,10 @@ export class Home extends Component<Props> {
             <div className={styles.half}>
               <div className={styles.overlay} />
               <div className={styles.half_content}>
-                <h2>Truly solving your needs</h2>
-                <h5>powered by buzzword technology</h5>
-                <Link className={styles.btn_more} to="/addstory">
-                  Call to Action Button Now
+                <h2>Satisfy everyone</h2>
+                <h5>in any gathering and event</h5>
+                <Link className={styles.btn_more} to="/match">
+                  CREATE AN EVENT NOW
                 </Link>
               </div>
             </div>
@@ -54,26 +54,26 @@ export class Home extends Component<Props> {
           <div className={styles.second_section}>
             <div className={styles.card}>
               <div>
-                Secure
+                Where
               </div>
               <div>
-                Sample dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
-              </div>
-            </div>
-            <div className={styles.card}>
-              <div>
-                Affordable
-              </div>
-              <div>
-                Example Lorem ipsum dolor sit amet, conscing elit. Aenean commodo ligula eget dolor. Aenean massa.
+                Let us choose a restaurant for you folks to satisfy as many people as possible
               </div>
             </div>
             <div className={styles.card}>
               <div>
-                Convenient
+                When
               </div>
               <div>
-                Random Lorem ipsum dolor sit amet, co. Aenean commodo ligula eget dolor. Aenean massa.
+                By connecting to Calendar apps, let us choose a time that fits everyone schedule.
+              </div>
+            </div>
+            <div className={styles.card}>
+              <div>
+                Together
+              </div>
+              <div>
+                Share event experience together. Enjoy discount together.
               </div>
             </div>
           </div>

@@ -45,6 +45,7 @@ type Props = {
 
 class StoryDetail extends PureComponent {
   constructor() {
+
     super();
     this.state = {
       isEditable: false,

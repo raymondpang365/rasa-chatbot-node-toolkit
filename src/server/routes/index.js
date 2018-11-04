@@ -3,8 +3,8 @@ import forms from './common/forms';
 import locales from './common/locales';
 import comments from './common/comments';
 import stories from './common/stories';
-import courses from './common/courses';
-import requests from './common/requests';
+import courses from './common/businesses';
+import matches from './common/matches';
 import auth from './common/auth';
 import react from './web/react';
 
@@ -14,8 +14,8 @@ export default app => {
   comments(app);
   stories(app);
   courses(app);
-  requests(app);
   locales(app);
   auth(app);
+  matches(app);
   react(app);
 };
