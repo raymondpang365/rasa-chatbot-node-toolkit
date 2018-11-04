@@ -13,11 +13,11 @@ export default apiEngine => ({
   matchResult: ( id ) => {
     console.log(apiEngine.get);
     console.log(id);
-    return apiEngine.get(`/api/matches/result/${id}`)
+    return apiEngine.get(`/api/match/result/${id}`)
 
   },
   list: ({ page }) => {
     console.log(apiEngine.get);
-    return apiEngine.get('/api/match', {params: {page}})
+    return apiEngine.get('/api/matches', {params: {page}})
   }
 });

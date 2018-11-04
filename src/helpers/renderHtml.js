@@ -22,9 +22,8 @@ export default (
         <!--[if IE]>
           <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
         <![endif]-->
-       
-       
-         <link rel="stylesheet" type="text/css" href=" https://fullcalendar.io/js/fullcalendar-3.4.0/fullcalendar.css">
+
+        <link rel="stylesheet" type="text/css" href=" https://fullcalendar.io/js/fullcalendar-2.6.0/fullcalendar.css">
         <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Tangerine">
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
         <link rel="shortcut icon" href="/favicon.ico">

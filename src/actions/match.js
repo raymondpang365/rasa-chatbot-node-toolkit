@@ -5,6 +5,7 @@ import { setEntities, removeEntities } from './entity';
 import { setPages, prependEntitiesIntoPage } from './page';
 import matchAPI from '../api/match';
 import { pushErrors } from './error';
+import redirect from './route';
 
 import {
   SET_SELECTED_MATCH
@@ -60,7 +61,7 @@ export const joinMatch = (id, keywords): ThunkAction => async (
     /* istanbul ignore next */
     console.log(json.data);
     dispatch({ type: JOIN_MATCH_SUCCESS, data: json.data.matches });
-
+    dispatch(redirect(`/matchresult/${id}`));
     console.log(getState());
 
   } catch (err) {
@@ -92,14 +93,16 @@ export const createMatch = (): ThunkAction => async (
   }
 };
 
-export const matchResult = (id): ThunkAction => async (
+export const fetchMatchResults = (id) : ThunkAction => async (
   dispatch: Dispatch,
   getState: GetState,
   apiEngine
 ) => {
   dispatch({ type: MATCH_RESULT_REQUESTING });
   let json;
+  console.log('calling match result action');
   try {
+    console.log(id);
     const json = await matchAPI(apiEngine).matchResult(id);
     /* istanbul ignore next */
     console.log(json.data);

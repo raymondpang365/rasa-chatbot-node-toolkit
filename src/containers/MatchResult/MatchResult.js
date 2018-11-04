@@ -8,12 +8,12 @@ import { withRouter } from 'react-router-dom';
 import { hot } from 'react-hot-loader';
 import { push } from 'connected-react-router';
 import ErrorList from '../../components/utils/ErrorList';
-import { matchResult, fetchMatchesIfNeeded } from '../../actions/match';
+import { fetchMatchResults } from '../../actions/match';
 import StoryListItem from '../../components/StoryListItem';
 import InfiniteScroll from '../../components/utils/InfiniteScroll';
 import styles from '../../styles/main.scss'
 import Footer from '../../components/utils/Footer'
-import MatchListItem from '../../components/MatchListItem'
+import MatchResultListItem from '../../components/MatchResultListItem'
 
 import {
   MATCH_RESULT_SUCCESS,
@@ -30,7 +30,7 @@ import type {
 
 type Props = {
   storyList: StoryListType,
-  fetchMatchesIfNeeded: () => void
+  matchResult: () => void
 };
 
 
@@ -38,15 +38,12 @@ class MatchResult extends PureComponent {
 
   constructor(props) {
     super(props);
-    this.loadItems = this._loadItems.bind(this);
-    // this.handleAddClick = this._handleAddClick.bind(this);
-    // this.handleRemoveClick = this._handleRemoveClick.bind(this);
-    // this.handleSaveClick = this._handleSaveClick.bind(this);
     console.log('another fff');
 
     this.state = {
       matches: {
         readyStatus: MATCH_RESULT_INVALID,
+        selected: 0,
         err: null,
         data: []
       }
@@ -58,7 +55,9 @@ class MatchResult extends PureComponent {
   }
 
   componentDidMount() {
-    this.props.fetchMatchesIfNeeded(this.props.match.params.page);
+    const { match: { params } } = this.props;
+    console.log(params.id);
+    this.props.fetchMatchResults(1);
     console.log('hello');
   }
 
@@ -68,42 +67,31 @@ class MatchResult extends PureComponent {
     }
   }
 
-  _loadItems(page) {
-    const { location } = this.props;
-    this.props.setCurrentPage(page);
-    this.props.fetchMatchesIfNeeded(page);
-    if (location !== undefined) {
-      this.props.push({
-        pathname: location.pathname,
-        query: {page: this.props.page.current}
-      });
-    }
-  }
-
-  renderStoryList() {
-    const { matches } = this.props;
+  renderMatchResultList() {
+    const { matchResult } = this.props;
     let loader;
     if (
-      !matches.readyStatus ||
-      matches.readyStatus === MATCH_RESULT_INVALID ||
-      matches.readyStatus === MATCH_RESULT_REQUESTING
+      !matchResult.readyStatus ||
+      matchResult.readyStatus === MATCH_RESULT_INVALID ||
+      matchResult.readyStatus === MATCH_RESULT_REQUESTING
     ) {
       loader = <div className="loader">Loading ...</div>;
-    } else if (matches.readyStatus === MATCH_RESULT_FAILURE) {
+    } else if (matchResult.readyStatus === MATCH_RESULT_FAILURE) {
       loader = <p>Oops, Failed to load items!</p>;
     }
 
 
-    console.log(this.props.matches);
+    console.log(this.props.matchResult);
     const items = (
       <div>
-        {this.props.matches.data.map((story, numInList) => {
+        {this.props.matchResult.data.map((story, numInList) => {
           console.log(story.id);
-          return (<StoryListItem
+          return (<MatchResultListItem
             numInList={numInList}
-            storyId={story.id}
+            matchId={story.id}
+            score={story.score}
+            imageUrl={story.image_url}
             displayName={story.display_name}
-            avatarUrl={story.avatar_url}
             title={story.title}
           />);
         })}
@@ -130,30 +118,11 @@ class MatchResult extends PureComponent {
   }
 
   render() {
-    const { page } = this.props;
-    console.log(page);
     return (
       <div className={styles.pageContainer}>
         <div className={styles.storyListPage}>
           <ErrorList />
-          <MatchListItem
-            numInList={1}
-            storyId={1}
-            displayName="Grey Hound"
-            title="87%"
-          />
-          <MatchListItem
-            numInList={1}
-            storyId={1}
-            displayName="The Den"
-            title="83%"
-          />
-          <MatchListItem
-            numInList={1}
-            storyId={1}
-            displayName="Pizza Express"
-            title="75%"
-          />
+          {this.renderMatchResultList()}
         </div>
         <Footer />
       </div>
@@ -161,34 +130,25 @@ class MatchResult extends PureComponent {
   }
 }
 
-const mapStateToProps = ({ location, matches, pagination, entity }: ReduxState) => {
+const mapStateToProps = ({ location, matchResult, pagination,  selectMatch, entity }: ReduxState) => {
 
 
-  const { page, pages } = pagination.matches;
+  const { page } = pagination.matchResult;
 
-  /*
-    const storyIds = Array.prototype.flatten(
-      Object
-        .keys(pages)
-        .map(pageId => pages[pageId].ids)
-    );
-    console.log(storyIds);
+  console.log(matchResult);
 
-    matches =  ("ids" in storyIds) ? storyIds.ids.map(id => entity.matches[id]) : [];
-
-  */
 
   return {
+    page,
     location,
-    matches,
-    page
+    matchResult,
+    selectMatch
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   push: (pathname, query) => dispatch(push(pathname, query)),
-  matchResult: () => dispatch(matchResult()),
-  fetchMatchesIfNeeded:  () => dispatch(fetchMatchesIfNeeded()),
+  fetchMatchResults: (id) => dispatch(fetchMatchResults(id)),
 });
 
 const connector: Connector<{}, Props> = connect(

@@ -84,7 +84,7 @@ const Footer = () => (
           </a>
         </li>
       </ul>
-      <p className={styles.footerCopyright}>© 2018 All right reserved by Drivo Limited</p>
+      <p className={styles.footerCopyright}>© 2018 All right reserved by TGT</p>
     </div>
 
   </div>

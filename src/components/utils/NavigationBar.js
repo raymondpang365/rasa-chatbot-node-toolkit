@@ -48,11 +48,10 @@ class NavigationBar extends PureComponent {
         <nav className={styles.menuLeft}>
           <Link className={this.toggleButtonStyle('/')} to="/">Home</Link>
           <Link className={this.toggleButtonStyle('/feed')} to="/feed">Featured</Link>
-          <Link className={this.toggleButtonStyle('/matchlist')} to="/matchlist">Match List</Link>
+          <Link className={this.toggleButtonStyle('/matchlist')} to="/matchlist">Event List</Link>
           <Link className={this.toggleButtonStyle('/match')} to="/match">Match</Link>
         </nav>
         <nav className={styles.menuRight}>
-          <Link className={this.toggleButtonStyle('/journey')} to="/journey">Path</Link>
           {!isAuth &&
           <Link className={styles.menu__anchor__green} to="/user/register">Sign up for Beta</Link>
           }

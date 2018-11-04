@@ -26,14 +26,9 @@ class MyCalendar extends Component {
           start: '2018-11-16T16:00:00'
         },
         {
-          title: 'Conference',
-          start: '2017-05-11',
-          end: '2018-11-13'
-        },
-        {
           title: 'Meeting',
-          start: '2018-11-12T10:30:00',
-          end: '2018-11-12T12:30:00'
+          start: '2018-11-08T10:30:00',
+          end: '2018-11-08T12:30:00'
         },
         {
           title: 'Birthday Party',

@@ -3,5 +3,6 @@ export default {
   USER: 'USER',
   COMMENT: 'COMMRNT',
   BUSINESS: 'BUSINESS',
-  MATCH: 'MATCH'
+  MATCH: 'MATCH',
+  MATCH_RESULT: 'MATCH_RESULT'
 };

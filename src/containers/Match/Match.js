@@ -73,20 +73,21 @@ class Match extends PureComponent {
   updateInput(event){
     this.setState({search: event.target.value})
   }
-/*
 
+
+  handleSubmit(){
+    const { selectMatch } = this.props;
+    console.log(this.state.search);
+    this.props.joinMatch(selectMatch.selected, this.state.search);
+  }
+
+/*
   handleSubmit(){
     const { selectMatch } = this.props;
     console.log(this.state.search);
     this.props.joinMatch(selectMatch.selected, this.state.search);
   }
   */
-
-  handleSubmit(){
-    const { selectMatch } = this.props;
-    console.log(this.state.search);
-    this.props.joinMatch(selectMatch.selected, this.state.search);
-  }
 
   render() {
     const { page } = this.props;
@@ -97,12 +98,13 @@ class Match extends PureComponent {
         <div className={styles.storyListPage}>
           <ErrorList />
           <Calendar />
-          <div>
-            <input type="text" onChange={this.updateInput} />
-            <Link to='/matchresult/1'>
-              search
-            </Link>
+          <div className={styles.matchField}>
+            Preference: <input type="text" onChange={this.updateInput} />
           </div>
+          <button className={styles.btnGreen} onClick={this.handleSubmit}>
+            Go
+          </button>
+
         </div>
         <Footer />
       </div>

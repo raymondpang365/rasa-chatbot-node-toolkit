@@ -59,6 +59,7 @@ class MatchList extends PureComponent {
   }
 
   componentDidMount() {
+    console.log(this.props.match.params.page);
     this.props.fetchMatchesIfNeeded(this.props.match.params.page);
     console.log('hello');
   }

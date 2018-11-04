@@ -77,47 +77,6 @@ export class Home extends Component<Props> {
               </div>
             </div>
           </div>
-          <div className={styles.third_section}>
-            <div className={styles.half}>
-              <div className={styles.overlay} />
-              <div className={styles.half_content}>
-                <h2>Truly solve your needs</h2>
-                <h5>powered by multiple buzzword technologies</h5>
-                <a className={styles.btn_more}>What are you waiting for?</a>
-              </div>
-            </div>
-          </div>
-          <div className={styles.story_section}>
-            <div className={styles.card}>
-              <div>
-                Secure
-              </div>
-              <div>
-                Sample dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
-              </div>
-            </div>
-            <div className={styles.card}>
-              <div>
-                Affordable
-              </div>
-              <div>
-                Example Lorem ipsum dolor sit amet, conscing elit. Aenean commodo ligula eget dolor. Aenean massa.
-              </div>
-            </div>
-            <div className={styles.card}>
-              <div>
-                Convenient
-              </div>
-              <div>
-                Random Lorem ipsum dolor sit amet, co. Aenean commodo ligula eget dolor. Aenean massa.
-              </div>
-            </div>
-          </div>
-          <div className={styles.media_section}>
-            <br />
-            <h3>Need help?</h3>
-            <a className={styles.btn_more}>Contact Us</a>
-          </div>
           <Footer />
         </div>
       </div>
