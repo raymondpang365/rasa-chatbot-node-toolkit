@@ -118,7 +118,6 @@ const getEntry = () => {
   let entry = [
     // Allows you to use the full set of ES6 features on client-side (place it before anything else)
     'babel-polyfill',
-    'webpack-hot-middleware/client?reload=true',
     './src/client.js'
   ];
 

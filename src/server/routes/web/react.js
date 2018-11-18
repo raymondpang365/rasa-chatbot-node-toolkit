@@ -16,15 +16,14 @@ import assets from '../../../../public/webpack-assets.json';
 
 export default app => {
   app.get('*', (req, res) => {
-    console.log(req.store.getState());
+    // console.log(req.store.getState());
     // The method for loading data from server-side
     const loadBranchData = (): Promise<any> => {
 
       const branch = matchRoutes(routes, req.path);
-
       const promises = branch.map(({ route, match }) => {
         if (route.loadData) {
-          console.log('loading data');
+          // console.log('loading data');
           return Promise.all(
             route
               .loadData({ params: match.params, getState: req.store.getState })
@@ -73,17 +72,17 @@ export default app => {
           const initialState = req.store.getState();
           const loadableStateTag = loadableState.getScriptTag();
 
-          console.log(loadableStateTag);
+          // console.log(loadableStateTag);
 
           const htmlContent = renderToString(AppComponent);
 
-          console.log(htmlContent);
+          // console.log(htmlContent);
 
 
           // Check page status
           const status = staticContext.status === '404' ? 404 : 200;
 
-          console.log(status);
+          // console.log(status);
 
           // Pass the route and initial state into html template
           res

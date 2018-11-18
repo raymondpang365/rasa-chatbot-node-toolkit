@@ -27,10 +27,10 @@ export const setCookie = (name, value, options, res = null) => {
     } else if (res) {
       res.cookie(name, serializedValue);
     }
-    console.log('hehe');
-    console.log(name);
-    console.log(serializedValue);
-    console.log('hehe');
+   // console.log('hehe');
+   // console.log(name);
+  //  console.log(serializedValue);
+  // console.log('hehe');
     dispatch({
       type: 'SET_COOKIE',
       cookie: {
@@ -51,7 +51,7 @@ export const setCookies = (cookies, res = null) => dispatch => {
 
 export const removeCookie = name => dispatch => {
   if (typeof window !== "undefined") {
-    console.log(`done remove cookie ${name}`);
+  //  console.log(`done remove cookie ${name}`);
     return dispatch(
       setCookie(name, '', {
         expires: new Date(1970, 1, 1, 0, 0, 1)

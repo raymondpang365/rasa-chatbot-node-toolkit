@@ -74,11 +74,11 @@ export default {
 
 
         const keywordQuery = `SELECT business_id, SUM(ft.score * 2) as final_score ` +
-          `FROM business_tag ft LEFT JOIN tag st on ft.tag_id = st.id WHERE ` +
+          `FROM business_tag ft INNER JOIN tag st on ft.tag_id = st.id WHERE ` +
           `${buildFirstQueriesWIthKeywords} GROUP BY ft.business_id`;
 
         const favorQuery = `SELECT business_id, SUM(ft.score * st.score) as final_score ` +
-          `FROM business_tag ft LEFT JOIN user_tag st on ft.tag_id = st.tag_id ` +
+          `FROM business_tag ft INNER JOIN user_tag st on ft.tag_id = st.tag_id ` +
           `WHERE ${buildSecondQueriesWIthKeywords} GROUP BY ft.business_id`;
 
 

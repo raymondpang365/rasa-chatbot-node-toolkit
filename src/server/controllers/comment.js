@@ -9,7 +9,7 @@ const uuidv4 = require('uuid/v4');
 export default {
 
   list(req, res) {
-    console.log(req);
+    // console.log(req);
     let comments;
     p.query('SELECT * FROM comment WHERE story_id = $1', [req.query.storyId]).then(
       results => {

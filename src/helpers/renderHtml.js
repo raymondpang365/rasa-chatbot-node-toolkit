@@ -94,7 +94,7 @@ export default (
     minifyJS: true,
     minifyURLs: true
   };
-  console.log('renderedHtml');
+ // console.log('renderedHtml');
 
   // Minify html in production
   return __DEV__ ? html : minify(html, minifyConfig);

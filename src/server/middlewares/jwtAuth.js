@@ -41,7 +41,7 @@ export const refreshAccessToken = (req, res, next) => {
 
 export const jwtAuth = (req, res, next) => {
 
-  console.log(jwt.accessToken.secret);
+//  console.log(jwt.accessToken.secret);
   jsonwebtoken.verify(
     jwtExtractor(req),
     jwt.accessToken.secret,
@@ -83,7 +83,7 @@ export const jwtAuth = (req, res, next) => {
           }
         }).catch(queryErr => {
           res.pushError(queryErr);
-          console.log(queryErr);
+   //       console.log(queryErr);
           res.errors();
         });
       }

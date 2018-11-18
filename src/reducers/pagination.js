@@ -124,6 +124,7 @@ const paginationReducer = combineReducers({
   users: paginate(Resources.USER),
   comments: paginate(Resources.COMMENT),
   businesses: paginate(Resources.BUSINESS),
+  search: paginate(Resources.SEARCH),
   matches: paginate(Resources.MATCH),
   matchResult: paginate(Resources.MATCH_RESULT)
 });

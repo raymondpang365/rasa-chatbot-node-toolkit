@@ -57,7 +57,7 @@ export default app => {
 
   app.use((req, res, next) => {
 
-    console.log(req.headers);
+  //  console.log(req.headers);
 
     // Request headers you wish to allow
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Platform');

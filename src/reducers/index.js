@@ -11,6 +11,7 @@ import login from './login';
 import registration from './registration';
 import pagination from './pagination';
 import submitStory from './submitStory';
+import search from './search';
 import story from './story';
 import stories from './stories';
 import business from './business';
@@ -34,6 +35,7 @@ const reducers = {
   registration,
   joinMatch,
   matchResult,
+  search,
   story,
   stories,
   submitStory,

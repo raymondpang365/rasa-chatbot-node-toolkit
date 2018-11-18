@@ -3,6 +3,7 @@ export default {
   USER: 'USER',
   COMMENT: 'COMMRNT',
   BUSINESS: 'BUSINESS',
+  SEARCH: 'SEARCH',
   MATCH: 'MATCH',
   MATCH_RESULT: 'MATCH_RESULT'
 };

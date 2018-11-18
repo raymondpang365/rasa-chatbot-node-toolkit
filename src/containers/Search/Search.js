@@ -16,6 +16,7 @@ import {
   fetchBusinessesIfNeeded
 } from '../../actions/businesses';
 import { setCurrentPage } from '../../actions/page';
+import searchDispatch from "../../actions/search";
 import StoryListItem from '../../components/StoryListItem';
 import InfiniteScroll from '../../components/utils/InfiniteScroll';
 import styles from '../../styles/main.scss'
@@ -23,12 +24,13 @@ import Footer from '../../components/utils/Footer'
 import SearchToolbar from './SearchToolbar'
 import Calendar from '../../components/MyCalendar'
 
+
 import {
-  FETCH_BUSINESSES_SUCCESS,
-  FETCH_BUSINESSES_FAILURE,
-  FETCH_BUSINESSES_REQUESTING,
-  FETCH_BUSINESSES_INVALID
-} from "../../reducers/businesses";
+  SEARCH_SUCCESS,
+  SEARCH_FAILURE,
+  SEARCH_REQUESTING,
+  SEARCH_INVALID
+} from "../../reducers/search";
 
 import type {
   StoryList as StoryListType,
@@ -47,14 +49,15 @@ class Search extends PureComponent {
   constructor(props) {
     super(props);
     this.loadItems = this._loadItems.bind(this);
-    // this.handleAddClick = this._handleAddClick.bind(this);
-    // this.handleRemoveClick = this._handleRemoveClick.bind(this);
-    // this.handleSaveClick = this._handleSaveClick.bind(this);
+
+    this.updateInput = this.updateInput.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+
     console.log('another fff');
 
     this.state = {
-      businesses: {
-        readyStatus: FETCH_BUSINESSES_INVALID,
+      search: {
+        readyStatus: SEARCH_INVALID,
         err: null,
         data: []
       }
@@ -66,13 +69,13 @@ class Search extends PureComponent {
   }
 
   componentDidMount() {
-    this.props.fetchBusinessesIfNeeded(this.props.match.params.page);
+
     console.log('hello');
   }
 
   componentWillReceiveProps(newProps){
-    if(JSON.stringify(newProps.businesses) !== JSON.stringify(this.businesses) ){
-      this.setState({businesses: newProps.businesses })
+    if(JSON.stringify(newProps.search) !== JSON.stringify(this.search) ){
+      this.setState({search: newProps.search })
     }
   }
 
@@ -98,7 +101,7 @@ class Search extends PureComponent {
   _loadItems(page) {
     const { location } = this.props;
     this.props.setCurrentPage(page);
-    this.props.fetchBusinessesIfNeeded(page);
+    this.props.searchIfNeeded(page);
     if (location !== undefined) {
       this.props.push({
         pathname: location.pathname,
@@ -107,31 +110,42 @@ class Search extends PureComponent {
     }
   }
 
+  updateInput(event){
+    this.setState({search: event.target.value})
+  }
+
+
+  handleSubmit(){
+    console.log(this.state.search);
+    this.props.searchDispatch(this.state.search);
+  }
+
+
   renderStoryList() {
-    const { businesses } = this.props;
+    const { search } = this.props;
     let loader;
     if (
-      !businesses.readyStatus ||
-      businesses.readyStatus === FETCH_BUSINESSES_INVALID ||
-      businesses.readyStatus === FETCH_BUSINESSES_REQUESTING
+      !search.readyStatus ||
+      search.readyStatus === SEARCH_INVALID ||
+      search.readyStatus === SEARCH_REQUESTING
     ) {
       loader = <div className="loader">Loading ...</div>;
-    } else if (businesses.readyStatus === FETCH_BUSINESSES_FAILURE) {
+    } else if (search.readyStatus === SEARCH_FAILURE) {
       loader = <p>Oops, Failed to load items!</p>;
     }
 
 
-    console.log(this.props.businesses);
+    console.log(this.props.search);
     const items = (
       <div>
-        {this.props.businesses.data.map((story, numInList) => {
-          console.log(story.id);
+        {this.props.search.data.map((business, numInList) => {
+          console.log(business.id);
           return (<StoryListItem
             numInList={numInList}
-            storyId={story.id}
-            displayName={story.display_name}
-            avatarUrl={story.avatar_url}
-            title={story.title}
+            storyId={business.id}
+            displayName={business.display_name}
+            avatarUrl={business.avatar_url}
+            title={business.title}
           />);
         })}
       </div>
@@ -164,8 +178,12 @@ class Search extends PureComponent {
 
         <div className={styles.storyListPage}>
           <ErrorList />
-
-          <Calendar />
+          <div className={styles.matchField}>
+            Preference: <input type="text" onChange={this.updateInput} />
+          </div>
+          <button className={styles.btnGreen} onClick={this.handleSubmit}>
+            Go
+          </button>
 
 
 
@@ -177,10 +195,10 @@ class Search extends PureComponent {
   }
 }
 
-const mapStateToProps = ({ location, businesses, pagination, entity }: ReduxState) => {
+const mapStateToProps = ({ location, businesses, pagination, entity, search }: ReduxState) => {
 
 
-  const { page, pages } = pagination.businesses;
+  const { page, pages } = pagination.search;
 
   /*
     const storyIds = Array.prototype.flatten(
@@ -193,18 +211,20 @@ const mapStateToProps = ({ location, businesses, pagination, entity }: ReduxStat
     businesses =  ("ids" in storyIds) ? storyIds.ids.map(id => entity.businesses[id]) : [];
 
   */
+  console.log(search);
 
   return {
     location,
     businesses,
-    page
+    page,
+    search
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   push: (pathname, query) => dispatch(push(pathname, query)),
-  fetchBusinessesIfNeeded: () => dispatch(fetchBusinessesIfNeeded()),
-  setCurrentPage: page => dispatch(setCurrentPage('STORY', page))
+  searchDispatch: () => dispatch(searchDispatch()),
+  setCurrentPage: page => dispatch(setCurrentPage('SEARCH', page))
 });
 
 const connector: Connector<{}, Props> = connect(

@@ -18,7 +18,7 @@ export default (req, res, next) => {
       return cb(null, userFound);
     })
       .catch( err => {
-        console.log(err);
+   //     console.log(err);
         return cb(err);
       });
   };
@@ -59,7 +59,7 @@ export default (req, res, next) => {
     }
     const keys = [];
     const values = [];
-    console.log(user);
+  //  console.log(user);
     for (const k in user) {
       if (typeof user[k] !== "undefined") {
         keys.push(k);

@@ -3,6 +3,7 @@ import forms from './common/forms';
 import locales from './common/locales';
 import comments from './common/comments';
 import stories from './common/stories';
+import search from './common/search';
 import courses from './common/businesses';
 import matches from './common/matches';
 import auth from './common/auth';
@@ -17,5 +18,6 @@ export default app => {
   locales(app);
   auth(app);
   matches(app);
+  search(app);
   react(app);
 };

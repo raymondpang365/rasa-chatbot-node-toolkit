@@ -39,8 +39,8 @@ class NavigationBar extends PureComponent {
   render() {
 
     const { isAuth, user } = this.props;
-    console.log(`isAuth:${isAuth}`);
-    console.log(`user.avatarURL:${user.avatarURL}`);
+   // console.log(`isAuth:${isAuth}`);
+   // console.log(`user.avatarURL:${user.avatarURL}`);
 
     return(
       <header className={styles.header}>
@@ -48,6 +48,7 @@ class NavigationBar extends PureComponent {
         <nav className={styles.menuLeft}>
           <Link className={this.toggleButtonStyle('/')} to="/">Home</Link>
           <Link className={this.toggleButtonStyle('/feed')} to="/feed">Featured</Link>
+          <Link className={this.toggleButtonStyle('/search')} to="/search">Search</Link>
           <Link className={this.toggleButtonStyle('/matchlist')} to="/matchlist">Event List</Link>
           <Link className={this.toggleButtonStyle('/match')} to="/match">Match</Link>
         </nav>
