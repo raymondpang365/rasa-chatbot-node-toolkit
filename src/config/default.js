@@ -4,8 +4,8 @@ const xoauth2 = require('xoauth2');
 module.exports = {
   listenTo: process.env.LISTEN_TO || 'localhost',
   host: process.env.NODE_HOST || 'localhost', // Define your host from 'package.json'
-  port: process.env.PORT || 3000,
-  publicPort: process.env.PORT || 3000,
+  port: 3001,
+  publicPort: 3001,
   domainName: '',
   hasDomainName: false,
   app: {

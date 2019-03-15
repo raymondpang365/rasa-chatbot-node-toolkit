@@ -11,12 +11,6 @@ export default {
     code: ErrorCodes.DB_OPERATION_FAIL,
     status: 500,
     title: 'Database Operation Failed',
-    detail: 'Current database operation is invalid'
-  },
-  [ErrorCodes.DB_ROLLBACK_FAIL]: {
-    code: ErrorCodes.DB_OPERATION_FAIL,
-    status: 500,
-    title: 'Database Rollback Failed',
     detail: 'Current database operation is invalid.'
   },
   [ErrorCodes.DB_VALIDATION]: {
@@ -49,6 +43,20 @@ export default {
     title: 'User Unauthorized',
     detail:
       'You are a guest or invalid user. Please login to access the resource.'
+  },
+  [ErrorCodes.KIT_ALREADY_USED]: {
+    code: ErrorCodes.KIT_ALREADY_USED,
+    status: 401,
+    title: 'Kit Already Used',
+    detail:
+      'The kit is already used by others.'
+  },
+  [ErrorCodes.NOT_FOUND]: {
+    code: ErrorCodes.NOT_FOUND,
+    status: 404,
+    title: 'Not found',
+    detail:
+      'Resource not found.'
   },
   [ErrorCodes.USER_EXISTED]: {
     code: ErrorCodes.USER_EXISTED,
