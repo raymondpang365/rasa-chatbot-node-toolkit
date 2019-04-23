@@ -9,6 +9,7 @@ import matches from './matches';
 import auth from './auth';
 import tags from './tags';
 import mail from './mail';
+import chatbot from './chatbot';
 
 export default app => {
   users(app);
@@ -22,4 +23,5 @@ export default app => {
   matches(app);
   search(app);
   mail(app);
+  chatbot(app);
 };

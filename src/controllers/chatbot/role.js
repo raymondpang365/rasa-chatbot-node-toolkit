@@ -79,7 +79,7 @@ class Role extends EventEmitter {
     log.verbose('Talker', 'say()');
     const payload  = this.load();
     try {
-      const response = await this.think(payload);
+      let response = await this.think(payload);
 
       console.log('final action start');
       console.log(response);
@@ -87,41 +87,25 @@ class Role extends EventEmitter {
       console.log('final action end');
 
 
-      if (Array.isArray(response)) {
-        response.map(r => {
-          const { action } = r;
-          switch(action) {
-            case 'reply':
-              this.emit('reply', r);
-              break;
-            case 'send':
-              this.emit('send', r);
-              break;
-            case 'forward':
-              this.emit('forward', r);
-              break;
-            default:
-              break;
-          }
-        });
+      if (!Array.isArray(response)) {
+        response = [response];
       }
-      else {
-        const { action } = response;
+      response.map(r => {
+        const { action } = r;
         switch(action) {
           case 'reply':
-            this.emit('reply', response);
+            this.emit('reply', r);
             break;
           case 'send':
-            this.emit('send', response);
+            this.emit('send', r);
             break;
           case 'forward':
-            this.emit('forward', response);
+            this.emit('forward', r);
             break;
           default:
             break;
         }
-      }
-
+      });
     }
     catch(err){
       console.log(err);

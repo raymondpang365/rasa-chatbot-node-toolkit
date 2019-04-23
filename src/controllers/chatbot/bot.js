@@ -13,8 +13,10 @@ import {
   Contact
 } from 'Wechaty'
 
+import { PuppetPadpro } from 'wechaty-puppet-padpro'
 
-import think from './think';
+
+import think from './think/index';
 
 // log.level = 'verbose'
 // log.level = 'silly'
@@ -87,16 +89,7 @@ const initBot = type => {
   let puppet;
   switch(type) {
     case 1:
-   /*   const { PuppetPadpro } = require('wechaty-puppet-padpro');
-      const WECHATY_PUPPET_PADPRO_TOKEN = 'puppet_padchat_baac2cfed6c03757';
-      //wxid_bz4eto56p2g322 Raymond Pang x Orange bot integration
-
-      puppet = new PuppetPadpro({
-        token: WECHATY_PUPPET_PADPRO_TOKEN,
-      });
-      return new Wechaty({puppet});*/
-
-      const WECHATY_PUPPET_PADCHAT_TOKEN = 'puppet_padchat_baac2cfed6c03757'
+      const WECHATY_PUPPET_PADCHAT_TOKEN = 'puppet_padchat_baac2cfed6c03757';
 
       puppet = 'wechaty-puppet-padchat' // 使用ipad 的方式接入。
 
@@ -111,6 +104,17 @@ const initBot = type => {
       break;
 
     case 2:
+      const WECHATY_PUPPET_PADPRO_TOKEN = 'puppet_padpro_75d1a03c2984967b';
+      //wxid_bz4eto56p2g322 Raymond Pang x Orange bot integration
+
+      puppet = new PuppetPadpro({
+        token: WECHATY_PUPPET_PADPRO_TOKEN,
+      });
+      return new Wechaty({puppet});
+
+      break;
+
+    case 3:
       const { PuppetIoscat } = require('wechaty-puppet-ioscat');
       puppet =  new PuppetIoscat({
         token: 'wxid_mpk305ilqx3712' //Shiba
@@ -118,7 +122,7 @@ const initBot = type => {
       });
       return new Wechaty({puppet});
       break;
-    case 3:
+    case 4:
       return new Wechaty();
       break;
     default:
@@ -127,7 +131,7 @@ const initBot = type => {
   }
 };
 
-const bot = initBot(1);
+const bot = initBot(2);
 
 import opn from 'opn';
 
@@ -144,12 +148,21 @@ bot
   .on('login'  , async user => {
    // await main();
 
-    const contact = await bot.Contact.find({name: '萦爸'});
-   // const contact = await bot.Contact.find({alias: 'Bb'});
+//onst contact2 = bot.Contact.load(wxid_8919859198712);
+   // const contact = await bot.Contact.load('wxid_bz4eto56p2g322');
+   // const contact = await bot.Contact.find({name: '萦爸'});
+    const contact = await bot.Contact.findAll();
+    const contact2 = await bot.Contact.load('wxid_bz4eto56p2g322');
 
-   const weixin = await contact.weixin();
-    console.log(contact);
-    console.log(weixin);
+
+
+
+
+  // const weixin = await contact.weixin();
+
+  //  const contact2 = bot.Contact.load('wxid_8919859198712');
+   // console.log(contact);
+    console.log(contact2);
     log.info('Bot', `bot login: ${user}`)
   })
   .on('logout' , user => log.info('Bot', 'bot %s logout.', user))

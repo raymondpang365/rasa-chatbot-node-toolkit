@@ -1,19 +1,11 @@
-import p from '../../../utils/agents';
+import p from '../../../../../../utils/agents';
 
-export default async (result, senderContactId, senderRoomId, utteranceId) => {
+export default async (params) => {
 
   let category = '';
   let wxid = '';
-
-  if (result.parameters) {
-    if (result.parameters &&
-        result.parameters.fields &&
-        result.parameters.fields.object &&
-        result.parameters.fields.object.stringValue
-    ) {
-      category = result.parameters.fields.object.stringValue;
-    }
-  }
+  let replyMessage = '';
+  category = params.slots.service;
 
   console.log(category);
 
@@ -30,9 +22,6 @@ export default async (result, senderContactId, senderRoomId, utteranceId) => {
     [senderContactId, senderRoomId, utteranceId, res0.rows[0].id])
     .then(res => res).catch(err => console.log(err));
 
-
-
-
   let res1 = await p.query(
         'SELECT ct.contact_id FROM tag t ' +
         'INNER JOIN contact_tag ct ON ct.tag_id = t.id ' +
@@ -41,9 +30,12 @@ export default async (result, senderContactId, senderRoomId, utteranceId) => {
 
   let rows1 = res1.rows;
   if (rows1.length <= 0) return {
-    action: 'reply',
-    message: `抱歉， 没有${category}员工，我会帮你向管理处联络。`
+    reply: {
+      action: 'action_respondent_not_found'
+    }
   };
+
+
   let found1 = rows1[0];
 
   let res2 = await p.query(
@@ -53,9 +45,11 @@ export default async (result, senderContactId, senderRoomId, utteranceId) => {
   let rows2 = res2.rows;
 
   if(rows2.length <= 0) return {
-    action: 'reply',
-    message: `抱歉， 没有${category}员工，我会帮你向管理处联络。`
+    reply: {
+      action: 'action_respondent_not_found'
+    }
   };
+
 
   let found2 = rows2[0];
   if(typeof found2.wxid === 'string' && found2.wxid.length > 0){
@@ -65,28 +59,25 @@ export default async (result, senderContactId, senderRoomId, utteranceId) => {
   console.log(wxid);
   console.log(category);
 
-  if(wxid === '' || category === ''){
-    return{
-      action: 'reply',
-      message: result.fulfillmentText
+  if(wxid === '' || category === '') {
+    return {
+      reply: {
+        action: 'action_respondent_not_found'
+      }
     }
   }
-  const response = [
-    {
-      action: 'send',
-      message: `有人现要${category}员工帮忙。请选择： A）接受 B）拒绝`,
-      flag: 'yes_no',
-      scenario: 'dispatch',
-      matchId: matchIdResult.rows[0].id,
-      to: wxid,
-      toContactId: found1.contact_id
-    },
-    {
-      action: 'reply',
-      message: `好，我马上问问在班的${category}员工有没有空帮忙。`,
-    }
-  ];
-  console.log(response);
-  return response;
+  else {
+    return {
+      reply: {
+        action: 'action_service_request_response'
+      },
+      reverseCommand: [{
+        command: '/委派工作 service:[清洁](service) floor:[18](floor) flat:[A](flat)',
+        matchId: matchIdResult.rows[0].id,
+        to: wxid,
+        toContactId: found1.contact_id
+      }]
+    };
+  }
 
 }
