@@ -1,21 +1,6 @@
 import { EventEmitter } from 'events'
 import { Brolog as log } from 'brolog'
 
-
-const selectFinalAction = response => {
-  const { action } = response;
-  switch(action) {
-    case 'reply':
-      this.emit('reply', response);
-      break;
-    case 'send':
-      this.emit('send', response);
-      break;
-    case 'forward':
-      this.emit('forward', response);
-      break;
-  }
-}
 class Role extends EventEmitter {
   constructor(think) {
     log.verbose('Talker()');

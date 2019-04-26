@@ -1,4 +1,4 @@
-import processLanguage from './processLanguage/rasa/rasaProcessor';
+import processLanguage from './processLanguage/rasaProcessor';
 import dispatchWechatAction from './dispatchWechatAction';
 import p from '../../../utils/agents';
 
@@ -21,15 +21,26 @@ export default async (payload) => {
   let senderContactId = senderContactIdResult.rows[0].id;
 
   await p.query(
-    'INSERT INTO utterance (body, contact_id, room_id, bot, created_at) VALUES ' +
-    '($1, $2, $3, $4, CURRENT_TIMESTAMP) RETURNING id;',
-    [text,  senderContactId , roomId, false])
+    'INSERT INTO utterance (body, contact_id, room_id, created_at) VALUES ' +
+    '($1, $2, $3, CURRENT_TIMESTAMP) RETURNING id;',
+    [text,  senderContactId , roomId])
     .then(res => res)
     .catch(err => console.log(err));
 
 
-  let messageFromBot = await processLanguage(payload);
+  let botMessages = await processLanguage(payload);
+  console.log('botMessages')
+  console.log(botMessages);
+  console.log('botMessages')
+  let fullWechatActions = [];
 
-  return await dispatchWechatAction(messageFromBot, senderContactId);
+  botMessages.map(m => {
+    fullWechatActions.push({
+      action: 'reply',
+      ...m
+    })
+  });
+
+  return await dispatchWechatAction(fullWechatActions);
 
 }

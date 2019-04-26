@@ -1,41 +1,49 @@
-import p from '../../../../../../utils/agents';
+import p from '../../../../../utils/agents';
+import {
+  qNonEmpty
+} from './handleError'
+
+import { init_inform_respondent_found } from '../../../../../constants/ReverseCmds'
 
 const respondentFound = async (decision, text, senderContactId, fromId, previousUtteranceId) => {
 
-  let res1 = await p.query('SELECT * FROM match WHERE respondent_utterance_id = $1', [previousUtteranceId])
-    .then(res => res).catch(err => console.log(err));
+  /**
+   *  Todo:
+   *  change fetchMatch to fetching match id from epic id
+   */
 
-  if (res1.rows.length === 0){
-    return {
-      reply: {
-        action: 'fallback'
-      }
-    }
-  }
 
-  let tagId = res1.rows[0].tag_id;
-  let enquirerRoomId = res1.rows[0].enquirer_room_id;
-  let enquirerContactId = res1.rows[0].enquirer_id;
 
-  let res2 = await p.query('SELECT tag_name FROM tag WHERE id = $1', [tagId])
-    .then(res => res).catch(err => console.log(err));
+  const fetchMatch = await qNonEmpty(
+    'SELECT * FROM match WHERE respondent_utterance_id = $1',
+    [previousUtteranceId])
+    .rows[0];
+
+  const tagId = fetchMatch.tag_id;
+  const matchId = fetchMatch.id;
+  const enquirerRoomId = fetchMatch.enquirer_room_id;
+  const enquirerContactId = fetchMatch.enquirer_id;
+
+  const tagName = await qNonEmpty(
+    'SELECT DISTINCT tag_name FROM tag WHERE id = $1',
+    [tagId]
+    ).rows[0].name || '';
 
   await p.query('UPDATE match SET respondent_id = $1 WHERE id = $2',
-    [senderContactId, res2.rows[0].id]
-  ).then(res => res).catch(err => console.log(err));
+    [senderContactId, matchId]
+  ).then(res => res).catch(err => {throw err} );
 
-  let res3 = await p.query('SELECT wxid FROM contact WHERE id = $1', [enquirerContactId])
-    .then(res => res).catch(err => console.log(err));
-
-  let enquirerWxid = res3.rows[0].wxid;
+  let enquirerWxid = await qNonEmpty(
+    'SELECT wxid FROM contact WHERE id = $1', [enquirerContactId]
+  ).rows[0].wxid || '';
 
   return {
     reply: {
-      action: 'action_thanks'
+      action: 'utter_thanks'
     },
     reverseCommand: [
       {
-        message: '/服务要求被接受 service:[清洁](service) staffName:[刘明](name)',
+        message: init_inform_respondent_found(tagName, 'someone'),
         to: enquirerWxid,
         room: enquirerRoomId || undefined,
         toContactId: enquirerContactId

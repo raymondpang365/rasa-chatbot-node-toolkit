@@ -11,7 +11,7 @@ const requestModule = require('request');
 
 const request = async (value) =>
   new Promise((resolve, reject) => {
-    requestModule(value, (error, response, data) => {
+    requestModule.post(value, (error, response, data) => {
       if(error) reject(error)
       else resolve(data)
     })

@@ -1,31 +1,41 @@
-const dialogFlow = require('dialogflow');
-const uuid = require('uuid');
-
-import { request } from '../../../util';
-
-/**
- * Send a query to the dialogflow agent, and return the query result.
- * @param {string} projectId The project to be used
- */
-
+// import { request } from '../../util';
+import axios from 'axios';
 
 async function processMessage(payload) {
 
+  /**
+   *  Todo:
+   *  If epic ID is not provided as an argument,
+   *  insert new epic in db
+   *
+   *  Encrypt epic iD and concat with message
+    */
+
   try {
-    const formdata ={
-      "sender": payload.fromId,
-      "message": payload.text
-    } ;
 
-    const message = await request.post({
-        url: 'http://localhost:5002/webhooks/rest/webhook',
-        form: formdata
-      });
-
-    return {
-      to: payload.fromId,
-      message: message
+    let formData = {
+      sender: payload.fromId,
+      message: payload.text
     };
+
+    console.log(formData);
+
+    const message = await axios.post(
+       'http://localhost:5002/webhooks/rest/webhook',
+        formData
+      ).then(res => res).catch(err => {throw err});
+
+    console.log(message);
+
+    if(message.data.length > 0) {
+      return {
+        recipient_id: message.data[0].recipient_id || '',
+        text: message.data[0].text || ''
+      };
+    }
+    else {
+      throw new Error('no response');
+    }
   }
   catch(err){
     throw new Error(err);

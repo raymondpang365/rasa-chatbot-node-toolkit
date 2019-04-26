@@ -1,7 +1,5 @@
-import chatbotController from '../controllers/chatbot/think/processLanguage/rasa/processCustomActions';
+import chatbotController from '../controllers/chatbot/think/processLanguage/processCustomActions';
 import bodyParser from '../middlewares/bodyParser';
-
-
 
 
 export default app => {

@@ -1,12 +1,10 @@
-import p from '../../../../../../utils/agents';
+import { UTTER_ALRIGHT } from '../../../../../constants/BotActions'
 
 const respondentNotFound = async () => {
 
-  console.log('yes_no file');
-
   return {
     reply: {
-      action: 'action_fine'
+      action: UTTER_ALRIGHT
     }
   }
 
