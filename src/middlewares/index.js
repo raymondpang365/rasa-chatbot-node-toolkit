@@ -9,7 +9,7 @@ import express from 'express';
 export default app => {
 
   // Use for http request debug (show errors only)
-  app.use(morgan('dev'));
+  //app.use(morgan('dev'));
 
   app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", 'http://localhost:3000');

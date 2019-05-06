@@ -1,4 +1,4 @@
-import { UTTER_ALRIGHT } from '../../../../../constants/BotActions'
+import { UTTER_ALRIGHT } from '../../../../constants/BotActions'
 
 const respondentNotFound = async () => {
 
@@ -7,8 +7,6 @@ const respondentNotFound = async () => {
       action: UTTER_ALRIGHT
     }
   }
-
-
 };
 
 export default respondentNotFound;

@@ -1,8 +1,8 @@
-import { EventEmitter } from 'events'
+import{  EventEmitter } from 'events'
 import { Brolog as log } from 'brolog'
 
 class Role extends EventEmitter {
-  constructor(think) {
+  constructor(think, m = null) {
     log.verbose('Talker()');
     super();
     this.think = think;
@@ -12,6 +12,11 @@ class Role extends EventEmitter {
       fromId: null,
       roomId: null
     }
+    this.m = m;
+  }
+
+  setMessage(m){
+    this.m = m;
   }
 
   save(payload) {
@@ -66,37 +71,40 @@ class Role extends EventEmitter {
     try {
       let response = await this.think(payload);
 
-      console.log('final action start');
-      console.log(response);
-      console.log(Array.isArray(response));
-      console.log('final action end');
+      this.dispatchWechatAction(response);
 
-
-      if (!Array.isArray(response)) {
-        response = [response];
-      }
-      response.map(r => {
-        const { action } = r;
-        switch(action) {
-          case 'reply':
-            this.emit('reply', r);
-            break;
-          case 'send':
-            this.emit('send', r);
-            break;
-          case 'forward':
-            this.emit('forward', r);
-            break;
-          default:
-            break;
-        }
-      });
     }
     catch(err){
       console.log(err);
     }
 
     this.timer = undefined;
+  }
+
+  dispatchWechatAction(response){
+    if (!Array.isArray(response)) {
+      response = [response];
+    }
+    console.log(response);
+    response.map(r => {
+    //  this.emit('send', r);
+      const { action } = r;
+      console.log(r);
+      switch(action) {
+        case 'reply':
+          this.emit('reply', r);
+          break;
+        case 'send':
+          this.emit('send', r);
+          break;
+        case 'forward':
+          this.emit('forward', r);
+          break;
+        default:
+          break;
+      }
+
+    });
   }
 
   delayTime() {

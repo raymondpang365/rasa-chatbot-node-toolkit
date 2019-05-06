@@ -34,5 +34,33 @@ module.exports = {
 
     //rasa default actions
 
-  ACTION_DEFAULT_FALLBACK: 'action_default_fallback'
+  ACTION_DEFAULT_FALLBACK: 'action_default_fallback',
+
+  utterActions: [
+    'utter_ask_flat',
+    'utter_ask_floor',
+    'utter_ask_time',
+    'utter_service_request_response',
+
+    'utter_thanks',
+    'utter_alright',
+    'utter_greet',
+    'utter_goodbye',
+    'utter_name'
+  ],
+
+  reverseCmdUtterActions: [
+    'utter_init_service_request_notification',
+    'utter_init_inform_respondent_found',
+    'utter_init_inform_respondent_not_found',
+    'utter_init_inform_service_completed'
+  ],
+
+
+  customActions: [
+    'action_dispatch_service_request',
+    'service_request_form',
+    'action_respondent_found',
+    'action_respondent_not_found'
+  ]
 }

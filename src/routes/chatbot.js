@@ -1,4 +1,4 @@
-import chatbotController from '../controllers/chatbot/think/processLanguage/processCustomActions';
+import chatbotController from '../controllers/chatbot/think/ActionManagement/manger/index';
 import bodyParser from '../middlewares/bodyParser';
 
 

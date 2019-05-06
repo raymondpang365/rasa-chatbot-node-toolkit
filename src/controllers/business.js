@@ -46,7 +46,7 @@ export default {
       const goal = res1.rows[0].content;
       const limitation = res2.rows[0].content;
       const finalresult = {..._business, goal, limitation};
-      console.log('finalresult');
+
       console.log(finalresult);
       res.json({
         business: finalresult

@@ -33,7 +33,7 @@ export default {
   wordFilter(req, res, next){
     let matchedTags = [];
 
-    console.log(req.body);
+
 
     if(req.body.word !== '') {
       p.query("SELECT * FROM tag WHERE tag ==> dsl.match(field => 'tag_name', query => $1, analyzer => 'synonym')",
@@ -69,7 +69,7 @@ export default {
     //----------------------------------------------
     // case 1 tags
 
-    console.log(req.body);
+
 
 
 

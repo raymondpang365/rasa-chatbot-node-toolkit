@@ -21,7 +21,8 @@ class Agent {
     return new Promise((resolve, reject) => {
       this.pool.query(text, params, (err, res) => {
         const duration = Date.now() - start;
-        console.log('executed query', { text, duration, rows: res })
+    //    console.log('executed query', { text, duration, rows: res })
+        console.log('executed query', { text })
         if (err) {
           console.log(err);
           reject(err);
@@ -60,9 +61,7 @@ class Agent {
         client.query('BEGIN')
             .then(res => new Promise((resu, reje) => bodyPromises(client, resu, reje)))
             .then(res => {
-              console.log('super');
-              console.log(res);
-              console.log('super');
+
               results = res;
             })
             .then(client.query('COMMIT'))

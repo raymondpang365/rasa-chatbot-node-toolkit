@@ -96,7 +96,7 @@ export default {
   },
 
   create(req, res) {
-    console.log(req.body);
+
     const goal_id = uuidv4();
     const limitation_id = uuidv4();
     const limitationTagsInsert = [];

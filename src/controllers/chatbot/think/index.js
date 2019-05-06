@@ -1,46 +1,52 @@
-import processLanguage from './processLanguage/rasaProcessor';
-import dispatchWechatAction from './dispatchWechatAction';
-import p from '../../../utils/agents';
+import processMessage from './processMessage';
+import {
+  userUtterLog,
+  botUtterLog
+} from './utterLog';
 
+import getExtraAction from './getExtraAction';
+
+import { BOT_MESSAGE as extractFromBotMessage } from '../util/extractDetail'
 
 export default async (payload) => {
 
-  console.log(payload);
-  let { fromId, roomId, text } = payload;
+  try {
 
-  let senderContactIdResult = await p.query('SELECT id FROM contact WHERE wxid = $1;',
-    [fromId])
-    .then(res => res).catch(err => console.log(err));
+    let {fromId, roomId, text} = payload;
 
-  if (senderContactIdResult.rows.length <= 0){
-    senderContactIdResult = await p.query(
-      'INSERT INTO contact (wxid) VALUES ($1) RETURNING id;',
-      [fromId])
-      .then(res => res).catch(err => console.log(err));
-  }
-  let senderContactId = senderContactIdResult.rows[0].id;
+    const utteranceId = await userUtterLog(fromId, roomId, text);
 
-  await p.query(
-    'INSERT INTO utterance (body, contact_id, room_id, created_at) VALUES ' +
-    '($1, $2, $3, CURRENT_TIMESTAMP) RETURNING id;',
-    [text,  senderContactId , roomId])
-    .then(res => res)
-    .catch(err => console.log(err));
+    const formData = {
+      sender: typeof roomId === 'string' && roomId.length > 0 ? `${fromId}@${roomId}`: fromId,
+      message: text
+    };
 
+    const botMessage = await processMessage({
+      payload: formData,
+      utteranceId
+    });
 
-  let botMessages = await processLanguage(payload);
-  console.log('botMessages')
-  console.log(botMessages);
-  console.log('botMessages')
-  let fullWechatActions = [];
+    const epicId = extractFromBotMessage.epicId(botMessage);
 
-  botMessages.map(m => {
-    fullWechatActions.push({
+    await botUtterLog(
+      { action: 'reply', ...botMessage },
+      epicId
+    );
+
+    const wechatAction = {
       action: 'reply',
-      ...m
-    })
-  });
-
-  return await dispatchWechatAction(fullWechatActions);
+      text: extractFromBotMessage.content(botMessage),
+      to: extractFromBotMessage.wxid(botMessage),
+      room: extractFromBotMessage.roomId(botMessage)
+    }
+    console.log(botMessage)
+    const extraWechatAction = await getExtraAction(botMessage);
+    console.log(extraWechatAction);
+    return [wechatAction, ...extraWechatAction];
+  }
+  catch(err){
+    throw err;
+  }
 
 }
+

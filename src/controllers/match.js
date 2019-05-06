@@ -328,7 +328,7 @@ export default {
   },
 
   createMatch(req, res, next) {
-    console.log(req.body);
+
     let matchId;
     p.query('INSERT INTO match (creator_id, title, description) VALUES ($1, $2, $3) RETURNING id', ['U0000001', req.body.title, req.body.description]).then(
       results => {

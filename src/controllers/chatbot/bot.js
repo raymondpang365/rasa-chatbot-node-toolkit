@@ -2,9 +2,7 @@ const QrcodeTerminal = require('qrcode-terminal');
 
 import { Brolog as log } from 'brolog'
 
-import { extractMessage } from "./util";
-
-import Role from './role';
+import { passiveTalk } from './communicate';
 
 import {
   config,
@@ -15,8 +13,6 @@ import {
 
 import { PuppetPadpro } from 'wechaty-puppet-padpro'
 
-
-import think from './think/index';
 
 // log.level = 'verbose'
 // log.level = 'silly'
@@ -36,14 +32,6 @@ async function main() {
    */
   for (let i = 0; i < contactList.length; i++) {
     const contact = contactList[i];
-    console.log(contact);
-
-  //  const weixin = await  contact.weixin();
-    console.log(weixin);
-    /*
-    if (contact.type() === Contact.Type.Official) {
-      log.info('Bot', `official ${i}: ${contact}`)
-    }*/
   }
 
   /**
@@ -146,23 +134,7 @@ bot
     console.log(`${qrcode}\n[${status}] Scan QR Code in above url to login: `)
   })
   .on('login'  , async user => {
-   // await main();
 
-//onst contact2 = bot.Contact.load(wxid_8919859198712);
-   // const contact = await bot.Contact.load('wxid_bz4eto56p2g322');
-   // const contact = await bot.Contact.find({name: '萦爸'});
-    const contact = await bot.Contact.findAll();
-    const contact2 = await bot.Contact.load('wxid_bz4eto56p2g322');
-
-
-
-
-
-  // const weixin = await contact.weixin();
-
-  //  const contact2 = bot.Contact.load('wxid_8919859198712');
-   // console.log(contact);
-    console.log(contact2);
     log.info('Bot', `bot login: ${user}`)
   })
   .on('logout' , user => log.info('Bot', 'bot %s logout.', user))
@@ -171,10 +143,6 @@ bot
       console.log(m);
       return }
 
-   // if(m.topic().startsWith('骏皇名居')){ return }
-
-    // co(function* () {
-    //   const msg = yield m.load()
     const room = m.room();
 
     if (room){
@@ -185,15 +153,17 @@ bot
       }
     }
 
-    console.log(m);
-
-
     log.info('Bot', 'talk: %s'  , m);
     const prefix = '@bot ';
 
-    if(room === null || m.text().substring(0, 5).toLowerCase() === prefix) {
-      talk(m);
-    }
+
+
+      if (room === null || m.text().substring(0, 5).toLowerCase() === prefix) {
+        console.log(typeof passiveTalk);
+        console.log(m);
+        passiveTalk(m);
+      }
+
 
   });
 
@@ -204,74 +174,4 @@ bot.start()
     process.exit(-1)
   });
 
-
-
-/* tslint:disable:variable-name */
-const Roles = {};
-
-function talk(m) {
-  const from    = m.from();
-  if (from === null) return;
-
-  const fromId  = from && from.id;
-
-  const room    = m.room();
-  const roomId  = room && room.id;
-
-
-  let roleName = '';
-
-  if(room === null){
-    roleName = fromId || '';
-  }
-  else{
-    roleName = roomId + (fromId || '');
-  }
-
-  if (!Roles[roleName]) {
-    Roles[roleName] = new Role(function(payload) {
-      return new Promise(async (resolve, reject) => { //think function
-          try {
-            const responseMessage = await think(payload);
-            console.log(responseMessage);
-            resolve(responseMessage);
-
-
-          } catch (err) {
-            reject(err);
-          }
-      })
-    });
-
-    Roles[roleName].on('reply', response => m.say(response.message));
-    Roles[roleName].on('send', async response => {
-      console.log('hehe');
-      console.log(response);
-      const {message} = response;
-      try {
-        if (typeof message === 'string') {
-          const result = await m.puppet.messageSendText({
-            contactId: response.to || undefined,
-            roomId: response.room || undefined,
-          }, response.message);
-
-          console.log(result);
-        }
-      }catch(err){
-        throw new Error(err);
-      }
-    });
-    Roles[roleName].on('forward', response => m.forward(response.to));
-
-  }
-  console.log(extractMessage(m));
-  console.log('beforepayload');
-  let payload = {
-    text: extractMessage(m),
-    fromId,
-    roomId: roomId || ''
-  };
-
-  Roles[roleName].hear(payload);
-}
-
+export default bot;

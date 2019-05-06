@@ -34,7 +34,7 @@ const randomValueHex = (len) =>
 export default {
 
   readSelf(req, res) {
-    console.log(req.user);
+
     res.json({
       user: req.user
     });
@@ -87,9 +87,7 @@ export default {
             })
          })
       ).then( results => {
-        console.log('bibibo');
-        console.log(results);
-        console.log('bibibo');
+
       const { user_id, session_id } = results[0].rows[0];
         const access_token = genAccessToken({ user_id, session_id });
         userReturned = { user_id, session_id, access_token, ...userReturned };
