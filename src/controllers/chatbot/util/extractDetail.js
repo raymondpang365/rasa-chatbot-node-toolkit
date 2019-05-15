@@ -12,17 +12,17 @@ import {
 const extractWxidFromCustomAction = (body) => {
   const convId = (typeof body.sender === 'string') ? body.sender : '';
 
-  return body.sender.indexOf('@') > -1 ? body.sender.split('@')[0] : convId;
+  return body.sender.indexOf('#') > -1 ? body.sender.split('#')[0] : convId;
 };
 
 const extractWxidFromBotMessage = payload => {
   const convId = (typeof payload.recipient_id === 'string') ? payload.recipient_id : '';
-  return payload.recipient_id.indexOf('@') > -1 ? payload.recipient_id.split('@')[0] : convId;
+  return payload.recipient_id.indexOf('#') > -1 ? payload.recipient_id.split('#')[0] : convId;
 };
 
 const extractWxidFromUserMessage = payload => {
   const convId = (typeof payload.sender === 'string') ? payload.sender : '';
-  return payload.sender.contains('@') ? payload.sender.split('@')[0] : convId;
+  return payload.sender.contains('#') ? payload.sender.split('#')[0] : convId;
 };
 
 const extractUtteranceIdFromCustomAction = body=> {
@@ -55,7 +55,7 @@ const CUSTOM_ACTION = {
     return parseInt(result.rows[0].id);
   },
   roomId: (body) => {
-    return body.sender.indexOf('@') > -1 ? body.sender.split('@')[1] : null;
+    return body.sender.indexOf('#') > -1 ? body.sender.split('#')[1] : null;
   },
   epicId: body => {
     const text = body.text;
@@ -91,7 +91,7 @@ const BOT_MESSAGE = {
     return parseInt(result);
   },
   roomId: payload => {
-    return payload.recipient_id.indexOf('@') > -1 ? payload.recipient_id.split('@')[1] : null;
+    return payload.recipient_id.indexOf('#') > -1 ? payload.recipient_id.split('#')[1] : null;
   },
   epicId: payload => {
     const { text } = payload;
@@ -142,7 +142,7 @@ const USER_MESSAGE = {
     return parseInt(result.rows[0].id);
   },
   roomId: payload => {
-    return payload.sender.indexOf('@') > -1 ? payload.sender.split('@')[1] : null;
+    return payload.sender.indexOf('#') > -1 ? payload.sender.split('#')[1] : null;
   }
 };
 

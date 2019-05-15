@@ -65,7 +65,7 @@ const respondentFound = async (body, epicId) => {
 
 
   const sender = typeof enquirerRoomId === 'string' && enquirerRoomId.length > 0
-    ? `${enquirerWxid}@${enquirerRoomId}`
+    ? `${enquirerWxid}#${enquirerRoomId}`
     : enquirerWxid;
 
   const respondentWxid = (await qNonEmpty(

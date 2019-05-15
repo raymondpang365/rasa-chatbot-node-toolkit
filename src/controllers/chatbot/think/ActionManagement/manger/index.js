@@ -20,7 +20,7 @@ import {  customActions } from '../../../../../constants/BotActions'
 import { CUSTOM_ACTION } from '../../../../../constants/Format'
 
 const chooseCustomActions = async (body, action) => {
-
+  console.log(body);
   try {
     const epicId = await epicManager(body, CUSTOM_ACTION);
     let tasks = {

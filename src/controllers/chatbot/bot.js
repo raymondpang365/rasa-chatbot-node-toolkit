@@ -8,14 +8,15 @@ import {
   config,
   Wechaty,
   Message,
-  Contact
+  Contact,
+  Friendship
 } from 'Wechaty'
 
 import { PuppetPadpro } from 'wechaty-puppet-padpro'
 
 
 // log.level = 'verbose'
-// log.level = 'silly'
+ log.level = 'silly';
 //w2820697897
 
 //wxid_7kwo47d4iwtd22
@@ -138,6 +139,27 @@ bot
     log.info('Bot', `bot login: ${user}`)
   })
   .on('logout' , user => log.info('Bot', 'bot %s logout.', user))
+  .on('friendship', async friendship => {
+    try {
+      console.log(`received friend event.`)
+      switch (friendship.type()) {
+
+        // 1. New Friend Request
+
+        case Friendship.Type.Receive:
+          await friendship.accept();
+          break;
+
+        // 2. Friend Ship Confirmed
+
+        case Friendship.Type.Confirm:
+          console.log(`friend ship confirmed`);
+          break;
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  })
   .on('message', async m => {
     if (m.self()){
       console.log(m);
@@ -159,7 +181,7 @@ bot
 
 
       if (room === null || m.text().substring(0, 5).toLowerCase() === prefix) {
-        console.log(typeof passiveTalk);
+      //  console.log(typeof passiveTalk);
         console.log(m);
         passiveTalk(m);
       }

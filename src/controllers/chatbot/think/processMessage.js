@@ -15,7 +15,7 @@ async function processMessage({ payload, utteranceId = 0, epicId = 0 }) {
     console.log(formData);
 
     const message = await axios.post(
-       'http://localhost:5002/webhooks/rest/webhook',
+       'http://localhost:5004/webhooks/rest/webhook',
         formData
       ).then(res => res).catch(err => {throw err});
 

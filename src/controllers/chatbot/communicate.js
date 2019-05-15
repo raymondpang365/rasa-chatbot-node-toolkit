@@ -20,7 +20,7 @@ const activeTalk = botMessages => {
       roleName = to || '';
     }
     else{
-      roleName = room + (to || '');
+      roleName = (to || '') + '#' + room;
     }
 
     if (!Roles[roleName]) {
@@ -59,7 +59,7 @@ const passiveTalk = m => {
     roleName = fromId || '';
   }
   else{
-    roleName = roomId + (fromId || '');
+    roleName = (fromId || '') + '#' + roomId;
   }
   if (!!Roles[roleName]) {
     console.log('girl logging m variable')

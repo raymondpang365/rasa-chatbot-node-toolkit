@@ -17,7 +17,7 @@ export default async (payload) => {
     const utteranceId = await userUtterLog(fromId, roomId, text);
 
     const formData = {
-      sender: typeof roomId === 'string' && roomId.length > 0 ? `${fromId}@${roomId}`: fromId,
+      sender: typeof roomId === 'string' && roomId.length > 0 ? `${fromId}#${roomId}`: fromId,
       message: text
     };
 
