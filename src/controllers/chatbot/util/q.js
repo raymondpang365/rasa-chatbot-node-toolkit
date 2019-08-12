@@ -1,4 +1,4 @@
-import { ACTION_DEFAULT_FALLBACK } from '../../../constants/BotActions'
+import { UTTER_INTERNAL_SERVER_ERROR } from '../../../constants/BotActions'
 
 import  p from '../../../utils/agents';
 
@@ -9,8 +9,8 @@ const qNonEmpty = async (sql, params, errMetaData) => {
   return await p.query(sql, params)
     .then(res => {
       if (res.rows.length === 0) {
-        console.log(errMetaData);
-        throw new Error(errMetaData);
+       // console.log(errMetaData);
+        throw new Error('No rows found');
       }
       return res;
     })
@@ -30,9 +30,24 @@ const q = async (sql, params) => {
     })
 };
 
+
+function insertData(item,callback) {
+  q('INSERT INTO subscriptions (subscription_guid, employer_guid, employee_guid)' +
+  'values ($1,$2,$3)', [
+  item.subscription_guid,
+    item.employer_guid,
+    item.employee_guid
+],
+  function(err,result) {
+    // return any err to async.each iterator
+    callback(err);
+  })
+}
+
+
 const handleCustomActionError = (
   {
-    action = ACTION_DEFAULT_FALLBACK,
+    action = UTTER_INTERNAL_SERVER_ERROR,
     message = ''
   }
   ) => {

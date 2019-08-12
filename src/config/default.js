@@ -4,11 +4,15 @@ const xoauth2 = require('xoauth2');
 module.exports = {
   listenTo: process.env.LISTEN_TO || 'localhost',
   host: process.env.NODE_HOST || 'localhost', // Define your host from 'package.json'
-  port: 3001,
-  publicPort: 3001,
+  bot: process.env.DEV_BOT,
+  port: process.env.DEV_PORT,
+  publicPort: process.env.DEV_PORT,
+  nluCorePort: process.env.NLP_CORE_PORT,
   domainName: '',
   hasDomainName: false,
   backdoor: true,
+  naiveVoteClassification: false,
+  isSplitNlpServer: false,
   app: {
     htmlAttributes: { lang: 'en' },
     title: 'Test',
@@ -60,6 +64,7 @@ module.exports = {
       pass: process.env.GMAIL_PASSWORD,
     },
   },
+  openWeather: process.env.OPEN_WEATHER_API_KEY,
   mailOptions: {
     subject: 'Untitled Mail',
     from: 'Express-React-Hmr-Boilerplate <psfr937@gmail.com>',

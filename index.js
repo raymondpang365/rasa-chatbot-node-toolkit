@@ -10,6 +10,10 @@ global.__CLIENT__ = false;
 global.__SERVER__ = true;
 global.__DEV__ = process.env.NODE_ENV === 'development';
 
+const path = require('path');
+
+require('dotenv').config({path: path.resolve(process.cwd(), '../.env')})
+
 
 console.log(`Server starts in ${process.env.NODE_ENV} environment.`);
 

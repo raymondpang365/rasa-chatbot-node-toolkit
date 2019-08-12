@@ -31,7 +31,8 @@ export default app => {
   app.use(mountHelper);
   app.use(passportInit);
 
-  require('../controllers/chatbot/bot');
+require('../controllers/chatbot/cause/outer/index');
+require('../controllers/chatbot/announcement/schedule');
 
  // app.use(express.query());
 //  app.use('/wechat', wechat);

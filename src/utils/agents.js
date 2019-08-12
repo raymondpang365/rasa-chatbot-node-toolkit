@@ -1,5 +1,6 @@
 import getDatabaseConfig from '../config/database';
 import Errors from '../constants/Errors';
+import async from 'async';
 
 const { Pool } = require('pg');
 
