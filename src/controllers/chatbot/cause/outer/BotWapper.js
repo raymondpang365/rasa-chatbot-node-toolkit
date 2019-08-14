@@ -287,7 +287,7 @@ class BotWrapper{
           if (m.text().substring(0, mentionPrefix.length).toLowerCase() === mentionPrefix
             || (Array.isArray(m.payload.mentionIdList) && m.payload.mentionIdList.includes(this.wxid))) {
 
-            let text = m.text().substring(mentionPrefix.length);
+            let text = m.text().substring(mentionPrefix.length).trim();
             passiveTalk(m, text === "" ? "hi" : text);
 
           }
