@@ -37,13 +37,13 @@ export const userUtterLog = async (fromId, roomId, text)=>{
     [text,  senderContactId , roomId, false ])).rows[0].id;
 };
 
-export const updateUserUtterLogStoryId = async (utteranceId, stage3_StoryId) => {
+export const updateUserUtterLogEpicId = async (utteranceId, stage3_EpicId) => {
   console.log(utteranceId);
-  console.log(stage3_StoryId);
+  console.log(stage3_EpicId);
   if(utteranceId !== 0)
     return await qNonEmpty(
-      'UPDATE utterance u SET story_id = $1 WHERE id = $2 RETURNING id;',
-      [stage3_StoryId, utteranceId]
+      'UPDATE utterance u SET epic_id = $1 WHERE id = $2 RETURNING id;',
+      [stage3_EpicId, utteranceId]
     );
 };
 
@@ -53,7 +53,7 @@ export const updateUserUtterLogStoryId = async (utteranceId, stage3_StoryId) => 
    *
    */
 
-export const botUtterLog = async (wechatActions, stage3_StoryId) => {
+export const botUtterLog = async (wechatActions, stage3_EpicId) => {
     if (typeof wechatActions !== 'undefined' && !Array.isArray(wechatActions))
       wechatActions = [wechatActions];
 
@@ -70,14 +70,14 @@ export const botUtterLog = async (wechatActions, stage3_StoryId) => {
 
         if(typeof a.to === 'string' && a.to.length > 0) {
 
-          botUtterId = (await qNonEmpty('INSERT INTO utterance (contact_id, body, room_id, story_id, is_bot_to_user, created_at) ' +
+          botUtterId = (await qNonEmpty('INSERT INTO utterance (contact_id, body, room_id, epic_id, is_bot_to_user, created_at) ' +
             'SELECT c.id, $1, $2, $3, $4, CURRENT_TIMESTAMP FROM contact c WHERE wxid = $5 RETURNING id;',
-            [a.text, null, stage3_StoryId, true, a.to])).rows[0].id;
+            [a.text, null, stage3_EpicId, true, a.to])).rows[0].id;
         }
         else{
-          botUtterId = (await qNonEmpty('INSERT INTO utterance (contact_id, body, room_id, story_id, is_bot_to_user, created_at) ' +
+          botUtterId = (await qNonEmpty('INSERT INTO utterance (contact_id, body, room_id, epic_id, is_bot_to_user, created_at) ' +
             'VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP) RETURNING id;',
-            [null, a.text,  a.room, stage3_StoryId, true])).rows[0].id;
+            [null, a.text,  a.room, stage3_EpicId, true])).rows[0].id;
         }
 
         const userUtterId = await extractFromBotMessage.utteranceId(a);

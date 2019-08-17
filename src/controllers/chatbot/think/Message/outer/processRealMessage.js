@@ -19,7 +19,7 @@ export default async ({ payload, utteranceId = 0 }) => {
       if (voteChecking.isVote) {
         return {
           botMessage: voteChecking,
-          stage3_StoryId: null
+          stage3_EpicId: null
         }
       }
     }
@@ -51,22 +51,22 @@ export default async ({ payload, utteranceId = 0 }) => {
     if(message.data.length === 0) {
       return {
         botMessage: null,
-        stage3_StoryId: null
+        stage3_EpicId: null
       }
     }
     else {
       const botMessage = message.data[0];
-      const {epicId: stage3_EpicId, storyId: stage3_StoryId } = await epicManager(botMessage, BOT_MESSAGE);
+      const stage3_EpicId = await epicManager(botMessage, BOT_MESSAGE);
       botMessage.text = extractFromBotMessage.insertNewEpicId(stage3_EpicId, botMessage);
 
       console.log('fuck you');
       console.log(botMessage);
       if(maybeAffirmFallback) {
 
-        await affirmFallbackUtils.updateOldConversationStoryId(
+        await affirmFallbackUtils.updateOldConversationEpicId(
           oldUserUtteranceId,
           botAskAffirmUtteranceId,
-          stage3_StoryId);
+          );
       }
 
       console.log(botMessage);
@@ -75,7 +75,7 @@ export default async ({ payload, utteranceId = 0 }) => {
           action: 'reply',
           ...botMessage
         },
-        stage3_StoryId};
+        stage3_EpicId};
     }
   }
   catch(err){

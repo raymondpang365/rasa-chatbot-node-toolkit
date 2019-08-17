@@ -22,7 +22,7 @@ export default async (payload) => {
       message: text
     };
 
-    const { botMessage, stage3_StoryId } = await processRealMessage({
+    const { botMessage, stage3_EpicId } = await processRealMessage({
       payload: formData,
       utteranceId: utteranceId,
       epicId: 0,
@@ -31,7 +31,7 @@ export default async (payload) => {
 
     await botUtterLog(
       botMessage,
-      stage3_StoryId
+      stage3_EpicId
     );
 
     const wechatAction = {

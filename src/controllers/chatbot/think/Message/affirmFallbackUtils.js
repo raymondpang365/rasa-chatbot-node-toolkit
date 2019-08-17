@@ -1,5 +1,5 @@
 import { q, qNonEmpty } from '../../util/q';
-import { updateUserUtterLogStoryId } from './utterLog';
+import { updateUserUtterLogEpicId } from './utterLog';
 import { USER_MESSAGE } from '../../util/extractDetail'
 
 export default {
@@ -55,13 +55,13 @@ export default {
     }
 
   },
-  updateOldConversationStoryId: async (oldUserUtteranceId, botAskAffirmUtteranceId, storyId) => {
+  updateOldConversationEpicId: async (oldUserUtteranceId, botAskAffirmUtteranceId, epicId) => {
     const promises = [];
     if(!isNaN(oldUserUtteranceId) && oldUserUtteranceId > 0) {
-      promises.push(await updateUserUtterLogStoryId(oldUserUtteranceId, storyId));
+      promises.push(await updateUserUtterLogEpicId(oldUserUtteranceId, epicId));
     }
     if(!isNaN(botAskAffirmUtteranceId) && botAskAffirmUtteranceId > 0) {
-      promises.push(await updateUserUtterLogStoryId(botAskAffirmUtteranceId, storyId));
+      promises.push(await updateUserUtterLogEpicId(botAskAffirmUtteranceId, epicId));
     }
 
     await Promise.all(promises)

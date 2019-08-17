@@ -1,8 +1,6 @@
 import normalizeDetail from './normalizeDetail';
 import { reverseCmdIntents } from '../../../../constants/Intents'
 
-import { findExistingStory } from './dbUtils'
-
 import policy from './policy'
 
 export default async (params, format, inner) => {
@@ -22,8 +20,7 @@ export default async (params, format, inner) => {
       if(inner === 'inner') {
         const {defaultEpicId, intent, contactId, roomId} = detail;
         if (defaultEpicId !== 0 || reverseCmdIntents.includes(intent)) {
-          const storyId = await findExistingStory(contactId, roomId, defaultEpicId);
-          return { epicId: defaultEpicId, storyId: storyId };
+          return defaultEpicId;
         }
       }
       else {

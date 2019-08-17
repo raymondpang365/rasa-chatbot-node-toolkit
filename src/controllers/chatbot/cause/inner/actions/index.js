@@ -28,7 +28,7 @@ import logger from '../../../../../utils/logger';
 const chooseCustomActions = async (body, action) => {
   console.log(body);
   try {
-    const { epicId: stage2_EpicId, storyId: stage2_StoryId } = await epicManager(body, CUSTOM_ACTION);
+    const stage2_EpicId = await epicManager(body, CUSTOM_ACTION);
     let tasks = {
         reply: {
           action: ''
@@ -62,7 +62,7 @@ const chooseCustomActions = async (body, action) => {
       default:
         break;
     }
-    return { tasks, stage2_EpicId, stage2_StoryId }
+    return { tasks, stage2_EpicId }
   }
   catch(err){
     console.log('error');
@@ -70,7 +70,7 @@ const chooseCustomActions = async (body, action) => {
       action: err.action,
       message: err
     });
-    return { tasks, epicId: 0, storyId: 0 }
+    return { tasks, epicId: 0 }
   }
 };
 
@@ -92,7 +92,7 @@ export default asyncRoute(
 
       const action = await extractFromCustomAction.action(body);
 
-      const { tasks, stage2_EpicId, stage2_StoryId }  = await chooseCustomActions(body, action);
+      const { tasks, stage2_EpicId }  = await chooseCustomActions(body, action);
       logger.info(JSON.stringify(tasks));
       logger.info(JSON.stringify(tasks.send))
 
@@ -111,11 +111,11 @@ export default asyncRoute(
       if(typeof tasks.send !== 'undefined' && tasks.send !== null) {
         if(Array.isArray(tasks.send)){
           tasks.send.map(async s => {
-            await sendMessage(s, stage2_StoryId);
+            await sendMessage(s, stage2_EpicId);
           })
         }
         else {
-          await sendMessage(tasks.send, stage2_StoryId);
+          await sendMessage(tasks.send, stage2_EpicId);
         }
       }
 
@@ -123,7 +123,7 @@ export default asyncRoute(
         && tasks.reverseCommands.length > 0)
         await Promise.all(
           tasks.reverseCommands.map(async rc =>
-            await activeTalk(rc, stage2_EpicId, stage2_StoryId)
+            await activeTalk(rc, stage2_EpicId)
           )
         ).then(res => res).catch(err => { throw err; })
     }

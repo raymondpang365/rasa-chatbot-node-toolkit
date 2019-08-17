@@ -3,20 +3,20 @@ import {
   findExistingEpic
 } from "./dbUtils";
 
-import { updateUserUtterLogStoryId } from '../Message/utterLog';
+import { updateUserUtterLogEpicId } from '../Message/utterLog';
 
 
 export default async ({action, intent, utteranceId, contactId, roomId }) => {
 
     if (intent === 'service_request' || action ===  'action_database_ask_affirmation') {
-      const {epicId, storyId} = await startNewEpic(contactId, roomId);
-      await updateUserUtterLogStoryId(utteranceId, storyId);
-      return {epicId, storyId};
+      const epicId = await startNewEpic(contactId, roomId);
+      await updateUserUtterLogEpicId(utteranceId, epicId);
+      return epicId;
     }
     else {
-      const {epicId, storyId} = await findExistingEpic(contactId, roomId);
-      await updateUserUtterLogStoryId(utteranceId, storyId);
-      return {epicId, storyId};
+      const epicId = await findExistingEpic(contactId, roomId);
+      await updateUserUtterLogEpicId(utteranceId, epicId);
+      return epicId;
     }
 
 }

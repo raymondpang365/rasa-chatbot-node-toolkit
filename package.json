@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/wellyshen/react-cool-starter",
   "scripts": {
+    "autotest": "better-npm-run autotest",
     "start": "better-npm-run start",
     "start:testprod": "better-npm-run start:testprod",
     "start:prod": "better-npm-run start:prod",
@@ -42,12 +43,22 @@
   },
   "betterScripts": {
     "start": {
-      "command": "nodemon --inspect=0.0.0.0:9229 ./index.js",
+      "command": "nodemon ./index.js",
       "env": {
         "NODE_PATH": "./src",
         "NODE_ENV": "development",
         "NODE_HOST": "localhost",
         "LISTEN_TO": "localhost"
+      }
+    },
+    "start:autotest": {
+      "command": "nodemon ./index.js",
+      "env": {
+        "NODE_PATH": "./src",
+        "NODE_ENV": "development",
+        "NODE_HOST": "localhost",
+        "LISTEN_TO": "localhost",
+        "AUTOTEST": true
       }
     },
     "start:testprod": {

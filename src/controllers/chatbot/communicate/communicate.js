@@ -12,7 +12,7 @@ import { Contact, Room } from 'wechaty';
 
 const Roles = {};
 
-const sendMessage = async (m, stage2_StoryId) => {
+const sendMessage = async (m, stage2_EpicId) => {
 
   logger.info(JSON.stringify(m));
 
@@ -42,29 +42,32 @@ const sendMessage = async (m, stage2_StoryId) => {
     roleName = (wechatAction.to || '') + '#' + wechatAction.room;
   }
 
-  if (!Roles[roleName]) {
-    initNewRole(roleName, m)
+  if(!process.env.AUTOTEST) {
+    if (!Roles[roleName]) {
+      initNewRole(roleName, m)
+    }
+
+    logger.info('1.6');
+
+    logger.info(JSON.stringify(wechatAction));
+
+    Roles[roleName].dispatchWechatAction(wechatAction);
   }
 
-  logger.info('1.6');
+  await botUtterLog(wechatAction, stage2_EpicId);
 
-  logger.info(JSON.stringify(wechatAction));
-
-  Roles[roleName].dispatchWechatAction(wechatAction);
-
-  await botUtterLog(wechatAction, stage2_StoryId);
 };
 
-const activeTalk = async (reverseCommand, stage2_EpicId, stage2_StoryId) => {
+const activeTalk = async (reverseCommand, stage2_EpicId) => {
   try {
     logger.info('activeTalk!');
-    let botMessages = await botInitChat(reverseCommand, stage2_EpicId, stage2_StoryId);
+    let botMessages = await botInitChat(reverseCommand, stage2_EpicId);
 
     if (!Array.isArray(botMessages))
       botMessages = [botMessages];
 
     botMessages.map(async m => {
-      await sendMessage(m, stage2_StoryId);
+      await sendMessage(m, stage2_EpicId);
     });
 
     return true;
