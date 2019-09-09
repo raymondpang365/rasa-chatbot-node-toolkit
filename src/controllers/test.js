@@ -1,5 +1,5 @@
 //import counter from './chatbot/cause/outer/testCounter';
-import CounterWrapper from './chatbot/cause/outer/CounterWrapper'
+import CounterWrapper from './cause/outer/CounterWrapper'
 export default {
 
   test(req, res) {

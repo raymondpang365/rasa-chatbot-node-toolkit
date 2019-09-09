@@ -1,27 +1,14 @@
-import users from './users';
-import forms from './forms';
-import locales from './locales';
-import comments from './comments';
-import stories from './stories';
-import search from './search';
-import courses from './businesses';
-import matches from './matches';
-import auth from './auth';
-import tags from './tags';
-import mail from './mail';
-import chatbot from './chatbot';
+import chatbotActionController from '../controllers/cause/inner/actions/index';
+import chatbotContextController from '../controllers/cause/inner/context/index';
+import chatbotSenderIdController from '../controllers/senderId';
+import bodyParser from '../middlewares/bodyParser';
+//import testController from '../controllers/test';
+
 
 export default app => {
-  users(app);
-  forms(app);
-  comments(app);
-  stories(app);
-  courses(app);
-  locales(app);
-  auth(app);
-  tags(app);
-  matches(app);
-  search(app);
-  mail(app);
-  chatbot(app);
+  app.post('/api/chatbot/actions', bodyParser.json, chatbotActionController);
+  app.post('/api/chatbot/context', bodyParser.json, chatbotContextController);
+  app.post('/api/chatbot/sender_id', bodyParser.json, chatbotSenderIdController);
+  //app.get('/api/chatbot/test', bodyParser.json, testController.test);
 };
+
