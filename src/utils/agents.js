@@ -34,7 +34,7 @@ class Agent {
           logger.info('executed query %s', text);
         }
         if(logLevelCode >= 4) {
-          logger.verbose('%o', {duration, rows: res.rows})
+          logger.verbose('%o', {duration, response: res})
         }
         if (err) {
           if(logLevelCode >= 2) {
