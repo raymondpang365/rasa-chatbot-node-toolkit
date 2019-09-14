@@ -2,11 +2,11 @@ import { UTTER_INTERNAL_SERVER_ERROR } from '../../constants/BotActions'
 
 import  p from '../../utils/agents';
 
+import logger from '../../utils/logger';
 
+const qNonEmpty = async (sql, params, loglevel = 'verbose', errMetaData) => {
 
-const qNonEmpty = async (sql, params, errMetaData) => {
-
-  return await p.query(sql, params)
+  return await p.query(sql, params, loglevel)
     .then(res => {
       if (res.rows.length === 0) {
        // console.log(errMetaData);
@@ -19,9 +19,9 @@ const qNonEmpty = async (sql, params, errMetaData) => {
     })
 };
 
-const q = async (sql, params) => {
+const q = async (sql, params, loglevel = 'verbose') => {
 
-  return await p.query(sql, params)
+  return await p.query(sql, params, loglevel)
     .then(res => {
       return res;
     })
@@ -51,7 +51,7 @@ const handleCustomActionError = (
     message = ''
   }
   ) => {
-    console.log(message);
+    logger.error(message);
     return {
       reply: {
         action

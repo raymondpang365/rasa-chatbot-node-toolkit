@@ -35,9 +35,9 @@ export default {
       }
 
 
-      const pollRows = (await q('SELECT p.id, p.question_utterance_id FROM poll p ' +
-        'INNER JOIN room r ON p.room_id = r.id ' +
-        'WHERE r.code = $1 AND p.completed = false ORDER BY p.id DESC;', [roomId])).rows;
+      const pollRows = (await q(`SELECT p.id, p.question_utterance_id FROM poll p 
+        INNER JOIN room r ON p.room_id = r.id
+        WHERE r.code = $1 AND p.completed = false ORDER BY p.id DESC`, [roomId])).rows;
       if (pollRows.length === 0){
         return {
           isVote: false,
@@ -53,8 +53,8 @@ export default {
 
       const { id: pollId } = pollRows[0];
 
-      const optionsRows = (await q('SELECT id, alias, option FROM poll_options ' +
-        'WHERE poll_id = $1 ORDER BY alias ASC',
+      const optionsRows = (await q(`SELECT id, alias, option FROM poll_options 
+        WHERE poll_id = $1 ORDER BY alias`,
         [pollId])).rows;
 
       const correctChosenOptionFormat = textWithoutBracket.charAt(0)
@@ -81,10 +81,13 @@ export default {
 
       logger.info(JSON.stringify(optionIdLists));
 
-      const voteRows = (await q('SELECT c.wxid as wxid, v.poll_option_id as oid FROM contact c ' +
-        'INNER JOIN vote v ON c.id = v.contact_id ' +
-        'WHERE v.poll_option_id = ANY($1) ORDER BY v.created_at ASC', [optionIdLists])).rows;
+      const voteRows = (await q(`SELECT c.wxid as wxid, v.poll_option_id as oid FROM contact c
+        INNER JOIN vote v ON c.id = v.contact_id
+        WHERE v.poll_option_id = ANY($1) ORDER BY v.created_at`, [optionIdLists]
+      )).rows;
+
       logger.info(voteRows);
+
       if (voteRows.length !== 0){
          const names = await Promise.all(voteRows.map(async (r, i) => {
              let contact = await BotWrapper.bot.Contact.load(r.wxid);

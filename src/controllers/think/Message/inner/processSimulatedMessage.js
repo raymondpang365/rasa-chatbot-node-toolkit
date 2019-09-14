@@ -10,18 +10,17 @@ export default async ({ payload, utteranceId = 0, epicId = 0 }) => {
       sender: payload.sender,
       message: `${epicId} e ${utteranceId} u| ${payload.message}`
     };
-    logger.info(`Request NLP process with message: ${JSON.stringify(formData)}`);
+    logger.info('Request NLP process with message: %o', formData);
 
     const message = await processMessage(formData);
-    console.log(message);
-    logger.info(`Response from NLP process: ${JSON.stringify(formData)}`);
+
+    logger.info('Response from NLP process: %o', message.data );
 
     if(message.data.length === 0) {
       return null;
     }
     else {
       const botMessage = message.data[0];
-      console.log(botMessage);
 
       return botMessage;
     }

@@ -16,8 +16,10 @@ const announcer = cron.schedule('*/1 * * * *', async () => {
       WHERE ((EXTRACT (EPOCH FROM (CURRENT_TIMESTAMP - s.last_announced)) > 120 OR s.last_announced ISNULL)
             AND s.is_repeated = TRUE
              AND MOD((EXTRACT (EPOCH FROM (s.first_time - CURRENT_TIMESTAMP))::INTEGER), s.time_interval) BETWEEN -60 AND 60)
-                 OR EXTRACT(EPOCH FROM ( s.first_time - CURRENT_TIMESTAMP )) BETWEEN -60 AND 60`
-    )).rows;
+                 OR EXTRACT(EPOCH FROM ( s.first_time - CURRENT_TIMESTAMP )) BETWEEN -60 AND 60`,
+    null,
+    'error')
+    ).rows;
 
     if (rows.length > 0) {
 

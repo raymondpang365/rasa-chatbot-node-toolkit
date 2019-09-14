@@ -12,15 +12,15 @@ export default {
 
       const lastAffirmationRows = roomId === null
         ? (await q(
-          'SELECT a.id, a.utterance_id, a.bot_utterance_id, a.intent_name FROM affirmation a INNER JOIN utterance u ' +
-          'ON a.utterance_id = u.id ' +
-          'WHERE u.contact_id = $1 AND u.room_id ISNULL AND a.affirmed = false ORDER BY u.created_at DESC LIMIT 1',
+          `SELECT a.id, a.utterance_id, a.bot_utterance_id, a.intent_name FROM affirmation a INNER JOIN utterance u
+          ON a.utterance_id = u.id
+          WHERE u.contact_id = $1 AND u.room_id ISNULL AND a.affirmed = false ORDER BY u.created_at DESC LIMIT 1`,
           [contactId]
         )).rows
         : (await q(
-        'SELECT a.id, a.utterance_id, a.bot_utterance_id, a.intent_name FROM affirmation a INNER JOIN utterance u ' +
-        'ON a.utterance_id = u.id ' +
-        'WHERE u.contact_id = $1 AND u.room_id = $2 AND a.affirmed = false ORDER BY u.created_at DESC LIMIT 1',
+        `SELECT a.id, a.utterance_id, a.bot_utterance_id, a.intent_name FROM affirmation a INNER JOIN utterance u
+        ON a.utterance_id = u.id 
+        WHERE u.contact_id = $1 AND u.room_id = $2 AND a.affirmed = false ORDER BY u.created_at DESC LIMIT 1`,
         [contactId, roomId]
       )).rows;
 

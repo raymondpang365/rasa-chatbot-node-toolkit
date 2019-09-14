@@ -11,9 +11,6 @@ export default async botMessage => {
   const epicId = BOT_MESSAGE.epicId(botMessage);
   logger.info(`Epic ID of action is retrieved : %o`, action);
 
-
-
-
   if(action === ACTION_RESPONDENT_FOUND) {
     const respondentWxid = (await qNonEmpty(
       'SELECT c.wxid FROM contact c INNER JOIN match m ON c.id = m.respondent_id WHERE m.epic_id = $1',

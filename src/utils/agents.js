@@ -7,6 +7,12 @@ import logger from './logger';
 
 const databaseConfig = getDatabaseConfig(process.env.NODE_ENV);
 
+const logLevelCodes = {
+  'never': 1,
+  'error': 2,
+  'info': 3,
+  'verbose': 4
+}
 
 class Agent {
 
@@ -18,19 +24,28 @@ class Agent {
   }
 
 
-  query(text, params){
+  query(text, params, logLevel = 'verbose'){
+    const logLevelCode = logLevelCodes[logLevel]
     const start = Date.now();
     return new Promise((resolve, reject) => {
       this.pool.query(text, params, (err, res) => {
         const duration = Date.now() - start;
-        logger.info('executed query %s', text);
-        logger.verbose('%o', { duration, rows: res.rows })
+        if(logLevelCode >= 3) {
+          logger.info('executed query %s', text);
+        }
+        if(logLevelCode >= 4) {
+          logger.verbose('%o', {duration, rows: res.rows})
+        }
         if (err) {
-          logger.error(err);
+          if(logLevelCode >= 2) {
+            logger.error(err);
+          }
           reject(err);
         }
-        else{
-          logger.info('Query execution success');
+        else {
+          if (logLevelCode >= 3){
+            logger.info('Query execution success');
+          }
           resolve(res);
         }
       });
