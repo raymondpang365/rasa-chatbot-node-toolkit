@@ -4,6 +4,8 @@ import { port, host } from './config';
 import middlewares from './middlewares';
 import serverRoutes from './routes';
 
+import logger from '../src/utils/logger';
+
 const app = express();
 
 middlewares(app);
@@ -15,9 +17,9 @@ if (port) {
   app.listen(port, host, err => {
     const url = `http://${host}:${port}`;
 
-    if (err) console.error(chalk.red(`==> 😭  OMG!!! ${err}`));
+    if (err) logger.error(chalk.red(`==> 😭  OMG!!! ${err}`));
 
-    console.info(chalk.green(`==> 🌎  Listening at ${url}`));
+    logger.info(chalk.green(`==> 🌎  Listening at ${url}`));
 
     process.on('uncaughtException', function(e) {
       console.log('An error has occured. error is: %s and stack trace is: %s', e, e.stack);
@@ -27,7 +29,7 @@ if (port) {
 
   });
 } else {
-  console.error(
+  logger.error(
     chalk.red('==> 😭  OMG!!! No PORT environment variable has been specified')
   );
 }

@@ -2,14 +2,14 @@ import { q, qNonEmpty } from '../../util/q';
 import { updateUserUtterLogEpicId } from './utterLog';
 import { USER_MESSAGE } from '../../util/extractDetail'
 
+import logger from '../../../utils/logger'
+
 export default {
   checking: async (payload, utteranceId) => {
     try {
       const contactId = await USER_MESSAGE.contactId(payload);
       const roomId = USER_MESSAGE.roomId(payload);
 
-      console.log(contactId);
-      console.log(roomId);
       const lastAffirmationRows = roomId === null
         ? (await q(
           'SELECT a.id, a.utterance_id, a.bot_utterance_id, a.intent_name FROM affirmation a INNER JOIN utterance u ' +
@@ -25,7 +25,6 @@ export default {
       )).rows;
 
 
-      console.log(lastAffirmationRows);
       if (lastAffirmationRows.length === 1) {
         const {
           id: affirmationId,
@@ -51,7 +50,7 @@ export default {
       }
     }
     catch(err){
-      console.log(err);
+      logger.error(err);
     }
 
   },

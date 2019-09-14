@@ -8,10 +8,6 @@ import {
 } from '../../../util/extractDetail'
 import { init_notify_respondent_found } from '../../../../constants/ReverseCmds'
 
-import {
-  Contact
-} from 'wechaty'
-
 import BotWrapper from '../../outer/BotWapper';
 
 

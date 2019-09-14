@@ -35,9 +35,6 @@ export default {
       }
 
 
-      logger.info(roomId);
-
-
       const pollRows = (await q('SELECT p.id, p.question_utterance_id FROM poll p ' +
         'INNER JOIN room r ON p.room_id = r.id ' +
         'WHERE r.code = $1 AND p.completed = false ORDER BY p.id DESC;', [roomId])).rows;
@@ -47,7 +44,8 @@ export default {
         };
       }
 
-      const subject = (await qNonEmpty('SELECT body FROM utterance WHERE id = $1',
+      const subject = (await qNonEmpty(
+        'SELECT body FROM utterance WHERE id = $1',
         [pollRows[0].question_utterance_id])).rows[0].body;
 
       logger.info(pollRows[0].question_utterance_id);
@@ -107,17 +105,12 @@ export default {
           }
         });
       }
-   //   logger.info('hahahahaha 1')
-   //   logger.info(nameList);
+
       if(voteRows.length <= 2){
          for(let i = voteRows.length + 1; i <= 3; i ++){
            nameList += `\n${i}.`;
          }
       }
-     // logger.info('hahahahaha 2')
-    //  logger.info(nameList);
-
-    //  logger.info(roomId);
 
       text = `${subject} \n ${optionList} \n 接龙：` + nameList
         + '\n\n(清输入讯息"#a","#b"...来进行投票)';
@@ -130,7 +123,7 @@ export default {
       };
     }
     catch(err){
-      console.log(err);
+      logger.error(err);
       return {
         isVote: true,
       };

@@ -1,5 +1,7 @@
 import processMessage from '../processMessage'
 
+import logger from '../../../../utils/logger';
+
 export default async ({ payload, utteranceId = 0, epicId = 0 }) => {
 
   try {
@@ -8,10 +10,11 @@ export default async ({ payload, utteranceId = 0, epicId = 0 }) => {
       sender: payload.sender,
       message: `${epicId} e ${utteranceId} u| ${payload.message}`
     };
-    console.log(formData);
+    logger.info(`Request NLP process with message: ${JSON.stringify(formData)}`);
 
     const message = await processMessage(formData);
     console.log(message);
+    logger.info(`Response from NLP process: ${JSON.stringify(formData)}`);
 
     if(message.data.length === 0) {
       return null;

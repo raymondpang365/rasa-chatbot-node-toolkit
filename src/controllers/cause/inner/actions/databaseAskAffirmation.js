@@ -11,6 +11,7 @@ import {
   qNonEmpty,
 } from '../../../util/q';
 
+import logger from '../../../../utils/logger';
 
 export default async (body, epicId) => {
   try {
@@ -26,15 +27,13 @@ export default async (body, epicId) => {
     const {intent_to_be_affirmed: intentToBeAffirmed, is_room: isRoom} = extraParams;
 
 
-    await qNonEmpty('INSERT INTO affirmation (utterance_id, intent_name, affirmed) VALUES ' +
-      '($1, $2, FALSE) RETURNING id;',
+    await qNonEmpty(`INSERT INTO affirmation (utterance_id, intent_name, affirmed) VALUES 
+        ($1, $2, FALSE) RETURNING id;`,
       [utteranceId, intentToBeAffirmed]);
 
     let action = '';
 
-    console.log(intentToBeAffirmed);
-    console.log(isRoom);
-
+    logger.info(`Intent to be affirmed: ${JSON.stringify(intentToBeAffirmed)}`);
 
     switch (intentToBeAffirmed) {
       case 'lol':
@@ -57,6 +56,6 @@ export default async (body, epicId) => {
     };
   }
   catch(err){
-    console.log(err)
+    logger.error(err)
   }
 }

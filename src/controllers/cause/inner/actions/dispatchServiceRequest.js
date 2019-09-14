@@ -49,16 +49,13 @@ export default async (body, epicId) => {
 
   /* dispatch to all potential respondents */
   const contactIdOfAllTargetsRows = (await q(
-      'SELECT ct.contact_id FROM tag t ' +
-      'INNER JOIN contact_tag ct ON ct.tag_id = t.id ' +
-      'WHERE t.tag_name = $1 AND ct.contact_id <> $2',
+      `SELECT ct.contact_id FROM tag t 
+      INNER JOIN contact_tag ct ON ct.tag_id = t.id 
+      WHERE t.tag_name = $1 AND ct.contact_id <> $2`,
       [category, enquirerContactId],
     )).rows;
 
-  console.log(contactIdOfAllTargetsRows);
-
   const findWxidQueryPromises = contactIdOfAllTargetsRows.map(async c => {
-    console.log(c);
     return (await qNonEmpty(
       'SELECT DISTINCT wxid FROM contact c WHERE id = $1',
       [ c.contact_id ]

@@ -1,6 +1,8 @@
 import { q, qNonEmpty } from '../../../util/q';
 import { NLU_MESSAGE } from '../../../util/extractDetail'
 
+import logger from '../../../../utils/logger';
+
 export default async (payload) => {
     try {
       const roomId = await NLU_MESSAGE.roomId(payload);
@@ -14,9 +16,9 @@ export default async (payload) => {
       }
       console.log(roomId)
 
-      const pollRows = (await q('SELECT p.id, p.question_utterance_id FROM poll p ' +
-        'INNER JOIN room r ON p.room_id = r.id ' +
-        'WHERE r.code = $1 AND p.completed = false ORDER BY p.id DESC;', [roomId])).rows;
+      const pollRows = (await q(`SELECT p.id, p.question_utterance_id FROM poll p 
+        INNER JOIN room r ON p.room_id = r.id 
+        WHERE r.code = $1 AND p.completed = false ORDER BY p.id DESC`, [roomId])).rows;
 
       if (pollRows.length === 0){
         return originalIntent;
@@ -24,15 +26,15 @@ export default async (payload) => {
 
       const { id: pollId } = pollRows[0];
 
-      const optionsRows = (await q('SELECT id, alias, option FROM poll_options ' +
-        'WHERE poll_id = $1 ORDER BY alias ASC',
+      const optionsRows = (await q(`SELECT id, alias, option FROM poll_options 
+        WHERE poll_id = $1 ORDER BY alias`,
         [pollId])).rows;
 
       for(let i = 0; i < optionsRows.length; i++){
           const r = optionsRows[i];
 
           if (r.alias === optionChosen || r.option === optionChosen) {
-            console.log('changed to vote')
+            logger.info('changed to vote')
             return {
               intent: 'vote',
               confidence: 1

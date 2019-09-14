@@ -4,24 +4,20 @@ import processSimulatedMessage from '../../think/Message/inner/processSimulatedM
 
 import { USER_MESSAGE } from '../../util/extractDetail';
 
-
+import logger from '../../../utils/logger';
 
 export default async (reverseCommand, stage2_EpicId) => {
   try {
-    console.log(reverseCommand);
+    logger.info(`Bot received reverse command: %o`, reverseCommand);
     const roomId = USER_MESSAGE.roomId(reverseCommand);
-    console.log('haha1')
     const fromId = USER_MESSAGE.wxid(reverseCommand);
-    console.log('haha2')
     const text = USER_MESSAGE.content(reverseCommand);
-    console.log('haha3')
-    console.log(fromId);
-    console.log(roomId);
-    console.log(text);
+
     const utteranceId = await userUtterLog(fromId, roomId, text);
     await updateUserUtterLogEpicId(utteranceId, stage2_EpicId);
 
-    console.log(utteranceId);
+    logger.verbose(`Reverse command utterance id found %d`, utteranceId);
+
     return await processSimulatedMessage(
       {
         payload: reverseCommand,
@@ -31,6 +27,6 @@ export default async (reverseCommand, stage2_EpicId) => {
     );
   }
   catch(err){
-    console.log(err);
+    logger.info(`Error processing reverse command %o:`, err);
   }
 }

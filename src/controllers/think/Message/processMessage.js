@@ -14,16 +14,12 @@ export default async formData => {
       throw err
     });
 
-    console.log(nluResponse)
-
     let entitiesStringArray = nluResponse.entities.map( e => `"${e.entity}":"${e.value}"`);
     let entitiesString = entitiesStringArray.join(',');
 
     const intentString = nluResponse.intent.name;
 
     const nlgInputString = `/${intentString}{${entitiesString}}`
-
-    console.log(nlgInputString)
 
     return await axios.post(
       `http://localhost:${nluCorePort}/webhooks/rest/webhook`,

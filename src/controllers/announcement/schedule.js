@@ -5,19 +5,19 @@ import composeContent from './composeContent';
 
 import BotWrapper from '../cause/outer/BotWapper'
 
+import logger from '../../utils/logger';
+
 const announcer = cron.schedule('*/1 * * * *', async () => {
   try {
 
 
-    const rows = (await q('SELECT s.id, r.code, s.is_to_all_members, s.scenario_id FROM schedule s\n' +
-      'INNER JOIN room r ON s.room_id = r.id \n' +
-      'WHERE ((EXTRACT (EPOCH FROM (CURRENT_TIMESTAMP - s.last_announced)) > 120 OR s.last_announced ISNULL)\n' +
-      '      AND s.is_repeated = TRUE\n' +
-      '      AND MOD((EXTRACT (EPOCH FROM (s.first_time - CURRENT_TIMESTAMP))::INTEGER), s.time_interval) BETWEEN -60 AND 60)\n' +
-      '           OR EXTRACT(EPOCH FROM ( s.first_time - CURRENT_TIMESTAMP )) BETWEEN -60 AND 60;'
+    const rows = (await q(`SELECT s.id, r.code, s.is_to_all_members, s.scenario_id FROM schedule s
+      INNER JOIN room r ON s.room_id = r.id 
+      WHERE ((EXTRACT (EPOCH FROM (CURRENT_TIMESTAMP - s.last_announced)) > 120 OR s.last_announced ISNULL)
+            AND s.is_repeated = TRUE
+             AND MOD((EXTRACT (EPOCH FROM (s.first_time - CURRENT_TIMESTAMP))::INTEGER), s.time_interval) BETWEEN -60 AND 60)
+                 OR EXTRACT(EPOCH FROM ( s.first_time - CURRENT_TIMESTAMP )) BETWEEN -60 AND 60`
     )).rows;
-
-    console.log(rows);
 
     if (rows.length > 0) {
 
@@ -32,10 +32,7 @@ const announcer = cron.schedule('*/1 * * * *', async () => {
               [scenario_id])).rows[0].default_template;
 
             const content = await composeContent(unfilledContent, code);
-
-            console.log( code);
             const room = await BotWrapper.bot.Room.load( code);
-            console.log(room);
             const promises = [];
             if (is_to_all_members) {
               const roomMembers = await room.memberAll();
@@ -61,7 +58,7 @@ const announcer = cron.schedule('*/1 * * * *', async () => {
     }
   }
   catch(err){
-    console.log(err);
+    logger.error(err);
   }
 
 });

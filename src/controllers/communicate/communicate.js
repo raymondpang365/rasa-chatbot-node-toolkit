@@ -8,8 +8,6 @@ import { BOT_MESSAGE as extractFromBotMessage } from '../util/extractDetail'
 
 import logger from '../../utils/logger';
 
-import { Contact, Room } from 'wechaty';
-
 const Roles = {};
 
 const sendMessage = async (m, stage2_EpicId) => {
@@ -17,11 +15,8 @@ const sendMessage = async (m, stage2_EpicId) => {
   logger.info(JSON.stringify(m));
 
   const to = extractFromBotMessage.wxid(m);
-  logger.info('1.2');
   const room = extractFromBotMessage.roomId(m) || null;
-  logger.info('1.3');
   const text = extractFromBotMessage.content(m) || '';
-  logger.info('1.4');
 
   const wechatAction = {
     action: 'send',
@@ -30,8 +25,6 @@ const sendMessage = async (m, stage2_EpicId) => {
     text,
     contact_card: 'contact_card' in m? m.contact_card : null
   };
-
-  logger.info('1.5');
 
   let roleName = '';
 
@@ -47,8 +40,6 @@ const sendMessage = async (m, stage2_EpicId) => {
       initNewRole(roleName, m)
     }
 
-    logger.info('1.6');
-
     logger.info(JSON.stringify(wechatAction));
 
     Roles[roleName].dispatchWechatAction(wechatAction);
@@ -60,7 +51,7 @@ const sendMessage = async (m, stage2_EpicId) => {
 
 const activeTalk = async (reverseCommand, stage2_EpicId) => {
   try {
-    logger.info('activeTalk!');
+    logger.info('Active talk');
     let botMessages = await botInitChat(reverseCommand, stage2_EpicId);
 
     if (!Array.isArray(botMessages))
@@ -73,7 +64,7 @@ const activeTalk = async (reverseCommand, stage2_EpicId) => {
     return true;
   }
   catch(err){
-    throw err;
+    logger.error(err)
   }
 };
 
@@ -99,8 +90,7 @@ const passiveTalk = (m, text) => {
     roleName = (fromId || '') + '#' + roomId;
   }
   if (!!Roles[roleName]) {
-    console.log('girl logging m variable')
-    console.log(Roles[roleName].m)
+    logger.info('Passive talk message object %o:', Roles[roleName].m)
   }
 
   if (!Roles[roleName]) {
@@ -126,11 +116,9 @@ const initNewRole = (roleName, m = null) => {
     return new Promise(async (resolve, reject) => { //think function
       try {
         const responseMessage = await userInitChat(payload);
-
         resolve(responseMessage);
-
-
       } catch (err) {
+        logger.error(err)
         reject(err);
       }
     })
@@ -138,8 +126,6 @@ const initNewRole = (roleName, m = null) => {
 
 
   Roles[roleName].on('reply', response => {
-    console.log('18138138138138138138138138138');
-    console.log(Roles[roleName].m)
 
     if(Roles[roleName].m !== null){
       if(response.to !== null && response.room !== null){
@@ -201,7 +187,7 @@ const initNewRole = (roleName, m = null) => {
 
 
     }catch(err){
-      console.log(err);
+      logger.error(err);
     }
   });
 

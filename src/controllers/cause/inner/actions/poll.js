@@ -7,6 +7,8 @@ import {
   UTTER_START_POLL_RESPONSE
 } from '../../../../constants/BotActions'
 
+import logger from '../../../../utils/logger';
+
 import {
    q, qNonEmpty,
 } from '../../../util/q';
@@ -38,7 +40,7 @@ export const logPollSubject = async (body, epicId) => {
 
   }
   catch(err){
-    console.log(err)
+    logger.error(err)
   }
 };
 

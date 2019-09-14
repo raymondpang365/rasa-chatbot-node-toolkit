@@ -3,11 +3,13 @@ import { ACTION_RESPONDENT_FOUND } from '../../../constants/BotActions'
 
 import { q, qNonEmpty } from '../../util/q'
 
+import logger from '../../../utils/logger';
+
 export default async botMessage => {
   const action = await BOT_MESSAGE.action(botMessage);
-  console.log(action);
+  logger.info(`Bot received action: ${action}`);
   const epicId = BOT_MESSAGE.epicId(botMessage);
-  console.log(epicId);
+  logger.info(`Epic ID of action is retrieved : %o`, action);
 
 
 

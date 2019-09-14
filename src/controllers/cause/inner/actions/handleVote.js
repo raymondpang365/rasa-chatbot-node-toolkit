@@ -8,17 +8,15 @@ import {
 
 import BotWrapper from '../../outer/BotWapper'
 
-import {
-  Contact
-} from 'wechaty'
+import logger from '../../../../utils/logger';
 
 export default async (body, epicId) => {
   const roomId = extractFromCustomAction.roomId(body);
   const contactId = await extractFromCustomAction.contactId(body);
 
-  const pollRows = (await q('SELECT p.id, p.question_utterance_id FROM poll p ' +
-    'INNER JOIN room r ON p.room_id = r.id ' +
-    'WHERE r.code = $1 AND p.completed = false ORDER BY p.id DESC;', [roomId])).rows;
+  const pollRows = (await q(`SELECT p.id, p.question_utterance_id FROM poll p
+    INNER JOIN room r ON p.room_id = r.id 
+    WHERE r.code = $1 AND p.completed = false ORDER BY p.id DESC`, [roomId])).rows;
 
   const subject = (await qNonEmpty('SELECT body FROM utterance WHERE id = $1',
     [pollRows[0].question_utterance_id])).rows[0].body;
@@ -28,9 +26,6 @@ export default async (body, epicId) => {
   const optionsRows = (await q('SELECT id, alias, option FROM poll_options ' +
     'WHERE poll_id = $1 ORDER BY alias ASC',
     [pollId])).rows;
-
-
-//å  const optionChosen = await extractFromCustomAction.slots(body).options;
 
   const optionChosen = await extractFromCustomAction.content(body).trim();
   console.log(optionChosen);
@@ -51,11 +46,10 @@ export default async (body, epicId) => {
   let nameList = '';
   let text = '';
 
-  const voteRows = (await q('SELECT c.wxid as wxid, v.poll_option_id as oid FROM contact c ' +
-    'INNER JOIN vote v ON c.id = v.contact_id ' +
-    'WHERE v.poll_option_id = ANY($1) ORDER BY v.created_at ASC', [optionIdLists])).rows;
+  const voteRows = (await q(`SELECT c.wxid as wxid, v.poll_option_id as oid FROM contact c 
+    INNER JOIN vote v ON c.id = v.contact_id 
+    WHERE v.poll_option_id = ANY($1) ORDER BY v.created_at`, [optionIdLists])).rows;
 
-  console.log(voteRows);
 
   if (voteRows.length !== 0){
     const names = await Promise.all(voteRows.map(async (r, i) => {
@@ -82,9 +76,6 @@ export default async (body, epicId) => {
 
   text = `${subject} \n ${optionList} \n 接龙：` + nameList
     + '\n\n(清输入讯息"1","2"...来进行投票)';
-
-  console.log(text);
-  console.log(roomId);
 
   return {
     send: {

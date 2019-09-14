@@ -15,7 +15,7 @@ export default async (params, format) => {
   const utteranceId = extract.utteranceId(params);
   const contactId = await extract.contactId(params);
   const roomId = await extract.roomId(params);
-  console.log(utteranceId);
+
   return {
     defaultEpicId, action, intent, utteranceId, contactId, roomId
   }

@@ -19,7 +19,6 @@ import {
 } from 'wechaty'
 
 import { PuppetPadpro } from 'wechaty-puppet-padpro'
-import { Brolog as log } from 'brolog'
 
 const initBot = (type) => {
   try {
@@ -61,7 +60,7 @@ const initBot = (type) => {
   }
   catch(err){
     BotWrapper.setError(err);
-    console.log('EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE')
+    logger.error(`Bot initiation Error: ${JSON.stringify(err)}`);
     return null;
   }
 };
@@ -78,17 +77,17 @@ const checkPlan = async (room) => {
 
         if (roomId !== null) {
 
-          const {min_level} = (await qNonEmpty('SELECT min(p.plan_level) as min_level ' +
-            'FROM plan p INNER JOIN subscription s ON p.id = s.plan_id WHERE s.room_id = $1 AND s.bot_id = $2 ' +
-            'AND CURRENT_TIMESTAMP < s.end_timestamp',
+          const {min_level} = (await qNonEmpty(`SELECT min(p.plan_level) as min_level 
+            FROM plan p INNER JOIN subscription s ON p.id = s.plan_id WHERE s.room_id = $1 AND s.bot_id = $2 
+            AND CURRENT_TIMESTAMP < s.end_timestamp`,
             [roomId, this.contactId])).rows;
 
           if (isNaN(min_level)) {
-            console.log('not activated')
+            logger.verbose('not activated')
             return;
           }
           else if (min_level === 0) {
-            console.log('blacklisted')
+            logger.verbose('blacklisted')
             return;
           }
         }
@@ -126,12 +125,12 @@ class BotWrapper{
     dbRooms.map(async r => {
       dbRoomMap[r.code] = r.id;
 
-      await(q('INSERT INTO subscription (room_id, plan_id, subscription_start_timestamp, subscription_end_timestamp) ' +
-        'VALUES ($1, 2, CURRENT_TIMESTAMP, Infinity) RETURNING id', [r.id]));
+      await(q(`INSERT INTO subscription (room_id, plan_id, subscription_start_timestamp, subscription_end_timestamp) 
+        VALUES ($1, 2, CURRENT_TIMESTAMP, Infinity) RETURNING id`, [r.id]));
 
       if(freetrial){
-        await(q("INSERT INTO subscription (room_id, plan_id, subscription_start_timestamp, subscription_end_timestamp) " +
-          "VALUES ($1, 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + (1::text || ' month')::interval) RETURNING id",
+        await(q(`INSERT INTO subscription (room_id, plan_id, subscription_start_timestamp, subscription_end_timestamp)
+          VALUES ($1, 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + (1::text || ' month')::interval) RETURNING id`,
           [r.id]));
       }
     });
@@ -180,21 +179,20 @@ class BotWrapper{
       this.initiating = false;
       return;
     }
-    console.log(bot);
-    console.log('HAHAHAHAHAHAAHAHAHAHAHAAHAHAHAHAHAAHAHAHAHAHAAHAHAHAHAHAAHAHAHAHAHAAHAHAHAHAHA')
+
+    logger.info('Starting to initiate bot')
 
     bot
       .on('scan', (qrcode, status) => {
-        console.log('ON SCANNNNNNNNNNNN')
         const qrcodeImageUrl = [
           'https://api.qrserver.com/v1/create-qr-code/?data=',
           encodeURIComponent(qrcode),
         ].join('');
-        console.log(qrcodeImageUrl);
-        console.log(`${qrcode}\n[${status}] Scan QR Code in above url to login: `)
+        logger.info(qrcodeImageUrl);
+        logger.info(`${qrcode}\n[${status}] Scan QR Code in above url to login: `)
       })
       .on('login', async user => {
-        log.info('Bot', `bot login: ${user}`)
+        logger.info('Bot login')
 
         this.wxid = user.id;
 
@@ -209,11 +207,11 @@ class BotWrapper{
 
       })
       .on('logout', user => {
-        log.info('Bot', 'bot %s logout.', user)
+        logger.info('Bot logout')
       })
       .on('friendship', async friendship => {
         try {
-          console.log(`received friend event.`)
+          logger.info('received friend event')
           switch (friendship.type()) {
 
             // 1. New Friend Request
@@ -225,16 +223,16 @@ class BotWrapper{
             // 2. Friend Ship Confirmed
 
             case Friendship.Type.Confirm:
-              console.log(`friend ship confirmed`);
+              logger.info(`Friend ship confirmed`);
               break;
           }
         } catch (e) {
-          console.error(e)
+          logger.error('%o', e)
         }
       })
       .on('room-invite', async roomInvitation => {
             try {
-              console.log(`received room-invite event.`)
+             logger.info(`Received room-invite event.`)
 
               const {auto_activate, freetrial } = await(qNonEmpty('SELECT auto_activate FROM global_setting WHERE id = $1',[1])).rows[0];
 
@@ -275,7 +273,7 @@ class BotWrapper{
           const roomIdSqlRows = await q('SELECT * FROM room WHERE code = $1;', [room.id]);
           const roomId = roomIdSqlRows.length > 0 ? roomIdSqlRows[0].roomId : null;
 */
-          log.info('Bot', 'talk: %s', m);
+          logger.info('talk: %s', m);
 
           console.log(this.contactId)
           console.log(room.id)
@@ -301,11 +299,9 @@ class BotWrapper{
       });
 
     bot.on('error', async e => {
-      log.error('Bot', 'error: %s', e);
-      logger.err(`Wechaty Error: ${e}`);
+      logger.error('Error: %o', e);
       if (bot.logonoff()) {
-        console.log(e.message);
-        await bot.say('Error').catch(console.error)
+        await bot.say('Error').catch('Error for saying error: %o', e)
       }
     }
     );
@@ -321,43 +317,43 @@ class BotWrapper{
       .then(() => {
         this.started = true;
       }).catch(async e => {
-        log.error('Bot', 'init() fail:' + e);
+        logger.error('Init() fail: %o', e);
         // process.exit(-1);
     });
   }
 
   async restart(){
     if(this.restarting){
-      console.log('Already restarting...')
+      logger.info('Already restarting...')
       return;
     }
     this.restarting = true;
 
     if(this.started === false){
-      console.log("Bot initiated but not started");
+      logger.info("Bot initiated but not started");
     }
     if(!this.bot.logonoff()){
-      console.log("Bot started but not logged in");
+      logger.info("Bot started but not logged in");
     }
     console.log('Restarting...');
 
     await this.bot.stop()
       .then(() => {
         this.started = false;
-        console.log('Stopped temporarily to restart');
+        logger.info('Stopped temporarily to restart');
       })
       .catch(err => {
-        console.log('Error when bot is stopping to restart. Fallback to reinitialization.');
+        logger.info('Error when bot is stopping to restart. Fallback to reinitialization.');
         throw new Error(err)
       });
     await this.bot.start()
       .then(() => {
         this.started = true;
         this.restarting = false;
-        console.log('restart success');
+        logger.info('restart success');
       })
       .catch(err => {
-        console.log('Error when bot is restarting. Fallback to reinitialization.');
+        logger.info('Error when bot is restarting. Fallback to reinitialization.');
         throw new Error(err)
       });
   }

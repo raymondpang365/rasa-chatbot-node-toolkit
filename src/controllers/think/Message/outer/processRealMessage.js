@@ -8,6 +8,8 @@ import {
   BOT_MESSAGE
 } from '../../../../constants/Format'
 
+import logger from '../../../../utils/logger'
+
 import { naiveVoteClassification } from '../../../../config';
 
 
@@ -43,10 +45,11 @@ export default async ({ payload, utteranceId = 0 }) => {
       sender: payload.sender,
       message: messageToBeSent
     };
-    console.log(formData);
+    logger.info(formData);
 
     const message = await processMessage(formData);
-    console.log(message);
+
+    logger.info(message);
 
     if(message.data.length === 0) {
       return {
@@ -59,8 +62,8 @@ export default async ({ payload, utteranceId = 0 }) => {
       const stage3_EpicId = await epicManager(botMessage, BOT_MESSAGE);
       botMessage.text = extractFromBotMessage.insertNewEpicId(stage3_EpicId, botMessage);
 
-      console.log('fuck you');
-      console.log(botMessage);
+      logger.info(botMessage);
+
       if(maybeAffirmFallback) {
 
         await affirmFallbackUtils.updateOldConversationEpicId(
@@ -69,7 +72,8 @@ export default async ({ payload, utteranceId = 0 }) => {
           );
       }
 
-      console.log(botMessage);
+      logger.info(botMessage);
+
       return {
         botMessage: {
           action: 'reply',

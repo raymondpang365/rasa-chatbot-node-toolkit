@@ -1,9 +1,9 @@
 import{  EventEmitter } from 'events'
-import { Brolog as log } from 'brolog'
+import logger from '../../utils/logger';
 
 class Role extends EventEmitter {
   constructor(think, m = null) {
-    log.verbose('Talker()');
+    logger.verbose('Talker()');
     super();
     this.think = think;
     this.obj = {
@@ -20,9 +20,7 @@ class Role extends EventEmitter {
   }
 
   save(payload) {
-    log.verbose('Talker', 'save(%s)', payload.text);
-    console.log(payload);
-    console.log('saved');
+    logger.verbose('Talker save(%s)', payload.text);
     this.obj.text.push(payload.text);
     this.obj.time.push(Date.now());
     if(this.obj.fromId !== payload.fromId){
@@ -35,7 +33,7 @@ class Role extends EventEmitter {
 
   load() {
     const text = this.obj.text.join(', ');
-    log.verbose('Talker', 'load(%s)', text);
+    logger.verbose('Talker load(%s)', text);
     let payload = {
       text: this.obj.text.join(', '),
       fromId: this.obj.fromId,
@@ -52,21 +50,21 @@ class Role extends EventEmitter {
 
   updateTimer(delayTime) {
     delayTime = delayTime || this.delayTime();
-    log.verbose('Talker', 'updateTimer(%s)', delayTime);
+    logger.verbose('updateTimer(%s)', delayTime);
 
     if (this.timer) { clearTimeout(this.timer) }
     this.timer = setTimeout(this.finalAction.bind(this), delayTime, 3)
   }
 
   hear(payload) {
-    log.verbose('Talker', `hear(${payload})`);
+    logger.verbose('Talker hear(%o)', payload);
     this.save(payload);
     this.updateTimer();
   }
 
 
   async finalAction() {
-    log.verbose('Talker', 'say()');
+    logger.verbose('Talker say()');
     const payload  = this.load();
     try {
       let response = await this.think(payload);
@@ -75,7 +73,7 @@ class Role extends EventEmitter {
 
     }
     catch(err){
-      console.log(err);
+      logger.error(err);
     }
 
     this.timer = undefined;
@@ -85,11 +83,10 @@ class Role extends EventEmitter {
     if (!Array.isArray(response)) {
       response = [response];
     }
-    console.log(response);
+    logger.verbose('Wechat Action: %o', response);
+
     response.map(r => {
-    //  this.emit('send', r);
       const { action } = r;
-      console.log(r);
       switch(action) {
         case 'reply':
           this.emit('reply', r);
@@ -103,7 +100,6 @@ class Role extends EventEmitter {
         default:
           break;
       }
-
     });
   }
 

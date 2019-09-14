@@ -1,13 +1,8 @@
-const QrcodeTerminal = require('qrcode-terminal');
 const cron = require('node-cron');
 
-import { Brolog as log } from 'brolog'
+import logger from '../../../utils/logger';
 
 
-import { finis } from 'finis';
-
-// log.level = 'verbose'
- log.level = 'silly';
 //w2820697897
 
 //Shiba: wxid_7kwo47d4iwtd22
@@ -19,9 +14,6 @@ let counter = 0;
 
 const botStarter = cron.schedule('*/1 * * * *', async () => {
   counter++;
-  //console.log('PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP')
-  //console.log(BotWrapper.initiating)
-
 
   try {
     if (BotWrapper.bot === null) {
@@ -37,7 +29,7 @@ const botStarter = cron.schedule('*/1 * * * *', async () => {
     }
   }
   catch(err){
-    console.log('Reinitializing...')
+    logger.info('Reinitializing...')
     await BotWrapper.init()
   }
 },
@@ -48,66 +40,5 @@ const botStarter = cron.schedule('*/1 * * * *', async () => {
 BotWrapper.init().then(()=> {
   botStarter.start();
 }).catch(err => {
-  console.log('main error');
-  console.log(err);
+  logger.error(err);
 });
-
-
-/*
-
-let killChrome;
-let quiting = false;
-let done = false;
-
-const checkForExit = () => {
-  // if (checkNum++ % 100 === 0) {
-  log.info('Bot', 'finis() checkForExit() checking done: %s', done);
-  // }
-  if (done) {
-    log.info('Bot', 'finis() checkForExit() done!');
-    setTimeout(() => doExit(code), 1000); // delay 1 second
-    return
-  }
-  // death loop to wait for `done`
-  // process.nextTick(checkForExit)
-  // setImmediate(checkForExit)
-  setTimeout(checkForExit, 100)
-}
-
-const doExit = (code) => {
-  log.info('Bot', 'doExit(%d)', code)
-  if (killChrome) {
-    killChrome('SIGINT')
-  }
-  process.exit(code)
-}
-*/
-
-
-/*
-finis(async (code, signal) => {
-  log.info('Bot', 'finis(%s, %s)', code, signal);
-
-  if (!BotWrapper.bot.logonoff()) {
-    log.info('Bot', 'finis() bot had been already stopped')
-    doExit(code)
-  }
-  if (quiting) {
-    log.warn('Bot', 'finis() already quiting... return and wait...')
-    return
-  }
-
-  quiting = true;
-
-  const exitMsg = `Wechaty will exit ${code} because of ${signal}`;
-
-  log.info('Bot', 'finis() broadcast quiting message for bot');
-  await BotWrapper.bot.say(exitMsg)
-  // .then(() => bot.stop())
-    .catch(e => log.error('Bot', 'finis() catch rejection: %s', e))
-    .then(() => done = true);
-
-  setImmediate(checkForExit);
-});
-*/
-

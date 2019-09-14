@@ -1,7 +1,5 @@
 import BotWrapper from './BotWapper'
 
-import { Brolog as log } from 'brolog'
-
 import logger from '../../../utils/logger';
 
 import { Contact } from 'wechaty'
@@ -10,8 +8,7 @@ export default async () => {
   const { bot } = BotWrapper;
   const contactList = await bot.Contact.findAll();
 
-  log.info('Bot', '#######################');
-  log.info('Bot', 'Contact number: %d\n', contactList.length)
+  logger.info('Contact number: %d\n', contactList.length)
 
   /**
    * official contacts list
@@ -55,18 +52,18 @@ const logPicture = async () => {
     const name = file.name;
     await file.toFile(name, true);
 
-    log.info('Bot', 'Contact: "%s" with avatar file: "%s"',
+    logger.info('Contact: "%s" with avatar file: "%s"',
       contact.name(),
       name,
     );
 
     if (i > MAX) {
-      log.info('Bot', 'Contacts too many, I only show you the first %d ... ', MAX)
+      logger.info('Contacts too many, I only show you the first %d ... ', MAX)
       break
     }
   }
 
   const SLEEP = 7;
-  log.info('Bot', 'I will re-dump contact weixin id & names after %d second... ', SLEEP)
-  setTimeout(main, SLEEP * 1000)
+  logger.info('I will re-dump contact weixin id & names after %d second... ', SLEEP)
+
 }

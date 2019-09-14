@@ -5,6 +5,8 @@ require('babel-polyfill');
 // Allows you to precompile ES6 syntax
 require('babel-register');
 
+
+
 // Setup global variables for server-side
 global.__CLIENT__ = false;
 global.__SERVER__ = true;
@@ -15,7 +17,7 @@ const path = require('path');
 require('dotenv').config({path: path.resolve(process.cwd(), '../.env')})
 
 
-console.log(`Server starts in ${process.env.NODE_ENV} environment.`);
+//logger.info(`Server starts in ${process.env.NODE_ENV} environment.`);
 
 
 // Run server

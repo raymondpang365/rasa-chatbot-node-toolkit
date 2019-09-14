@@ -1,8 +1,9 @@
 import getDatabaseConfig from '../config/database';
 import Errors from '../constants/Errors';
-import async from 'async';
 
 const { Pool } = require('pg');
+
+import logger from './logger';
 
 const databaseConfig = getDatabaseConfig(process.env.NODE_ENV);
 
@@ -22,14 +23,14 @@ class Agent {
     return new Promise((resolve, reject) => {
       this.pool.query(text, params, (err, res) => {
         const duration = Date.now() - start;
-    //    console.log('executed query', { text, duration, rows: res })
-        console.log('executed query', { text })
+        logger.info('executed query %s', text);
+        logger.verbose('%o', { duration, rows: res.rows })
         if (err) {
-          console.log(err);
+          logger.error(err);
           reject(err);
         }
         else{
-          console.log('hello2');
+          logger.info('Query execution success');
           resolve(res);
         }
       });

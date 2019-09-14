@@ -26,7 +26,7 @@ import { CUSTOM_ACTION } from '../../../../constants/Format'
 import logger from '../../../../utils/logger';
 
 const chooseCustomActions = async (body, action) => {
-  console.log(body);
+  logger.info(`Custom Action body: ${JSON.stringify(body)}`);
   try {
     const stage2_EpicId = await epicManager(body, CUSTOM_ACTION);
     let tasks = {
@@ -65,7 +65,7 @@ const chooseCustomActions = async (body, action) => {
     return { tasks, stage2_EpicId }
   }
   catch(err){
-    console.log('error');
+    logger.error(err);
     const tasks =  handleCustomActionError({
       action: err.action,
       message: err
@@ -106,8 +106,6 @@ export default asyncRoute(
         });
       }
 
-      logger.info('1.1');
-
       if(typeof tasks.send !== 'undefined' && tasks.send !== null) {
         if(Array.isArray(tasks.send)){
           tasks.send.map(async s => {
@@ -128,12 +126,12 @@ export default asyncRoute(
         ).then(res => res).catch(err => { throw err; })
     }
     catch(err){
+      logger.error(err.toString);
       if(!res.headersSent){
         res.status(500).json({
           message: err.toString()
         });
       }
-      console.log(err.toString);
     }
   }
 );
