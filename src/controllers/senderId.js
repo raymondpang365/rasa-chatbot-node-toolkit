@@ -3,14 +3,18 @@ import { NLU_MESSAGE } from './util/extractDetail';
 
 import asyncRoute from '../utils/asyncRoute'
 
+import logger from '../utils/logger';
+
 export default asyncRoute(
   async (req,res) => {
-  //   console.log(req.body);
 
     const { body } = req;
 
-    const {senderId } = await NLU_MESSAGE.sender(body);
-    console.log(senderId);
+    logger.info('Get request on route /api/chatbot/sender_id %o', body);
+
+    const { senderId } = await NLU_MESSAGE.sender(body);
+
+    logger.info('Sender id: %d', senderId);
 
     if(typeof senderId !== 'string'){
       return res.json({

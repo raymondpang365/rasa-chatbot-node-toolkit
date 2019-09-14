@@ -4,7 +4,7 @@ import  p from '../../utils/agents';
 
 import logger from '../../utils/logger';
 
-const qNonEmpty = async (sql, params, loglevel = 'verbose', errMetaData) => {
+const qNonEmpty = async (sql, params, loglevel = 'info', errMetaData) => {
 
   return await p.query(sql, params, loglevel)
     .then(res => {
@@ -19,7 +19,7 @@ const qNonEmpty = async (sql, params, loglevel = 'verbose', errMetaData) => {
     })
 };
 
-const q = async (sql, params, loglevel = 'verbose') => {
+const q = async (sql, params, loglevel = 'info') => {
 
   return await p.query(sql, params, loglevel)
     .then(res => {

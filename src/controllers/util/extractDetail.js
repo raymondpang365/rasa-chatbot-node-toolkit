@@ -36,7 +36,9 @@ const extractUtteranceIdFromCustomAction = body=> {
 
 const extractUtteranceIdFromBotMessage = payload=> {
   const { text } = payload;
-  const prefix = text.substring(0, text.indexOf('|'));
+  const prefix = text
+    .substring(0, text.indexOf('|'))
+    .replace('null', '');
   const u_at = prefix.indexOf('u');
   const e_at = prefix.indexOf('e');
   const answer  =prefix.substring(e_at + 1, u_at).trim();
@@ -46,12 +48,17 @@ const extractUtteranceIdFromBotMessage = payload=> {
 
 const extractUtteranceIdFromNluMessage = payload=> {
   const { text } = payload;
-  const prefix = text.substring(0, text.indexOf('|'));
+  const prefix = text
+    .substring(0, text.indexOf('|'))
+    .replace('null', '');
+  logger.info('Prefix: %s', prefix);
   const u_at = prefix.indexOf('u');
   const e_at = prefix.indexOf('e');
-  const answer  =prefix.substring(e_at + 1, u_at).trim();
-  console.log(`bot message:${answer}.`);
-  return parseInt(answer);
+  const answer = prefix.substring(e_at + 1, u_at);
+  logger.info('answer: %s', answer);
+  const trimmedAnswer = answer.trim();
+  logger.info('utterance id: %s', trimmedAnswer);
+  return parseInt(trimmedAnswer);
 }
 
 const NLU_MESSAGE = {
@@ -63,7 +70,6 @@ const NLU_MESSAGE = {
     const utteranceId = extractUtteranceIdFromNluMessage(body)
     const result = await qNonEmpty('SELECT u.contact_id, c.wxid, u.room_id FROM contact c INNER JOIN utterance u ON c.id = u.contact_id WHERE u.id = $1',
       [utteranceId]);
-    console.log(result)
 
     const roomId = result.rows[0].room_id;
     const wxid = result.rows[0].wxid;

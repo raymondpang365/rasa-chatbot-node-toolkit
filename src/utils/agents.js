@@ -24,8 +24,8 @@ class Agent {
   }
 
 
-  query(text, params, logLevel = 'verbose'){
-    const logLevelCode = logLevelCodes[logLevel]
+  query(text, params, logLevel = 'info'){
+    const logLevelCode = logLevelCodes[logLevel];
     const start = Date.now();
     return new Promise((resolve, reject) => {
       this.pool.query(text, params, (err, res) => {
@@ -33,9 +33,10 @@ class Agent {
         if(logLevelCode >= 3) {
           logger.info('executed query %s', text);
         }
+        /*
         if(logLevelCode >= 4) {
           logger.verbose('%o', {duration, response: res})
-        }
+        }*/
         if (err) {
           if(logLevelCode >= 2) {
             logger.error(err);
