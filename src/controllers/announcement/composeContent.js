@@ -1,15 +1,15 @@
 import axios from 'axios';
 import { q } from '../util/q'
-import moment from 'moment';
+import logger from '../../utils/logger';
 
-
+const moment = require('moment-timezone');
 
 export default async (content, roomCode) => {
 
   moment.locale("zh-cn");
 
   if(content.includes('$today_time')){
-    const today = moment()
+    const today = moment().tz("Asia/Hong_Kong|Hongkong")
     const date =  today.format("MMM Do")
     const day =  today.format("dddd")
 
@@ -19,7 +19,7 @@ export default async (content, roomCode) => {
   }
   if(content.includes('$tmr_time')){
 
-    const tmr = moment().add(1,'day')
+    const tmr = moment().tz("Asia/Hong_Kong|Hongkong").add(1,'day')
     const date = tmr.format("MMM Do")
     const day = tmr.format("dddd")
 
@@ -28,11 +28,11 @@ export default async (content, roomCode) => {
   }
 
   if(content.includes('$today_weather') || content.includes('$tmr_weather')) {
-    const building_id = (await q("SELECT building_id FROM building_room br INNER JOIN room r " +
-      "ON br.room_id = r.id WHERE r.code = $1", [roomCode])).rows[0].building_id
+    const building_id = (await q(`SELECT building_id FROM building_room br INNER JOIN room r 
+      ON br.room_id = r.id WHERE r.code = $1`, [roomCode])).rows[0].building_id
     const estate_id = (await q("SELECT estate_id FROM building WHERE id = $1", [building_id])).rows[0].estate_id;
-    const cityWeatherApiId = (await q("SELECT weather_api_id FROM city c " +
-      "INNER JOIN estate e ON c.id = e.city_id WHERE e.id = $1;", [estate_id])).rows[0].weather_api_id;
+    const cityWeatherApiId = (await q(`SELECT weather_api_id FROM city c 
+      INNER JOIN estate e ON c.id = e.city_id WHERE e.id = $1;`, [estate_id])).rows[0].weather_api_id;
 
     let todayWeather = null;
     let forecast = null;
@@ -44,7 +44,7 @@ export default async (content, roomCode) => {
           `&units=metric`
         )
       ).data;
-      console.log(todayWeather)
+      logger.info(todayWeather)
       const tmrMinTemp = todayWeather.main.temp_min;
       const tmrMaxTemp = todayWeather.main.temp_max;
       const weatherCode = todayWeather.weather[0].id;
