@@ -9,7 +9,7 @@ These advanced faetures include:
 
 - Create a scheduled announcement
 
-- Random weather and quotes
+- Report news and weathers
 
 - Run a survey or poll in a chatroom
 
