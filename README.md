@@ -2,7 +2,7 @@
 
 This Toolkit is a subsidiary server that contains examples of additional logic on top of [Rasa chatbot demo](https://github.com/RasaHQ/rasa-demo)
 
-Additional unctions include:
+Additional functions include:
 
 - Matc service request and service provider for a Uber-like scenario
 
