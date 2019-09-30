@@ -1,8 +1,8 @@
 # node-chatbot-toolkit
 
-This Toolkit helps you build chatbot with additional logic on top of Rasa.
+This Toolkit is a subsidiary server that contains examples of additional logic on top of [Rasa chatbot demo](https://github.com/RasaHQ/rasa-demo)
 
-Functions include:
+Additional unctions include:
 
 - Matc service request and service provider for a Uber-like scenario
 
@@ -11,6 +11,8 @@ Functions include:
 - Run a survey or poll in a chatroom
 
 - Trigger a menu
+
+- Supports Wechat
 
 More functions will be added.
 
