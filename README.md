@@ -7,7 +7,9 @@ These advanced faetures include:
 
 - Match service request and service provider for a Uber-like scenario
 
-- Schedule and announcement
+- Create a scheduled announcement
+
+- Random weather and quotes
 
 - Run a survey or poll in a chatroom
 
