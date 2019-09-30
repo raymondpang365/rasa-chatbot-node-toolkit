@@ -5,7 +5,7 @@ and more advanced logics on top of [Rasa chatbot demo](https://github.com/RasaHQ
 
 These advanced faetures include:
 
-- Matc service request and service provider for a Uber-like scenario
+- Match service request and service provider for a Uber-like scenario
 
 - Schedule and announcement
 
