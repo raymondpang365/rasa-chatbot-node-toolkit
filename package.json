@@ -189,7 +189,7 @@
     "ngrok": "^3.1.1",
     "node-bourbon": "^4.2.8",
     "node-cron": "^2.0.3",
-    "nodemailer": "^4.6.7",
+    "nodemailer": "^6.4.16",
     "normalizr": "^3.2.4",
     "object-assign": "^4.1.1",
     "passport": "^0.4.0",
